@@ -1,0 +1,38 @@
+<!-- Icône 512x512 pour PWA -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="grad512" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4F46E5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7C3AED;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="4" dy="4" stdDeviation="8" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <rect width="512" height="512" rx="64" fill="url(#grad512)"/>
+  
+  <!-- Main Brain Icon -->
+  <circle cx="256" cy="200" r="80" fill="white" opacity="0.95" filter="url(#shadow)"/>
+  <path d="M200 180c0-22 18-40 40-40s40 18 40 40" stroke="#4F46E5" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M200 220c0-22 18-40 40-40s40 18 40 40" stroke="#4F46E5" stroke-width="6" fill="none" stroke-linecap="round"/>
+  
+  <!-- Neural Network Lines -->
+  <path d="M220 200h72M220 220h64M220 240h56M220 260h48" stroke="#4F46E5" stroke-width="4" stroke-linecap="round" opacity="0.8"/>
+  
+  <!-- Education Book -->
+  <rect x="160" y="320" width="192" height="120" rx="16" fill="white" opacity="0.95" filter="url(#shadow)"/>
+  <path d="M180 350h152M180 370h128M180 390h104M180 410h80" stroke="#4F46E5" stroke-width="4" stroke-linecap="round"/>
+  
+  <!-- AI Network Nodes -->
+  <circle cx="100" cy="100" r="12" fill="white" opacity="0.8"/>
+  <circle cx="412" cy="100" r="12" fill="white" opacity="0.8"/>
+  <circle cx="100" cy="412" r="12" fill="white" opacity="0.8"/>
+  <circle cx="412" cy="412" r="12" fill="white" opacity="0.8"/>
+  
+  <!-- Connection Lines -->
+  <path d="M100 100L200 180M412 100L312 180M100 412L200 320M412 412L312 320" stroke="white" stroke-width="2" opacity="0.5"/>
+  
+  <!-- EduAI Text -->
+  <text x="256" y="480" font-family="Arial, sans-serif" font-size="32" font-weight="bold" text-anchor="middle" fill="white" opacity="0.9">EduAI</text>
+</svg>

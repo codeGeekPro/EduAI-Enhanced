@@ -1,0 +1,22 @@
+<!-- SVG Logo EduAI -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4F46E5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7C3AED;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background Circle -->
+  <circle cx="96" cy="96" r="88" fill="url(#gradient)" />
+  
+  <!-- Brain Icon -->
+  <path d="M72 64c-8.84 0-16 7.16-16 16 0 4.42 1.79 8.42 4.69 11.31C57.79 94.21 56 98.21 56 102.63c0 8.84 7.16 16 16 16h48c8.84 0 16-7.16 16-16 0-4.42-1.79-8.42-4.69-11.31C134.21 88.42 136 84.42 136 80c0-8.84-7.16-16-16-16H72z" fill="white" opacity="0.9"/>
+  
+  <!-- AI Circuit Lines -->
+  <path d="M80 72h32M80 88h32M80 104h24" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+  
+  <!-- Education Book -->
+  <rect x="64" y="120" width="64" height="40" rx="4" fill="white" opacity="0.8"/>
+  <path d="M72 128h48M72 136h40M72 144h32" stroke="#4F46E5" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,26 @@
+<!-- Icône 192x192 pour PWA -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <linearGradient id="grad192" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4F46E5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7C3AED;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <rect width="192" height="192" rx="24" fill="url(#grad192)"/>
+  
+  <!-- Brain & AI Icon -->
+  <circle cx="96" cy="80" r="32" fill="white" opacity="0.9"/>
+  <path d="M80 72c0-8.84 7.16-16 16-16s16 7.16 16 16" stroke="#4F46E5" stroke-width="3" fill="none"/>
+  <path d="M88 88h16M88 96h12M88 104h8" stroke="#4F46E5" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Education Elements -->
+  <rect x="64" y="120" width="64" height="48" rx="6" fill="white" opacity="0.9"/>
+  <path d="M72 132h48M72 140h40M72 148h32M72 156h24" stroke="#4F46E5" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- AI Nodes -->
+  <circle cx="48" cy="48" r="4" fill="white" opacity="0.7"/>
+  <circle cx="144" cy="48" r="4" fill="white" opacity="0.7"/>
+  <circle cx="48" cy="144" r="4" fill="white" opacity="0.7"/>
+  <circle cx="144" cy="144" r="4" fill="white" opacity="0.7"/>
+</svg>

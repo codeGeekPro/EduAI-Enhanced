@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#667eea" />
+    <meta name="description" content="IA Éducative Multilingue & Adaptive - PWA révolutionnaire pour l'éducation mondiale" />
+    
+    <!-- Apple PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="EduAI Enhanced" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    
+    <!-- Microsoft PWA Meta Tags -->
+    <meta name="msapplication-TileColor" content="#667eea" />
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://eduai-enhanced.com/" />
+    <meta property="og:title" content="EduAI Enhanced - IA Éducative Multilingue" />
+    <meta property="og:description" content="PWA révolutionnaire pour l'éducation mondiale avec IA adaptative" />
+    <meta property="og:image" content="/og-image.png" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://eduai-enhanced.com/" />
+    <meta property="twitter:title" content="EduAI Enhanced - IA Éducative Multilingue" />
+    <meta property="twitter:description" content="PWA révolutionnaire pour l'éducation mondiale avec IA adaptative" />
+    <meta property="twitter:image" content="/twitter-image.png" />
+    
+    <!-- Preconnect pour optimiser les performances -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    
+    <title>🎓 EduAI Enhanced</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+              console.log('🎓 EduAI PWA: Service Worker enregistré', registration);
+            })
+            .catch((error) => {
+              console.log('❌ Erreur Service Worker:', error);
+            });
+        });
+      }
+    </script>
+  </body>
+</html>

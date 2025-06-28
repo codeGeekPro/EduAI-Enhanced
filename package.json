@@ -1,0 +1,67 @@
+{
+  "name": "eduai-enhanced",
+  "version": "1.0.0",
+  "description": "🎓 IA Éducative Multilingue & Adaptive - PWA révolutionnaire pour l'éducation mondiale",
+  "main": "index.js",
+  "scripts": {
+    "setup": "npm run setup:frontend && npm run setup:backend && npm run setup:ai",
+    "setup:frontend": "cd frontend && npm install",
+    "setup:backend": "cd backend && pip install -r requirements.txt",
+    "setup:ai": "cd ai-services && pip install -r requirements.txt",
+    
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\" \"npm run dev:ai\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && python -m uvicorn main:app --reload --host 0.0.0.0 --port 8000",
+    "dev:ai": "cd ai-services && python -m uvicorn main:app --reload --host 0.0.0.0 --port 8001",
+    
+    "build": "npm run build:frontend",
+    "build:frontend": "cd frontend && npm run build",
+    
+    "test": "npm run test:frontend && npm run test:backend && npm run test:ai",
+    "test:frontend": "cd frontend && npm test",
+    "test:backend": "cd backend && python -m pytest",
+    "test:ai": "cd ai-services && python -m pytest",
+    
+    "lint": "npm run lint:frontend && npm run lint:backend && npm run lint:ai",
+    "lint:frontend": "cd frontend && npm run lint",
+    "lint:backend": "cd backend && flake8 . && black . --check",
+    "lint:ai": "cd ai-services && flake8 . && black . --check",
+    
+    "deploy": "npm run build && docker-compose up -d",
+    "deploy:prod": "npm run build && ./scripts/deploy-production.sh",
+    
+    "lighthouse": "cd frontend && npm run build && lighthouse http://localhost:3000 --output html --output-path ./lighthouse-report.html",
+    "pwa-audit": "npm run lighthouse && echo 'PWA Audit completed - check lighthouse-report.html'"
+  },
+  "keywords": [
+    "education",
+    "ai",
+    "pwa",
+    "multilingual",
+    "inclusive",
+    "adaptive-learning",
+    "emotion-recognition",
+    "offline-first",
+    "speech-recognition",
+    "hackathon"
+  ],
+  "author": "DOUTI Lamoussa <docteur@codegeek-pro.me>",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "lighthouse": "^11.4.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0",
+    "python": ">=3.11.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/codeGeekPro/EduAI-Enhanced.git"
+  },
+  "bugs": {
+    "url": "https://github.com/codeGeekPro/EduAI-Enhanced/issues"
+  },
+  "homepage": "https://github.com/codeGeekPro/EduAI-Enhanced#readme"
+}

@@ -1,0 +1,6 @@
+# Configuration de l'espace de travail PNPM pour EduAI Enhanced
+packages:
+  - 'frontend'
+  - 'mobile'
+  - 'packages/*'
+  

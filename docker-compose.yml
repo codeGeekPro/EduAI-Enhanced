@@ -1,0 +1,125 @@
+version: '3.8'
+
+services:
+  # 🗄️ Base de données MongoDB
+  mongodb:
+    image: mongo:7.0
+    container_name: eduai_mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - ./scripts/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: eduai
+      MONGO_INITDB_ROOT_PASSWORD: eduai_password
+      MONGO_INITDB_DATABASE: eduai_enhanced
+    networks:
+      - eduai_network
+
+  # 📊 Cache Redis
+  redis:
+    image: redis:7.2-alpine
+    container_name: eduai_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --requirepass eduai_redis_password
+    networks:
+      - eduai_network
+
+  # 🔧 API Backend (FastAPI)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: eduai_backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - MONGODB_URL=mongodb://eduai:eduai_password@mongodb:27017/eduai_enhanced
+      - REDIS_URL=redis://:eduai_redis_password@redis:6379
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY}
+      - PINECONE_API_KEY=${PINECONE_API_KEY}
+    volumes:
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - eduai_network
+
+  # 🤖 Services IA
+  ai_services:
+    build:
+      context: ./ai-services
+      dockerfile: Dockerfile
+    container_name: eduai_ai_services
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+    environment:
+      - ENVIRONMENT=production
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - HF_API_KEY=${HF_API_KEY}
+    volumes:
+      - ./ai-services/models:/app/models
+      - ./temp:/app/temp
+    networks:
+      - eduai_network
+
+  # 📱 Frontend PWA (Nginx)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: eduai_frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+      - VITE_AI_SERVICES_URL=http://localhost:8001
+    depends_on:
+      - backend
+      - ai_services
+    networks:
+      - eduai_network
+
+  # 🔍 Monitoring (Optionnel)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: eduai_prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+    networks:
+      - eduai_network
+
+volumes:
+  mongodb_data:
+    driver: local
+  redis_data:
+    driver: local
+  prometheus_data:
+    driver: local
+
+networks:
+  eduai_network:
+    driver: bridge

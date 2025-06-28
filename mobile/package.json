@@ -1,0 +1,31 @@
+{
+  "name": "eduai-mobile-tools",
+  "version": "1.0.0",
+  "description": "Outils de développement mobile pour EduAI PWA",
+  "main": "scripts/generate-assets.js",
+  "scripts": {
+    "build": "node scripts/build-mobile.js",
+    "generate-assets": "node scripts/generate-assets.js",
+    "validate": "node scripts/validate-pwa.js",
+    "test": "node scripts/test-mobile.js",
+    "test:local": "npm run test http://localhost:3000",
+    "all": "npm run generate-assets && npm run validate && npm run test"
+  },
+  "dependencies": {
+    "sharp": "^0.32.0",
+    "puppeteer": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0"
+  },
+  "keywords": [
+    "pwa",
+    "mobile",
+    "eduai",
+    "assets",
+    "testing",
+    "validation"
+  ],
+  "author": "EduAI Team",
+  "license": "MIT"
+}
