@@ -2,11 +2,16 @@
 # IA Éducative Multilingue & Adaptive
 
 # Core FastAPI Framework
-fastapi==0.104.1
-uvicorn[standard]==0.24.0
-pydantic==2.5.0
+fastapi==0.109.2
+uvicorn[standard]==0.27.1
+pydantic==2.9.2
+pydantic-settings==2.1.0
 python-multipart==0.0.6
 starlette==0.27.0
+
+# HTTP Client for APIs
+aiohttp>=3.9.0
+httpx>=0.25.0
 
 # Authentication & Security
 python-jose[cryptography]==3.3.0
@@ -111,7 +116,7 @@ py-spy==0.3.14
 
 # 🔒 Security & Validation
 email-validator==2.1.0
-pydantic[email]==2.5.0
+pydantic[email]==2.9.2
 
 # 📱 Mobile & PWA Support
 qrcode==7.4.2
@@ -124,4 +129,4 @@ azure-storage-blob==12.19.0
 # 🐳 Development Tools
 watchdog==3.0.0
 rich==13.7.0
-typer==0.9.0
+typer==0.16.0

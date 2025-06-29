@@ -50,9 +50,15 @@ echo ✅ Frontend installé avec PNPM
 REM Installation Backend (API)
 echo 🔧 Installation du Backend API...
 cd ..\backend
+
+REM Résolution des conflits de dépendances
+echo ⚠️ Résolution des conflits de dépendances...
+python -m pip install --upgrade pip
+python -m pip install "pydantic>=2.9.0,<3.0.0" "typer>=0.16.0" --upgrade
 python -m pip install -r requirements.txt
 if %errorlevel% neq 0 (
     echo ❌ Erreur installation backend
+    echo 💡 Essayez: scripts\fix_conflicts.bat
     pause
     exit /b 1
 )
@@ -60,8 +66,11 @@ echo ✅ Backend installé
 
 REM Installation AI Services
 echo 🤖 Installation des Services IA...
-cd ..\ai-services
-python -m pip install -r requirements.txt
+cd ..\ai_services
+
+REM Installation avec résolution de conflits
+python -m pip install pydantic==2.9.2
+python -m pip install -r requirements.txt --upgrade
 if %errorlevel% neq 0 (
     echo ❌ Erreur installation services IA
     pause
@@ -96,6 +105,7 @@ if not exist .env (
         echo ANTHROPIC_API_KEY=your_anthropic_api_key_here
         echo ELEVENLABS_API_KEY=your_elevenlabs_api_key_here
         echo PINECONE_API_KEY=your_pinecone_api_key_here
+        echo OPENROUTER_API_KEY=your_openrouter_api_key_here
         echo.
         echo # Hugging Face
         echo HF_API_KEY=your_hf_api_key_here
@@ -128,8 +138,12 @@ echo 🎉 Configuration terminée !
 echo.
 echo 📋 Next steps:
 echo    1. Configure your API keys in the .env file
-echo    2. Start MongoDB and Redis
+echo    2. Start MongoDB and Redis  
 echo    3. Launch the application with: pnpm run dev
+echo.
+echo ⚠️ En cas de conflits de dépendances:
+echo    - Lancez: scripts\fix_conflicts.bat
+echo    - Ou manuellement: python scripts\fix_dependencies.py
 echo.
 echo 📚 Documentation:
 echo    - API Backend: http://localhost:8000/docs

@@ -8,6 +8,10 @@ import asyncio
 from typing import Dict, List, Optional, Any
 import logging
 import sys
+
+# Import du client OpenRouter
+from .openrouter_client import OpenRouterClient, create_openrouter_client
+
 try:
     import huggingface_hub
     if not hasattr(huggingface_hub, 'cached_download'):
@@ -467,13 +471,19 @@ class MultiModalFusionEngine:
 class NLPProcessor:
     """Processeur NLP principal pour EduAI Enhanced"""
     
-    def __init__(self):
+    def __init__(self, openrouter_api_key: Optional[str] = None, openrouter_model: str = "mistralai/mistral-7b-instruct:free"):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu") if torch else None
         
         # Initialize experimental AI components
         self.few_shot_learner = FewShotLearner()
         self.meta_learning_engine = MetaLearningEngine()
         self.multimodal_fusion = MultiModalFusionEngine()
+        
+        # Initialize OpenRouter client
+        self.openrouter_client = None
+        if openrouter_api_key:
+            self.openrouter_client = create_openrouter_client(openrouter_api_key)
+            self.openrouter_model = openrouter_model
         
         # Initialize learning memory and adaptation systems
         self.learning_memory = {}
@@ -1127,3 +1137,93 @@ class NLPProcessor:
             "learning_effectiveness": 0.82,  # Expected learning outcome
             "innovation_factor": 0.95  # How innovative the transfer is
         }
+    
+    # ===== INTEGRATION OPENROUTER =====
+    
+    async def openrouter_completion(self, prompt: str, system_message: str = None, **kwargs) -> Optional[str]:
+        """
+        Utiliser OpenRouter pour la génération de texte
+        
+        Args:
+            prompt: Texte d'entrée
+            system_message: Message système optionnel
+            **kwargs: Arguments supplémentaires pour l'API
+        """
+        if not self.openrouter_client:
+            logger.warning("Client OpenRouter non initialisé")
+            return None
+        
+        system_msg = system_message or "Tu es un assistant IA éducatif bienveillant et pédagogique."
+        
+        return await self.openrouter_client.simple_completion(
+            prompt=prompt,
+            model=self.openrouter_model,
+            system_message=system_msg,
+            **kwargs
+        )
+    
+    async def openrouter_educational_response(self, question: str, context: Dict[str, Any] = None) -> Optional[str]:
+        """
+        Réponse éducative via OpenRouter
+        
+        Args:
+            question: Question de l'étudiant
+            context: Contexte éducatif (matière, niveau, etc.)
+        """
+        if not self.openrouter_client:
+            logger.warning("Client OpenRouter non initialisé")
+            return None
+        
+        context = context or {}
+        subject = context.get("subject", "général")
+        level = context.get("level", "collège")
+        language = context.get("language", "fr")
+        
+        return await self.openrouter_client.educational_response(
+            question=question,
+            subject=subject,
+            level=level,
+            language=language,
+            model=self.openrouter_model
+        )
+    
+    async def openrouter_translate(self, text: str, target_lang: str, source_lang: str = "auto") -> Optional[str]:
+        """
+        Traduction via OpenRouter
+        
+        Args:
+            text: Texte à traduire
+            target_lang: Langue cible
+            source_lang: Langue source
+        """
+        if not self.openrouter_client:
+            logger.warning("Client OpenRouter non initialisé")
+            return None
+        
+        return await self.openrouter_client.translate_text(
+            text=text,
+            target_lang=target_lang,
+            source_lang=source_lang,
+            model=self.openrouter_model
+        )
+    
+    async def openrouter_analyze_emotion(self, text: str) -> Optional[Dict[str, Any]]:
+        """
+        Analyse émotionnelle via OpenRouter
+        
+        Args:
+            text: Texte à analyser
+        """
+        if not self.openrouter_client:
+            logger.warning("Client OpenRouter non initialisé")
+            return None
+        
+        return await self.openrouter_client.analyze_emotion(
+            text=text,
+            model=self.openrouter_model
+        )
+    
+    async def close_openrouter(self):
+        """Fermer le client OpenRouter"""
+        if self.openrouter_client:
+            await self.openrouter_client.close()

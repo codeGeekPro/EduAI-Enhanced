@@ -5,7 +5,8 @@ Configuration pour l'API FastAPI avec tous les services IA
 
 import os
 from typing import List, Optional
-from pydantic import BaseSettings, validator
+from pydantic import validator
+from pydantic_settings import BaseSettings
 from functools import lru_cache
 
 
@@ -67,6 +68,11 @@ class Settings(BaseSettings):
     hf_api_key: Optional[str] = None
     hf_model_cache_dir: str = "./models/cache"
     
+    # 🔀 Configuration OpenRouter
+    openrouter_api_key: Optional[str] = None
+    openrouter_base_url: str = "https://openrouter.ai/api/v1"
+    openrouter_model: str = "mistralai/mistral-7b-instruct:free"
+    
     # 🌐 Configuration Google Cloud (Translation)
     google_credentials_path: Optional[str] = None
     google_project_id: Optional[str] = None
@@ -123,7 +129,7 @@ class Settings(BaseSettings):
             return v
         raise ValueError(v)
     
-    @validator("openai_api_key", "anthropic_api_key", "elevenlabs_api_key", "pinecone_api_key")
+    @validator("openai_api_key", "anthropic_api_key", "elevenlabs_api_key", "pinecone_api_key", "openrouter_api_key")
     def validate_api_keys(cls, v):
         if not v:
             print(f"⚠️  Clé API manquante - certaines fonctionnalités seront limitées")
@@ -195,6 +201,7 @@ settings = get_settings()
 AI_MODELS_CONFIG = {
     "development": {
         "text_generation": "gpt-3.5-turbo",
+        "openrouter_model": "mistralai/mistral-7b-instruct:free",
         "speech_to_text": "whisper-1",
         "text_to_speech": "elevenlabs",
         "emotion_detection": "cardiffnlp/twitter-roberta-base-emotion",
@@ -202,6 +209,7 @@ AI_MODELS_CONFIG = {
     },
     "production": {
         "text_generation": "gpt-4",
+        "openrouter_model": "meta-llama/llama-3.1-8b-instruct:free",
         "speech_to_text": "whisper-1", 
         "text_to_speech": "elevenlabs",
         "emotion_detection": "j-hartmann/emotion-english-distilroberta-base",

@@ -1,160 +1,108 @@
-# 🎓 EduAI Enhanced: IA Éducative Multilingue & Adaptive
+# 🎓 EduAI Enhanced - Plateforme d'Apprentissage IA Collaborative
 
-> **PWA révolutionnaire** qui s'adapte au style d'apprentissage de chaque élève, disponible en 50+ langues avec reconnaissance émotionnelle et apprentissage personnalisé
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)]()
+[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)]()
+[![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)]()
+[![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)]()
 
-## 🎯 Vision
-
-**"IA éducative qui comprend vos émotions et s'adapte à votre façon d'apprendre. En éwé, en hausa, en navajo ou en espagnol. Une seule app qui marche partout - smartphone, tablette, ordinateur. Installation 1-click, aucun app store requis."**
-
-## 📱 Solution Technique : PWA (Progressive Web App)
-
-- ✅ **Une seule application** qui fonctionne sur mobile ET desktop
-- ✅ **Installation 1-click** sans passer par les app stores
-- ✅ **Mode offline intelligent** avec synchronisation automatique
-- ✅ **Performance native-like** sur tous les appareils
-- ✅ **Accessibilité optimale** pour l'Afrique rurale
-
-## 🛠 Stack Technique
-
-### Backend Architecture
-```
-┌─ FastAPI (Python) ─ REST API
-├─ OpenAI GPT-4 ──── Intelligence principale
-├─ Whisper AI ────── Speech-to-Text
-├─ ElevenLabs ───── Text-to-Speech naturel
-├─ Hugging Face ─── Models personnalisés
-├─ Pinecone ─────── Vector database
-├─ MongoDB ──────── Data persistence
-└─ Redis ────────── Cache & sessions
-```
-
-### Frontend PWA Architecture
-```
-┌─ React 18 + PWA ─── Interface native-like mobile/desktop
-├─ TypeScript ────── Type safety & code robustesse
-├─ Tailwind CSS ─── Design system moderne & responsive
-├─ Service Workers ─ Mode offline intelligent
-├─ WebRTC ───────── Communication temps réel
-├─ Web Audio API ── Reconnaissance vocale optimisée
-├─ IndexedDB ────── Stockage local pour mode offline
-├─ D3.js ────────── Visualisations interactives
-├─ Three.js ─────── Éléments 3D & gamification
-└─ Push API ─────── Notifications d'apprentissage
-```
-
-### AI/ML Pipeline
-```
-┌─ Custom NLP Models ── Fine-tuned sur data éducative
-├─ Emotion Detection ── Analyse sentiment vocal
-├─ Learning Analytics ── ML pour adaptation
-├─ Content Generation ── IA créative pour exercices
-└─ Multi-language ──── 50+ langues supportées
-```
-
-## 🚀 Installation et Configuration
-
-### Prérequis
-- **Python 3.11+** (recommandé pour compatibilité optimale)
-- **Node.js 18+** 
-- **PNPM 8+** (gestionnaire de packages moderne)
-- **MongoDB** (local ou Atlas)
-- **Redis** (cache et sessions)
-
-### Installation rapide avec PNPM
-
-```bash
-# 1. Cloner le repository
-git clone https://github.com/codeGeekPro/EduAI-Enhanced.git
-cd EduAI-Enhanced
-
-# 2. Installer PNPM globalement si nécessaire
-npm install -g pnpm
-
-# 3. Installation automatique avec scripts
-./scripts/setup.sh  # Linux/macOS
-# ou
-./scripts/setup.bat # Windows
-
-# 4. Configuration de l'environnement Python
-conda create -n eduai-backend python=3.11
-conda activate eduai-backend
-pip install -r backend/requirements.txt
-
-# 5. Installation des dépendances frontend avec PNPM
-pnpm install
-
-# 6. Démarrage en mode développement
-pnpm dev        # Frontend (port 3000)
-uvicorn main:app --reload  # Backend (port 8000)
-```
-
-### Avantages de PNPM vs NPM
-
-- **3x plus rapide** : Installation et build optimisés
-- **Économie d'espace** : Store partagé, pas de duplication
-- **Sécurité renforcée** : Résolution stricte des dépendances
-- **Workspace natif** : Gestion multi-packages intégrée
-
-## 🌍 Impact Global
-
-### Pour l'Afrique rurale :
-- **Aucune barrière technique** : Pas besoin de Google Play ou App Store
-- **Compatible anciens smartphones** : Fonctionne sur appareils Android 5+
-- **Consommation data minimale** : Cache intelligent + mode offline
-
-### Pour minorités linguistiques :
-- **Accessibilité universelle** : Même technologie, langues adaptées
-- **Déploiement instantané** : Nouvelle langue = update automatique
-- **Coût minimal** : Une seule maintenance pour tous les marchés
-
-## 📋 Structure du Projet
-
-```
-eduai/
-├── frontend/              # PWA React + TypeScript
-│   ├── src/
-│   │   ├── components/    # Composants réutilisables
-│   │   ├── pages/        # Pages de l'application
-│   │   ├── services/     # Services API et IA
-│   │   ├── hooks/        # Hooks React personnalisés
-│   │   ├── utils/        # Utilitaires
-│   │   └── workers/      # Service Workers PWA
-│   ├── public/           # Assets statiques
-│   └── package.json
-├── backend/              # API FastAPI + Python
-│   ├── app/
-│   │   ├── api/          # Routes API
-│   │   ├── core/         # Configuration et utilitaires
-│   │   ├── models/       # Modèles de données
-│   │   ├── services/     # Services métier
-│   │   └── ai/           # Services IA
-│   ├── main.py
-│   └── requirements.txt
-├── ai-services/          # Services IA spécialisés
-│   ├── nlp/             # Traitement du langage naturel
-│   ├── emotion/         # Reconnaissance émotionnelle
-│   ├── speech/          # Speech-to-Text / Text-to-Speech
-│   └── vision/          # Vision par ordinateur
-├── docs/                # Documentation
-├── scripts/             # Scripts de déploiement
-└── deployment/          # Configuration Docker & Cloud
-```
+> Plateforme d'apprentissage collaborative révolutionnaire alimentée par l'IA, offrant une expérience interactive, accessible et visuellement attrayante.
 
 ## 🚀 Démarrage Rapide
 
+### Avec Docker (Recommandé)
 ```bash
-# Installation des dépendances
-npm run setup
-
-# Lancement en développement
-npm run dev
-
-# Build pour production
-npm run build
-
-# Déploiement
-npm run deploy
+git clone <repository-url>
+cd eduai
+docker-compose up -d
 ```
+
+### Installation Manuelle
+```bash
+# Backend
+cd backend && pip install -r requirements.txt
+uvicorn main:app --reload &
+
+# Services IA
+cd ai_services && pip install -r requirements.txt
+python main.py &
+
+# Frontend
+cd frontend && pnpm install && pnpm dev
+```
+
+## ✨ Fonctionnalités Principales
+
+### 🧠 IA Révolutionnaire
+- **Moteur métacognitif** auto-améliorant
+- **Analyse émotionnelle** en temps réel
+- **Traitement NLP** multi-langues via OpenRouter
+- **Collaboration IA** multi-agents
+
+### � Interface Interactive
+- **Carte conceptuelle** avec drag & drop
+- **Visualisations 3D** du parcours d'apprentissage  
+- **Thème adaptatif** sombre/clair
+- **Navigation accessible** (ARIA, clavier)
+
+### 🔗 Collaboration
+- **Apprentissage social** en temps réel
+- **Partage de concepts** interactif
+- **Mentoring IA** personnalisé
+
+## 🏗 Architecture
+
+```
+EduAI Enhanced
+├── 🎨 frontend/       # React + TypeScript + PWA
+├── ⚡ backend/        # FastAPI + Python  
+├── 🤖 ai_services/    # Moteurs IA avancés
+├── 📱 mobile/         # Applications mobiles
+└── 📚 docs/           # Documentation
+```
+
+## 🛠 Technologies
+
+**Frontend**: React 18, TypeScript, Vite, Tailwind CSS, PWA
+**Backend**: FastAPI, Python, MongoDB, Redis
+**IA**: OpenRouter, Transformers, TensorFlow, OpenCV
+**DevOps**: Docker, GitHub Actions, Nginx
+
+## 🔧 Développement
+
+```bash
+# Lancer en mode développement
+cd frontend && pnpm dev      # Frontend sur http://localhost:5173
+cd backend && uvicorn main:app --reload  # API sur http://localhost:8000
+cd ai_services && python main.py         # Services IA sur http://localhost:8001
+```
+
+## � Documentation
+
+- **📋 Guide de démarrage** : [QUICKSTART.md](QUICKSTART.md)
+- **🔧 Guide technique** : [docs/technical_guide.md](docs/technical_guide.md)
+- **👥 Guide utilisateur** : [docs/user_guide.md](docs/user_guide.md)
+- **🤖 API IA** : [docs/advanced_ai_api.md](docs/advanced_ai_api.md)
+
+## 🤝 Contribution
+
+1. Fork le projet
+2. Créer une branche pour la fonctionnalité (`git checkout -b feature/AmazingFeature`)
+3. Commit les changements (`git commit -m 'Add some AmazingFeature'`)
+4. Push vers la branche (`git push origin feature/AmazingFeature`)
+5. Ouvrir une Pull Request
+
+## 📄 Licence
+
+Distribué sous licence MIT. Voir `LICENSE` pour plus d'informations.
+
+## 🌟 Auteurs
+
+- **Équipe EduAI** - *Développement initial* - [GitHub](https://github.com/codeGeekPro)
+
+---
+
+⭐ **N'hésitez pas à donner une étoile si ce projet vous a aidé !**
+
 
 ## 📈 Métriques de Succès
 

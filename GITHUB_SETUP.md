@@ -66,4 +66,102 @@ Si vous configurez CI/CD, ajoutez ces secrets :
 🐙 https://github.com/codeGeekPro
 
 ---
+
+## 🚀 Lancement de l'Application
+
+### Prérequis avant le lancement
+```bash
+# Vérifier que vous êtes dans le bon répertoire
+cd /d "c:\Users\genie\Documents\Projet Python\eduai"
+
+# Vérifier que les services sont disponibles
+docker --version
+python --version
+node --version
+pnpm --version
+```
+
+### Option 1 : Lancement avec Docker (Recommandé)
+```bash
+# Démarrer tous les services avec Docker Compose
+docker-compose up -d
+
+# Vérifier que tous les conteneurs sont en cours d'exécution
+docker-compose ps
+
+# Voir les logs en temps réel
+docker-compose logs -f
+```
+
+### Option 2 : Lancement en mode développement
+```bash
+# Terminal 1 : Backend API
+cd backend
+python -m uvicorn main:app --reload --host 0.0.0.0 --port 8000
+
+# Terminal 2 : AI Services  
+cd ai_services
+python -m uvicorn main:app --reload --host 0.0.0.0 --port 8001
+
+# Terminal 3 : Frontend PWA
+cd frontend
+pnpm install
+pnpm dev
+
+# Terminal 4 : Services de base de données (si pas avec Docker)
+# MongoDB
+mongod
+
+# Redis  
+redis-server
+```
+
+### Option 3 : Lancement rapide avec les scripts NPM
+```bash
+# Installer toutes les dépendances
+pnpm install
+
+# Démarrer tous les services en parallèle
+pnpm dev
+```
+
+## 🌐 URLs d'accès après le lancement
+
+- **🎓 Frontend PWA** : http://localhost:3000
+- **🔧 API Backend** : http://localhost:8000
+- **📚 Documentation API** : http://localhost:8000/docs
+- **🤖 AI Services** : http://localhost:8001
+- **📊 AI Services Docs** : http://localhost:8001/docs
+- **🗄️ MongoDB** : localhost:27017
+- **📦 Redis** : localhost:6379
+
+## ✅ Vérification du fonctionnement
+
+```bash
+# Tester le backend
+curl http://localhost:8000/health
+
+# Tester les services IA
+curl http://localhost:8001/health
+
+# Ouvrir l'application dans le navigateur
+start http://localhost:3000
+```
+
+## 🔧 Dépannage rapide
+
+```bash
+# Si les ports sont occupés
+netstat -ano | findstr :3000
+netstat -ano | findstr :8000
+netstat -ano | findstr :8001
+
+# Arrêter tous les services Docker
+docker-compose down
+
+# Nettoyer et redémarrer
+docker-compose down --volumes
+docker-compose up -d --build
+```
+
 *Révolutionner l'éducation avec l'IA 🚀*
