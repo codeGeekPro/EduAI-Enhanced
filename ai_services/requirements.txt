@@ -29,6 +29,11 @@ openai-whisper==20231117
 speechrecognition==3.10.0
 pydub==0.25.1
 librosa==0.10.1
+soundfile==0.12.1
+
+# Phonetics and Speech Analysis
+phoneme==0.1.2
+scipy>=1.10.0
 
 # Text-to-Speech
 elevenlabs==0.2.27
@@ -42,6 +47,13 @@ faiss-cpu==1.7.4
 # Computer Vision
 opencv-python==4.8.1.78
 mediapipe==0.10.21
+easyocr==1.7.0
+pytesseract==0.3.10
+ultralytics==8.0.0
+pillow>=9.5.0
+
+# Audio Processing (FFmpeg support)
+ffmpeg-python>=0.2.0
 
 # Data Science
 numpy==1.26.0

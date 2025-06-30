@@ -71,7 +71,6 @@ pnpm-debug.log*
 *.key
 *.pem
 secrets/
-.env.demo
 
 # Base de données
 *.db
@@ -99,6 +98,16 @@ build/
 out/
 coverage/
 *.lcov
+
+# Fichiers de documentation personnelle à ignorer
+DEMO.md
+DEPENDENCY_CONFLICTS_RESOLVED.md
+FRONTEND_FINAL_COMPLETE.md
+info.md
+QUICKSTART.md
+docs/advanced_ai_api.md
+docs/technical_guide.md
+docs/user_guide.md
 
 # Documentation générée
 docs/build/
@@ -138,48 +147,15 @@ junit.xml
 #Ignore vscode AI rules
 .github\copilot-instructions.md
 
-# 🔒 Fichiers confidentiels et internes
+# 🔒 Fichiers confidentiels
 info.md
 translation_model.txt
 modèle de traduction.txt
 Feuille de route complète.txt
 Complete Roadmap.txt
-
-# Documentation interne (statuts, analyses, fixes)
 ANALYSIS_REPORT.md
-ALTERNATIVES_CLOUD.md
 Alternatives_API.md
-CI_CD_FIXES.md
-CI_CD_STATUS.md
-CLOUD_FREE_GUIDE.md
-DEPENDENCY_CONFLICTS_RESOLVED.md
-GITHUB_SETUP.md
-OPENROUTER_INTEGRATION.md
-PROJECT_STATUS.md
-TYPESCRIPT_FIXES.md
-TYPESCRIPT_FINAL_STATUS.md
+template_utile.txt
 
-# Scripts de développement interne
-scripts/codacy-analyze.bat
-scripts/codacy-analyze.ps1
-scripts/fix_ci_cd.bat
-scripts/fix_ci_cd.ps1
-scripts/fix_conflicts.bat
-scripts/fix_dependencies.py
-scripts/fix_typescript_errors.bat
-scripts/install_free_alternatives.py
-scripts/prepare_for_release.bat
-scripts/security-analysis.bat
-scripts/security-analysis.ps1
-scripts/setup_environment.bat
-scripts/test_ci_fixes.sh
-scripts/test_final_typescript.bat
-scripts/test_frontend.bat
-scripts/test_openrouter.py
-scripts/translate_project.py
-scripts/validate_environment.py
-scripts/validate_final_project.py
-scripts/validate_project.py
-
-# Rapports de sécurité (si contiennent des informations sensibles)
-security-reports/
+# Dossier personnel (non versionné)
+personnel/

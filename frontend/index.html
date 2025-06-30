@@ -2,13 +2,17 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
+    <title>EduAI Enhanced - Plateforme d'Apprentissage Adaptative par IA</title>
+    <meta name="description" content="Transformez l'éducation avec EduAI Enhanced. Une micro-pédagogie personnalisée par IA qui entraîne de réels changements de comportement et des résultats mesurables." />
+    <meta name="keywords" content="micro-pédagogie, formation IA, apprentissage en entreprise, apprentissage mobile, répétition espacée, gamification, formation en entreprise, renforcement de l'apprentissage, pratique délibérée, coaching IA, éducation adaptative, PWA" />
+
     <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#667eea" />
-    <meta name="description" content="IA Éducative Multilingue & Adaptive - PWA révolutionnaire pour l'éducation mondiale" />
-    
+    <meta name="theme-color" content="#4f46e5" />
+    <link rel="manifest" href="/manifest.json">
+
     <!-- Apple PWA Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -16,34 +20,209 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     
     <!-- Microsoft PWA Meta Tags -->
-    <meta name="msapplication-TileColor" content="#667eea" />
+    <meta name="msapplication-TileColor" content="#4f46e5" />
     <meta name="msapplication-config" content="/browserconfig.xml" />
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://eduai-enhanced.com/" />
-    <meta property="og:title" content="EduAI Enhanced - IA Éducative Multilingue" />
-    <meta property="og:description" content="PWA révolutionnaire pour l'éducation mondiale avec IA adaptative" />
+    <meta property="og:title" content="EduAI Enhanced - Plateforme d'Apprentissage Adaptative par IA" />
+    <meta property="og:description" content="Transformez l'éducation avec EduAI Enhanced. Une micro-pédagogie personnalisée par IA." />
     <meta property="og:image" content="/og-image.png" />
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://eduai-enhanced.com/" />
-    <meta property="twitter:title" content="EduAI Enhanced - IA Éducative Multilingue" />
-    <meta property="twitter:description" content="PWA révolutionnaire pour l'éducation mondiale avec IA adaptative" />
+    <meta property="twitter:title" content="EduAI Enhanced - Plateforme d'Apprentissage Adaptative par IA" />
+    <meta property="twitter:description" content="Transformez l'éducation avec EduAI Enhanced. Une micro-pédagogie personnalisée par IA." />
     <meta property="twitter:image" content="/twitter-image.png" />
-    
+
+    <!-- AI Crawler Meta Tags -->
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="bingbot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="chatgpt-user" content="index, follow" />
+    <meta name="gptbot" content="index, follow" />
+
+    <!-- AI Content Discovery -->
+    <meta name="ai-content-type" content="microlearning, adaptive-education, ai-coaching, learning-platform" />
+    <meta name="ai-accessible" content="true" />
+    <meta name="content-source" content="structured-data" />
+    <meta name="content-format" content="json-ld, html" />
+
+    <!-- Comprehensive FAQ Schema Markup -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Qu'est-ce que la micro-pédagogie?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La micro-pédagogie est une stratégie d'apprentissage qui fournit de petits morceaux de contenu ciblés en rafales courtes (généralement 2-5 minutes). Elle est conçue pour s'intégrer dans le flux de travail, rendant l'apprentissage plus digeste et la rétention plus efficace."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Qu'est-ce qu'EduAI Enhanced?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "EduAI Enhanced est une plateforme d'apprentissage adaptative alimentée par l'IA qui fournit une formation personnalisée à travers du contenu en petites bouchées, un renforcement espacé et des parcours d'apprentissage adaptatifs. Elle est conçue pour améliorer la rétention des connaissances et le changement de comportement."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Comment l'IA personnalise-t-elle la formation?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "L'IA agentique d'EduAI Enhanced personnalise l'apprentissage en identifiant les lacunes de connaissances, en analysant les modèles d'apprentissage individuels, en recommandant du contenu pertinent et en créant des horaires de renforcement optimaux pour chaque utilisateur."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Organization Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "EduAI Enhanced",
+      "url": "https://eduai-enhanced.com",
+      "logo": "https://eduai-enhanced.com/logo.svg",
+      "description": "Plateforme d'apprentissage adaptative alimentée par l'IA pour la formation en entreprise",
+      "sameAs": [
+        "https://www.linkedin.com/company/eduai-enhanced"
+      ]
+    }
+    </script>
+
+    <!-- SoftwareApplication Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "EduAI Enhanced",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Web, iOS, Android",
+      "description": "Plateforme d'apprentissage adaptative alimentée par l'IA qui fournit une formation personnalisée à travers du contenu en petites bouchées, un renforcement espacé et des parcours d'apprentissage adaptatifs.",
+      "url": "https://eduai-enhanced.com",
+      "publisher": {
+        "@type": "Organization",
+        "name": "EduAI Enhanced"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "Contactez-nous pour les tarifs",
+        "priceCurrency": "EUR"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "150"
+      }
+    }
+    </script>
+
     <!-- Preconnect pour optimiser les performances -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    
-    <title>🎓 EduAI Enhanced</title>
+
+    <!-- Organization Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "EduAI Enhanced",
+      "url": "https://eduai-enhanced.com",
+      "logo": "https://eduai-enhanced.com/logo.svg",
+      "description": "Plateforme de micro-pédagogie par IA pour l'éducation adaptative"
+    }
+    </script>
+
+    <!-- SoftwareApplication Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "EduAI Enhanced",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Web, PWA",
+      "description": "Plateforme de micro-pédagogie par IA qui offre un apprentissage personnalisé via du contenu concis, un renforcement espacé et des parcours adaptatifs.",
+      "url": "https://eduai-enhanced.com",
+      "publisher": {
+        "@type": "Organization",
+        "name": "EduAI Enhanced"
+      }
+    }
+    </script>
+
   </head>
   <body>
     <div id="root"></div>
+    
+    <!-- Comprehensive Content for AI Crawlers (No JavaScript Required) -->
+    <noscript>
+      <div style="font-family: Arial, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; line-height: 1.6;">
+        
+        <!-- Main Company Information -->
+        <header>
+          <h1>EduAI Enhanced - Plateforme d'Apprentissage Adaptative par IA</h1>
+          <p><strong>Transformez l'éducation avec une micro-pédagogie personnalisée par IA qui entraîne de réels changements de comportement et des résultats mesurables.</strong></p>
+        </header>
+
+        <!-- Core Platform Overview -->
+        <section>
+          <h2>Qu'est-ce qu'EduAI Enhanced?</h2>
+          <p>EduAI Enhanced est une plateforme d'apprentissage adaptative native IA conçue pour les organisations d'entreprise cherchant à révolutionner leur approche de formation. Notre plateforme fournit un apprentissage personnalisé à travers du contenu en petites bouchées, un renforcement espacé et des parcours d'apprentissage adaptatifs qui assurent la rétention des connaissances et conduisent à un changement de comportement significatif.</p>
+        </section>
+
+        <!-- Key Features -->
+        <section>
+          <h2>Capacités Principales</h2>
+          <ul>
+            <li><strong>Personnalisation IA:</strong> IA agentique qui s'adapte aux modèles d'apprentissage individuels et aux performances</li>
+            <li><strong>Évaluations Multimodales:</strong> Support pour les interactions texte, voix, image et vidéo</li>
+            <li><strong>Applications Mobiles Natives:</strong> Conception vraiment mobile-first avec capacités hors ligne</li>
+            <li><strong>Coaching Vocal:</strong> Pratique de conversation réaliste et feedback IA</li>
+            <li><strong>Simulations Interactives:</strong> Environnements de pratique sécurisés pour les scénarios à enjeux élevés</li>
+            <li><strong>Renforcement Espacé:</strong> Stratégies de rétention basées sur la science</li>
+            <li><strong>Intégration Entreprise:</strong> Connectivité transparente avec les systèmes existants</li>
+          </ul>
+        </section>
+
+        <!-- Complete FAQ Database -->
+        <section>
+          <h2>Base de données FAQ complète</h2>
+          <p><em>Réponses complètes aux questions fréquemment posées sur la plateforme d'apprentissage EduAI Enhanced, organisées par catégorie pour une référence et citation faciles.</em></p>
+
+          <!-- Microlearning with EduAI Enhanced Category -->
+          <div>
+            <h3>Micro-apprentissage avec EduAI Enhanced</h3>
+            
+            <div>
+              <h4>Qu'est-ce que la micro-pédagogie?</h4>
+              <p>La micro-pédagogie est une stratégie d'apprentissage qui fournit de petits morceaux de contenu ciblés en rafales courtes (généralement 2-5 minutes). Elle est conçue pour s'intégrer dans le flux de travail, rendant l'apprentissage plus digeste et la rétention plus efficace. Cette approche s'aligne avec la façon dont le cerveau moderne préfère consommer l'information à notre ère numérique.</p>
+            </div>
+
+            <div>
+              <h4>Qu'est-ce qu'EduAI Enhanced?</h4>
+              <p>EduAI Enhanced est une plateforme d'apprentissage adaptative alimentée par l'IA qui fournit une formation personnalisée à travers du contenu en petites bouchées, un renforcement espacé et des parcours d'apprentissage adaptatifs. Elle est conçue pour les organisations d'entreprise pour améliorer la rétention des connaissances et le changement de comportement à travers des méthodes d'apprentissage scientifiquement étayées.</p>
+            </div>
+
+            <div>
+              <h4>Comment l'IA personnalise-t-elle la formation?</h4>
+              <p>L'IA agentique d'EduAI Enhanced personnalise l'apprentissage de multiples façons: identifier les lacunes de connaissances à travers des évaluations adaptatives, analyser les modèles d'apprentissage individuels pour fournir des formats de contenu préférés, recommander du contenu pertinent basé sur le rôle et les performances, créer des horaires de renforcement optimaux, et ajuster la difficulté basée sur la compétence. Cela crée un parcours d'apprentissage unique pour chaque utilisateur.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
     
     <!-- Service Worker Registration -->

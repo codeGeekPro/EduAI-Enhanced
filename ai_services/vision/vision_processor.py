@@ -18,16 +18,42 @@ from transformers import (
 from PIL import Image, ImageDraw, ImageFont
 import io
 import logging
-import mediapipe as mp
-import easyocr
 import base64
-import logging
 from datetime import datetime
 import json
-import pytesseract
-import easyocr
-from ultralytics import YOLO
-import mediapipe as mp
+
+# Imports avec gestion d'erreur pour les modules optionnels
+try:
+    import mediapipe as mp
+    MEDIAPIPE_AVAILABLE = True
+except ImportError:
+    mp = None
+    MEDIAPIPE_AVAILABLE = False
+    print("⚠️ MediaPipe non disponible")
+
+try:
+    import easyocr
+    EASYOCR_AVAILABLE = True
+except ImportError:
+    easyocr = None
+    EASYOCR_AVAILABLE = False
+    print("⚠️ EasyOCR non disponible")
+
+try:
+    import pytesseract
+    PYTESSERACT_AVAILABLE = True
+except ImportError:
+    pytesseract = None
+    PYTESSERACT_AVAILABLE = False
+    print("⚠️ Pytesseract non disponible")
+
+try:
+    from ultralytics import YOLO
+    ULTRALYTICS_AVAILABLE = True
+except ImportError:
+    YOLO = None
+    ULTRALYTICS_AVAILABLE = False
+    print("⚠️ Ultralytics non disponible")
 
 logger = logging.getLogger(__name__)
 

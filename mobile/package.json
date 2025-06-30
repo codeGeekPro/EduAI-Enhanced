@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "sharp": "^0.32.0",
-    "puppeteer": "^19.0.0"
+    "puppeteer": "^23.7.1"
   },
   "devDependencies": {
     "@types/node": "^18.0.0"

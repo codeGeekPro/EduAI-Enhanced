@@ -4,34 +4,34 @@
   "description": "🎓 IA Éducative Multilingue & Adaptive - PWA révolutionnaire pour l'éducation mondiale",
   "main": "index.js",
   "scripts": {
-    "setup": "npm run setup:frontend && npm run setup:backend && npm run setup:ai",
-    "setup:frontend": "cd frontend && npm install",
+    "setup": "pnpm run setup:frontend && pnpm run setup:backend && pnpm run setup:ai",
+    "setup:frontend": "cd frontend && pnpm install",
     "setup:backend": "cd backend && pip install -r requirements.txt",
-    "setup:ai": "cd ai-services && pip install -r requirements.txt",
+    "setup:ai": "cd ai_services && pip install -r requirements.txt",
     
-    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\" \"npm run dev:ai\"",
-    "dev:frontend": "cd frontend && npm run dev",
-    "dev:backend": "cd backend && python -m uvicorn main:app --reload --host 0.0.0.0 --port 8000",
-    "dev:ai": "cd ai-services && python -m uvicorn main:app --reload --host 0.0.0.0 --port 8001",
+    "dev": "concurrently \"pnpm run dev:frontend\" \"pnpm run dev:backend\" \"pnpm run dev:ai\"",
+    "dev:frontend": "cd frontend && pnpm run dev",
+    "dev:backend": "cd backend && python -m uvicorn main_lite:app --reload --host 0.0.0.0 --port 8000",
+    "dev:ai": "cd ai_services && python -m uvicorn main_lite:app --reload --host 0.0.0.0 --port 8001",
     
-    "build": "npm run build:frontend",
-    "build:frontend": "cd frontend && npm run build",
+    "build": "pnpm run build:frontend",
+    "build:frontend": "cd frontend && pnpm run build",
     
-    "test": "npm run test:frontend && npm run test:backend && npm run test:ai",
-    "test:frontend": "cd frontend && npm test",
+    "test": "pnpm run test:frontend && pnpm run test:backend && pnpm run test:ai",
+    "test:frontend": "cd frontend && pnpm test",
     "test:backend": "cd backend && python -m pytest",
-    "test:ai": "cd ai-services && python -m pytest",
+    "test:ai": "cd ai_services && python -m pytest",
     
-    "lint": "npm run lint:frontend && npm run lint:backend && npm run lint:ai",
-    "lint:frontend": "cd frontend && npm run lint",
+    "lint": "pnpm run lint:frontend && pnpm run lint:backend && pnpm run lint:ai",
+    "lint:frontend": "cd frontend && pnpm run lint",
     "lint:backend": "cd backend && flake8 . && black . --check",
-    "lint:ai": "cd ai-services && flake8 . && black . --check",
+    "lint:ai": "cd ai_services && flake8 . && black . --check",
     
-    "deploy": "npm run build && docker-compose up -d",
-    "deploy:prod": "npm run build && ./scripts/deploy-production.sh",
+    "deploy": "pnpm run build && docker-compose up -d",
+    "deploy:prod": "pnpm run build && ./scripts/deploy-production.sh",
     
-    "lighthouse": "cd frontend && npm run build && lighthouse http://localhost:3000 --output html --output-path ./lighthouse-report.html",
-    "pwa-audit": "npm run lighthouse && echo 'PWA Audit completed - check lighthouse-report.html'"
+    "lighthouse": "cd frontend && pnpm run build && lighthouse http://localhost:3000 --output html --output-path ./lighthouse-report.html",
+    "pwa-audit": "pnpm run lighthouse && echo 'PWA Audit completed - check lighthouse-report.html'"
   },
   "keywords": [
     "education",
@@ -50,6 +50,14 @@
   "devDependencies": {
     "concurrently": "^8.2.2",
     "lighthouse": "^11.4.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "ws": ">=8.17.1",
+      "esbuild": ">=0.25.0",
+      "got": ">=11.8.5",
+      "cookie": ">=0.5.0"
+    }
   },
   "engines": {
     "node": ">=18.0.0",

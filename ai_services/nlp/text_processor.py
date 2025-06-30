@@ -10,15 +10,35 @@ import logging
 import sys
 
 # Import du client OpenRouter
-from .openrouter_client import OpenRouterClient, create_openrouter_client
+try:
+    from .openrouter_client import OpenRouterClient, create_openrouter_client
+except ImportError:
+    # Fallback pour exécution directe
+    try:
+        from openrouter_client import OpenRouterClient, create_openrouter_client
+    except ImportError:
+        # Définir des classes factices si le module n'est pas disponible
+        class OpenRouterClient:
+            def __init__(self, *args, **kwargs):
+                pass
+        def create_openrouter_client(*args, **kwargs):
+            return None
 
 try:
     import huggingface_hub
-    if not hasattr(huggingface_hub, 'cached_download'):
-        from huggingface_hub import hf_hub_download as cached_download
-        setattr(huggingface_hub, 'cached_download', cached_download)
+    # Vérification de compatibilité pour les versions récentes
+    if hasattr(huggingface_hub, 'hf_hub_download'):
+        from huggingface_hub import hf_hub_download
+    elif hasattr(huggingface_hub, 'cached_download'):
+        # Pour les anciennes versions
+        from huggingface_hub import cached_download as hf_hub_download
+    else:
+        # Fallback
+        def hf_hub_download(*args, **kwargs):
+            return None
 except ImportError:
-    pass
+    def hf_hub_download(*args, **kwargs):
+        return None
 
 # External dependencies wrapped to avoid import errors
 try:
@@ -1227,3 +1247,38 @@ class NLPProcessor:
         """Fermer le client OpenRouter"""
         if self.openrouter_client:
             await self.openrouter_client.close()
+
+# Section de test pour exécution directe
+if __name__ == "__main__":
+    # Test basique d'initialisation et de fonctionnement
+    async def test_processor():
+        print("🔍 Test du TextProcessor...")
+        
+        # Initialisation
+        try:
+            processor = TextProcessor()
+            print("✅ TextProcessor initialisé avec succès")
+        except Exception as e:
+            print(f"❌ Erreur lors de l'initialisation : {e}")
+            return
+        
+        # Test de fonction simple
+        try:
+            test_text = "Ceci est un test de traitement de texte."
+            sentiment = await processor.analyze_sentiment(test_text)
+            print(f"✅ Analyse de sentiment réussie : {sentiment}")
+        except Exception as e:
+            print(f"⚠️ Erreur analyse de sentiment : {e}")
+        
+        # Test d'extraction de concepts
+        try:
+            concepts = await processor.extract_concepts(test_text)
+            print(f"✅ Extraction de concepts réussie : {concepts}")
+        except Exception as e:
+            print(f"⚠️ Erreur extraction de concepts : {e}")
+        
+        print("🎯 Test terminé")
+
+    # Exécution du test
+    print("🚀 EduAI Text Processor - Test d'exécution directe")
+    asyncio.run(test_processor())

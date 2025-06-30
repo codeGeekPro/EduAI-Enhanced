@@ -1,0 +1,274 @@
+
+
+[33m[1m+===========================================================================================================================================================================================+[0m
+
+
+[31m[1mDEPRECATED: [0m[33m[1mthis command (`check`) has been DEPRECATED, and will be unsupported beyond 01 June 2024.[0m
+
+
+[32mWe highly encourage switching to the new [0m[32m[1m`scan`[0m[32m command which is easier to use, more powerful, and can be set up to mimic the deprecated command if required.[0m
+
+
+[33m[1m+===========================================================================================================================================================================================+[0m
+
+
++==============================================================================+
+
+                               /$$$$$$            /$$
+                              /$$__  $$          | $$
+           /$$$$$$$  /$$$$$$ | $$  \__//$$$$$$  /$$$$$$   /$$   /$$
+          /$$_____/ |____  $$| $$$$   /$$__  $$|_  $$_/  | $$  | $$
+         |  $$$$$$   /$$$$$$$| $$_/  | $$$$$$$$  | $$    | $$  | $$
+          \____  $$ /$$__  $$| $$    | $$_____/  | $$ /$$| $$  | $$
+          /$$$$$$$/|  $$$$$$$| $$    |  $$$$$$$  |  $$$$/|  $$$$$$$
+         |_______/  \_______/|__/     \_______/   \___/   \____  $$
+                                                          /$$  | $$
+                                                         |  $$$$$$/
+  by safetycli.com                                        \______/
+
++==============================================================================+
+
+ [1mANNOUNCEMENTS[0m 
+
+[33m  * Warning: aiohttp, aiofiles, spacy, nltk, huggingface-hub, scipy and pillow[0m 
+[33m    are unpinned. Safety by default does not report on potential[0m 
+[33m    vulnerabilities in unpinned packages. It is recommended to pin your[0m 
+[33m    dependencies unless this is a library meant for distribution. To learn more[0m 
+[33m    about reporting these, specifier range handling, and options for scanning[0m 
+[33m    unpinned packages visit https://docs.pyup.io/docs/safety-range-specs[0m 
+
++==============================================================================+
+
+ [1mREPORT[0m 
+
+  Safety [1mv3.5.2[0m is scanning for [1mVulnerabilities[0m[1m...[0m
+[1m  Scanning dependencies[0m in your [1mfiles:[0m
+
+  -> requirements.txt
+
+  Using [1mopen-source vulnerability database[0m
+[1m  Found and scanned 44 packages[0m
+  Timestamp [1m2025-06-29 22:35:16[0m
+[1m  12[0m[1m vulnerabilities reported[0m
+[1m  17[0m[1m vulnerabilities ignored[0m
+
++==============================================================================+
+ [1mVULNERABILITIES REPORTED[0m 
++==============================================================================+
+
+[33m-> Warning: 5 known vulnerabilities match the pillow versions that could be[0m 
+[33m   installed from your specifier: pillow>=9.5.0 (unpinned). These[0m 
+[33m   vulnerabilities are not reported by default. To report these vulnerabilities[0m 
+[33m   set 'ignore-unpinned-requirements' to False under 'security' in your policy[0m 
+[33m   file. See https://docs.pyup.io/docs/safety-20-policy-file for more[0m 
+[33m   information.[0m 
+[33m   It is recommended to pin your dependencies unless this is a library meant[0m 
+[33m   for distribution. To learn more about reporting these, specifier range[0m 
+[33m   handling, and options for scanning unpinned packages visit[0m 
+[33m   https://docs.pyup.io/docs/safety-range-specs[0m 
+
+[33m-> Warning: 3 known vulnerabilities match the nltk versions that could be[0m 
+[33m   installed from your specifier: nltk>=3.8.0 (unpinned). These vulnerabilities[0m 
+[33m   are not reported by default. To report these vulnerabilities set 'ignore-[0m 
+[33m   unpinned-requirements' to False under 'security' in your policy file. See[0m 
+[33m   https://docs.pyup.io/docs/safety-20-policy-file for more information.[0m 
+[33m   It is recommended to pin your dependencies unless this is a library meant[0m 
+[33m   for distribution. To learn more about reporting these, specifier range[0m 
+[33m   handling, and options for scanning unpinned packages visit[0m 
+[33m   https://docs.pyup.io/docs/safety-range-specs[0m 
+
+[33m-> Warning: 7 known vulnerabilities match the aiohttp versions that could be[0m 
+[33m   installed from your specifier: aiohttp>=3.9.0 (unpinned). These[0m 
+[33m   vulnerabilities are not reported by default. To report these vulnerabilities[0m 
+[33m   set 'ignore-unpinned-requirements' to False under 'security' in your policy[0m 
+[33m   file. See https://docs.pyup.io/docs/safety-20-policy-file for more[0m 
+[33m   information.[0m 
+[33m   It is recommended to pin your dependencies unless this is a library meant[0m 
+[33m   for distribution. To learn more about reporting these, specifier range[0m 
+[33m   handling, and options for scanning unpinned packages visit[0m 
+[33m   https://docs.pyup.io/docs/safety-range-specs[0m 
+
+-> Vulnerability found in black version 23.11.0
+[1m   Vulnerability ID: [0m66742
+[32m[1m   This vulnerability is being ignored.[0m
+[1m   For more information about this vulnerability, visit
+   [0mhttps://data.safetycli.com/v/66742/97c[0m
+
+
+-> Vulnerability found in scikit-learn version 1.3.2
+[1m   Vulnerability ID: [0m71596
+[32m[1m   This vulnerability is being ignored.[0m
+[1m   For more information about this vulnerability, visit
+   [0mhttps://data.safetycli.com/v/71596/97c[0m
+
+
+[31m-> Vulnerability found in ultralytics version 8.0.0[0m
+[1m   Vulnerability ID: [0m64065
+[1m   Affected spec: [0m<8.0.5
+[1m   ADVISORY: [0mUltralytics version 8.0.5 implements a security update
+   that addresses two significant vulnerabilities: command injection and...
+[1m   PVE-2024-64065[0m
+[1m   For more information about this vulnerability, visit
+   [0mhttps://data.safetycli.com/v/64065/97c[0m
+   To ignore this vulnerability, use PyUp vulnerability id 64065 in safety’s
+   ignore command-line argument or add the ignore to your safety policy file.
+
+
+[31m-> Vulnerability found in torch version 2.2.0[0m
+[1m   Vulnerability ID: [0m76771
+[1m   Affected spec: [0m<2.6.0
+[1m   ADVISORY: [0mPyTorch is a Python package that provides tensor
+   computation with strong GPU acceleration and deep neural networks built...
+[1m   CVE-2025-32434[0m
+[1m   For more information about this vulnerability, visit
+   [0mhttps://data.safetycli.com/v/76771/97c[0m
+   To ignore this vulnerability, use PyUp vulnerability id 76771 in safety’s
+   ignore command-line argument or add the ignore to your safety policy file.
+
+
+[31m-> Vulnerability found in torch version 2.2.0[0m
+[1m   Vulnerability ID: [0m76769
+[1m   Affected spec: [0m<=2.6.0
+[1m   ADVISORY: [0m*Disputed* A vulnerability, which was classified as
+   problematic, was found in PyTorch 2.6.0. Affected is the function...
+[1m   CVE-2025-3730[0m
+[1m   For more information about this vulnerability, visit
+   [0mhttps://data.safetycli.com/v/76769/97c[0m
+   To ignore this vulnerability, use PyUp vulnerability id 76769 in safety’s
+   ignore command-line argument or add the ignore to your safety policy file.
+
+
+[31m-> Vulnerability found in sentence-transformers version 2.2.2[0m
+[1m   Vulnerability ID: [0m73169
+[1m   Affected spec: [0m<3.1.0
+[1m   ADVISORY: [0mSentence-transformers affected versions are vulnerable
+   to arbitrary code execution when loading PyTorch model files. The...
+[1m   PVE-2024-73169[0m
+[1m   For more information about this vulnerability, visit
+   [0mhttps://data.safetycli.com/v/73169/97c[0m
+   To ignore this vulnerability, use PyUp vulnerability id 73169 in safety’s
+   ignore command-line argument or add the ignore to your safety policy file.
+
+
+[31m-> Vulnerability found in transformers version 4.36.2[0m
+[1m   Vulnerability ID: [0m71601
+[1m   Affected spec: [0m<4.38.0
+[1m   ADVISORY: [0mThe huggingface/transformers library is vulnerable to
+   arbitrary code execution through deserialization of untrusted data...
+[1m   CVE-2024-3568[0m
+[1m   For more information about this vulnerability, visit
+   [0mhttps://data.safetycli.com/v/71601/97c[0m
+   To ignore this vulnerability, use PyUp vulnerability id 71601 in safety’s
+   ignore command-line argument or add the ignore to your safety policy file.
+
+
+[31m-> Vulnerability found in transformers version 4.36.2[0m
+[1m   Vulnerability ID: [0m77149
+[1m   Affected spec: [0m<4.50.0
+[1m   ADVISORY: [0mA Regular Expression Denial of Service (ReDoS)
+   vulnerability was identified in the huggingface/transformers library,...
+[1m   CVE-2025-1194[0m
+[1m   For more information about this vulnerability, visit
+   [0mhttps://data.safetycli.com/v/77149/97c[0m
+   To ignore this vulnerability, use PyUp vulnerability id 77149 in safety’s
+   ignore command-line argument or add the ignore to your safety policy file.
+
+
+[31m-> Vulnerability found in transformers version 4.36.2[0m
+[1m   Vulnerability ID: [0m74882
+[1m   Affected spec: [0m<4.48.0
+[1m   ADVISORY: [0mAffected versions of the Hugging Face Transformers
+   library include standalone conversion scripts that are vulnerable to...
+[1m   PVE-2025-74882[0m
+[1m   For more information about this vulnerability, visit
+   [0mhttps://data.safetycli.com/v/74882/97c[0m
+   To ignore this vulnerability, use PyUp vulnerability id 74882 in safety’s
+   ignore command-line argument or add the ignore to your safety policy file.
+
+
+[31m-> Vulnerability found in transformers version 4.36.2[0m
+[1m   Vulnerability ID: [0m76262
+[1m   Affected spec: [0m<4.48.0
+[1m   ADVISORY: [0mA Regular Expression Denial of Service (ReDoS)
+   vulnerability was identified in the huggingface/transformers library,...
+[1m   CVE-2024-12720[0m
+[1m   For more information about this vulnerability, visit
+   [0mhttps://data.safetycli.com/v/76262/97c[0m
+   To ignore this vulnerability, use PyUp vulnerability id 76262 in safety’s
+   ignore command-line argument or add the ignore to your safety policy file.
+
+
+[31m-> Vulnerability found in transformers version 4.36.2[0m
+[1m   Vulnerability ID: [0m64402
+[1m   Affected spec: [0m<4.37.0
+[1m   ADVISORY: [0mTransformers is affected by a shell injection
+   vulnerability. It appears that while this issue is generally not...
+[1m   PVE-2024-64402[0m
+[1m   For more information about this vulnerability, visit
+   [0mhttps://data.safetycli.com/v/64402/97c[0m
+   To ignore this vulnerability, use PyUp vulnerability id 64402 in safety’s
+   ignore command-line argument or add the ignore to your safety policy file.
+
+
+[31m-> Vulnerability found in transformers version 4.36.2[0m
+[1m   Vulnerability ID: [0m71048
+[1m   Affected spec: [0m<4.41.0
+[1m   ADVISORY: [0mTransformers version 4.41.0 updates its `aiohttp`
+   dependency from version 3.8.5 to 3.9.0 to address the security...
+[1m   CVE-2023-49082[0m
+[1m   For more information about this vulnerability, visit
+   [0mhttps://data.safetycli.com/v/71048/97c[0m
+   To ignore this vulnerability, use PyUp vulnerability id 71048 in safety’s
+   ignore command-line argument or add the ignore to your safety policy file.
+
+
+[31m-> Vulnerability found in transformers version 4.36.2[0m
+[1m   Vulnerability ID: [0m71037
+[1m   Affected spec: [0m<4.41.0
+[1m   ADVISORY: [0mTransformers version 4.41.0 updates its `aiohttp`
+   dependency from version 3.8.5 to 3.9.0 to address the security...
+[1m   CVE-2023-49081[0m
+[1m   For more information about this vulnerability, visit
+   [0mhttps://data.safetycli.com/v/71037/97c[0m
+   To ignore this vulnerability, use PyUp vulnerability id 71037 in safety’s
+   ignore command-line argument or add the ignore to your safety policy file.
+
+
+[31m-> Vulnerability found in transformers version 4.36.2[0m
+[1m   Vulnerability ID: [0m71049
+[1m   Affected spec: [0m<4.41.0
+[1m   ADVISORY: [0mTransformers version 4.41.0 updates its `black`
+   dependency from version 22.1.0 to 24.3.0 to address the security...
+[1m   CVE-2024-21503[0m
+[1m   For more information about this vulnerability, visit
+   [0mhttps://data.safetycli.com/v/71049/97c[0m
+   To ignore this vulnerability, use PyUp vulnerability id 71049 in safety’s
+   ignore command-line argument or add the ignore to your safety policy file.
+
+
++==============================================================================+
+   [32m[1mREMEDIATIONS[0m
+
+  12 vulnerabilities were reported in 4 packages. For detailed remediation & 
+  fix recommendations, upgrade to a commercial license. 
+
++==============================================================================+
+
+ Scan was completed. 12 vulnerabilities were reported. 17 vulnerabilities from 
+ 5 packages were ignored. 
+
++==============================================================================+[0m
+
+
+[33m[1m+===========================================================================================================================================================================================+[0m
+
+
+[31m[1mDEPRECATED: [0m[33m[1mthis command (`check`) has been DEPRECATED, and will be unsupported beyond 01 June 2024.[0m
+
+
+[32mWe highly encourage switching to the new [0m[32m[1m`scan`[0m[32m command which is easier to use, more powerful, and can be set up to mimic the deprecated command if required.[0m
+
+
+[33m[1m+===========================================================================================================================================================================================+[0m
+
+

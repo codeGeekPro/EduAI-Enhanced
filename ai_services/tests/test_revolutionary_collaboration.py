@@ -428,14 +428,14 @@ class TestRevolutionaryCollaborationEngine:
             # Create revolutionary session
             session_result = await engine.create_revolutionary_session(
                 participants_data=participants_data,
-                collaboration_mode=CollaborationMode.CREATIVE_COLLABORATION,
+                mode=CollaborationMode.CREATIVE_COLLABORATION,
                 topic="AI-Human Collaborative Learning",
                 objectives=[
                     "Explore innovative learning methods",
                     "Develop collective intelligence",
                     "Create knowledge artifacts"
                 ],
-                advanced_options={
+                options={
                     "duration_minutes": 90,
                     "group_size": 3
                 }
@@ -478,7 +478,7 @@ class TestRevolutionaryCollaborationEngine:
             
             session_result = await engine.create_revolutionary_session(
                 participants_data=participants_data,
-                collaboration_mode=CollaborationMode.PEER_LEARNING,
+                mode=CollaborationMode.PEER_LEARNING,
                 topic="Test Orchestration",
                 objectives=["Test AI orchestration"]
             )
@@ -526,7 +526,7 @@ class TestRevolutionaryCollaborationEngine:
             
             session_result = await engine.create_revolutionary_session(
                 participants_data=participants_data,
-                collaboration_mode=CollaborationMode.PEER_LEARNING,
+                mode=CollaborationMode.PEER_LEARNING,
                 topic="Visualization Test",
                 objectives=["Test visualization"]
             )

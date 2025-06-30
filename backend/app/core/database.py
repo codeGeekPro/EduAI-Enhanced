@@ -4,6 +4,7 @@ Configuration MongoDB + Redis pour l'application IA éducative
 """
 
 import asyncio
+import json
 import motor.motor_asyncio
 import redis.asyncio as aioredis
 from typing import Optional
@@ -330,7 +331,7 @@ async def get_user_learning_progress(user_id: str) -> dict:
         if redis_client:
             cached = await redis_client.get(f"progress:{user_id}")
             if cached:
-                return eval(cached)  # En production, utiliser json.loads
+                return json.loads(cached)
         
         # Sinon, requête MongoDB
         pipeline = [

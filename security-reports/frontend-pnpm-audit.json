@@ -1,0 +1,322 @@
+{
+  "actions": [
+    {
+      "action": "review",
+      "module": "got",
+      "resolves": [
+        {
+          "id": 1088948,
+          "path": "frontend>workbox-cli>update-notifier>latest-version>package-json>got",
+          "dev": false,
+          "optional": false,
+          "bundled": false
+        }
+      ]
+    },
+    {
+      "action": "review",
+      "module": "ws",
+      "resolves": [
+        {
+          "id": 1098392,
+          "path": "mobile>puppeteer>puppeteer-core>ws",
+          "dev": false,
+          "optional": false,
+          "bundled": false
+        }
+      ]
+    },
+    {
+      "action": "review",
+      "module": "esbuild",
+      "resolves": [
+        {
+          "id": 1102341,
+          "path": "frontend>vite>esbuild",
+          "dev": false,
+          "optional": false,
+          "bundled": false
+        }
+      ]
+    },
+    {
+      "action": "review",
+      "module": "cookie",
+      "resolves": [
+        {
+          "id": 1103907,
+          "path": ".>lighthouse>@sentry/node>cookie",
+          "dev": false,
+          "optional": false,
+          "bundled": false
+        }
+      ]
+    },
+    {
+      "action": "review",
+      "module": "tar-fs",
+      "resolves": [
+        {
+          "id": 1104677,
+          "path": "mobile>puppeteer>@puppeteer/browsers>tar-fs",
+          "dev": false,
+          "optional": false,
+          "bundled": false
+        },
+        {
+          "id": 1105197,
+          "path": "mobile>puppeteer>@puppeteer/browsers>tar-fs",
+          "dev": false,
+          "optional": false,
+          "bundled": false
+        }
+      ]
+    }
+  ],
+  "advisories": {
+    "1088948": {
+      "findings": [
+        {
+          "version": "9.6.0",
+          "paths": [
+            "frontend>workbox-cli>update-notifier>latest-version>package-json>got"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://nvd.nist.gov/vuln/detail/CVE-2022-33987\n- https://github.com/sindresorhus/got/pull/2047\n- https://github.com/sindresorhus/got/compare/v12.0.3...v12.1.0\n- https://github.com/sindresorhus/got/commit/861ccd9ac2237df762a9e2beed7edd88c60782dc\n- https://github.com/sindresorhus/got/releases/tag/v11.8.5\n- https://github.com/sindresorhus/got/releases/tag/v12.1.0\n- https://github.com/advisories/GHSA-pfrx-2q88-qq97",
+      "created": "2022-06-19T00:00:21.000Z",
+      "id": 1088948,
+      "npm_advisory_id": null,
+      "overview": "The got package before 11.8.5 and 12.1.0 for Node.js allows a redirect to a UNIX socket.",
+      "reported_by": null,
+      "title": "Got allows a redirect to a UNIX socket",
+      "metadata": null,
+      "cves": [
+        "CVE-2022-33987"
+      ],
+      "access": "public",
+      "severity": "moderate",
+      "module_name": "got",
+      "vulnerable_versions": "<11.8.5",
+      "github_advisory_id": "GHSA-pfrx-2q88-qq97",
+      "recommendation": "Upgrade to version 11.8.5 or later",
+      "patched_versions": ">=11.8.5",
+      "updated": "2023-01-27T05:05:01.000Z",
+      "cvss": {
+        "score": 5.3,
+        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N"
+      },
+      "cwe": [],
+      "url": "https://github.com/advisories/GHSA-pfrx-2q88-qq97"
+    },
+    "1098392": {
+      "findings": [
+        {
+          "version": "8.13.0",
+          "paths": [
+            "mobile>puppeteer>puppeteer-core>ws"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/websockets/ws/security/advisories/GHSA-3h5v-q93c-6h6q\n- https://github.com/websockets/ws/issues/2230\n- https://github.com/websockets/ws/pull/2231\n- https://github.com/websockets/ws/commit/22c28763234aa75a7e1b76f5c01c181260d7917f\n- https://github.com/websockets/ws/commit/4abd8f6de4b0b65ef80b3ff081989479ed93377e\n- https://github.com/websockets/ws/commit/e55e5106f10fcbaac37cfa89759e4cc0d073a52c\n- https://github.com/websockets/ws/commit/eeb76d313e2a00dd5247ca3597bba7877d064a63\n- https://github.com/advisories/GHSA-3h5v-q93c-6h6q",
+      "created": "2024-06-17T19:09:10.000Z",
+      "id": 1098392,
+      "npm_advisory_id": null,
+      "overview": "### Impact\n\nA request with a number of headers exceeding the[`server.maxHeadersCount`][] threshold could be used to crash a ws server.\n\n### Proof of concept\n\n```js\nconst http = require('http');\nconst WebSocket = require('ws');\n\nconst wss = new WebSocket.Server({ port: 0 }, function () {\n  const chars = \"!#$%&'*+-.0123456789abcdefghijklmnopqrstuvwxyz^_`|~\".split('');\n  const headers = {};\n  let count = 0;\n\n  for (let i = 0; i < chars.length; i++) {\n    if (count === 2000) break;\n\n    for (let j = 0; j < chars.length; j++) {\n      const key = chars[i] + chars[j];\n      headers[key] = 'x';\n\n      if (++count === 2000) break;\n    }\n  }\n\n  headers.Connection = 'Upgrade';\n  headers.Upgrade = 'websocket';\n  headers['Sec-WebSocket-Key'] = 'dGhlIHNhbXBsZSBub25jZQ==';\n  headers['Sec-WebSocket-Version'] = '13';\n\n  const request = http.request({\n    headers: headers,\n    host: '127.0.0.1',\n    port: wss.address().port\n  });\n\n  request.end();\n});\n```\n\n### Patches\n\nThe vulnerability was fixed in ws@8.17.1 (https://github.com/websockets/ws/commit/e55e5106f10fcbaac37cfa89759e4cc0d073a52c) and backported to ws@7.5.10 (https://github.com/websockets/ws/commit/22c28763234aa75a7e1b76f5c01c181260d7917f), ws@6.2.3 (https://github.com/websockets/ws/commit/eeb76d313e2a00dd5247ca3597bba7877d064a63), and ws@5.2.4 (https://github.com/websockets/ws/commit/4abd8f6de4b0b65ef80b3ff081989479ed93377e)\n\n### Workarounds\n\nIn vulnerable versions of ws, the issue can be mitigated in the following ways:\n\n1. Reduce the maximum allowed length of the request headers using the [`--max-http-header-size=size`][] and/or the [`maxHeaderSize`][] options so that no more headers than the `server.maxHeadersCount` limit can be sent.\n2. Set `server.maxHeadersCount` to `0` so that no limit is applied.\n\n### Credits\n\nThe vulnerability was reported by [Ryan LaPointe](https://github.com/rrlapointe) in https://github.com/websockets/ws/issues/2230.\n\n### References\n\n- https://github.com/websockets/ws/issues/2230\n- https://github.com/websockets/ws/pull/2231\n\n[`--max-http-header-size=size`]: https://nodejs.org/api/cli.html#--max-http-header-sizesize\n[`maxHeaderSize`]: https://nodejs.org/api/http.html#httpcreateserveroptions-requestlistener\n[`server.maxHeadersCount`]: https://nodejs.org/api/http.html#servermaxheaderscount\n",
+      "reported_by": null,
+      "title": "ws affected by a DoS when handling a request with many HTTP headers",
+      "metadata": null,
+      "cves": [
+        "CVE-2024-37890"
+      ],
+      "access": "public",
+      "severity": "high",
+      "module_name": "ws",
+      "vulnerable_versions": ">=8.0.0 <8.17.1",
+      "github_advisory_id": "GHSA-3h5v-q93c-6h6q",
+      "recommendation": "Upgrade to version 8.17.1 or later",
+      "patched_versions": ">=8.17.1",
+      "updated": "2024-08-05T05:02:34.000Z",
+      "cvss": {
+        "score": 7.5,
+        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+      },
+      "cwe": [
+        "CWE-476"
+      ],
+      "url": "https://github.com/advisories/GHSA-3h5v-q93c-6h6q"
+    },
+    "1102341": {
+      "findings": [
+        {
+          "version": "0.21.5",
+          "paths": [
+            "frontend>vite>esbuild"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/evanw/esbuild/security/advisories/GHSA-67mh-4wv8-2f99\n- https://github.com/evanw/esbuild/commit/de85afd65edec9ebc44a11e245fd9e9a2e99760d\n- https://github.com/advisories/GHSA-67mh-4wv8-2f99",
+      "created": "2025-02-10T17:48:07.000Z",
+      "id": 1102341,
+      "npm_advisory_id": null,
+      "overview": "### Summary\n\nesbuild allows any websites to send any request to the development server and read the response due to default CORS settings.\n\n### Details\n\nesbuild sets `Access-Control-Allow-Origin: *` header to all requests, including the SSE connection, which allows any websites to send any request to the development server and read the response.\n\nhttps://github.com/evanw/esbuild/blob/df815ac27b84f8b34374c9182a93c94718f8a630/pkg/api/serve_other.go#L121\nhttps://github.com/evanw/esbuild/blob/df815ac27b84f8b34374c9182a93c94718f8a630/pkg/api/serve_other.go#L363\n\n**Attack scenario**:\n\n1. The attacker serves a malicious web page (`http://malicious.example.com`).\n1. The user accesses the malicious web page.\n1. The attacker sends a `fetch('http://127.0.0.1:8000/main.js')` request by JS in that malicious web page. This request is normally blocked by same-origin policy, but that's not the case for the reasons above.\n1. The attacker gets the content of `http://127.0.0.1:8000/main.js`.\n\nIn this scenario, I assumed that the attacker knows the URL of the bundle output file name. But the attacker can also get that information by\n\n- Fetching `/index.html`: normally you have a script tag here\n- Fetching `/assets`: it's common to have a `assets` directory when you have JS files and CSS files in a different directory and the directory listing feature tells the attacker the list of files\n- Connecting `/esbuild` SSE endpoint: the SSE endpoint sends the URL path of the changed files when the file is changed (`new EventSource('/esbuild').addEventListener('change', e => console.log(e.type, e.data))`)\n- Fetching URLs in the known file: once the attacker knows one file, the attacker can know the URLs imported from that file\n\nThe scenario above fetches the compiled content, but if the victim has the source map option enabled, the attacker can also get the non-compiled content by fetching the source map file.\n\n### PoC\n\n1. Download [reproduction.zip](https://github.com/user-attachments/files/18561484/reproduction.zip)\n2. Extract it and move to that directory\n1. Run `npm i`\n1. Run `npm run watch`\n1. Run `fetch('http://127.0.0.1:8000/app.js').then(r => r.text()).then(content => console.log(content))` in a different website's dev tools.\n\n![image](https://github.com/user-attachments/assets/08fc2e4d-e1ec-44ca-b0ea-78a73c3c40e9)\n\n### Impact\n\nUsers using the serve feature may get the source code stolen by malicious websites.",
+      "reported_by": null,
+      "title": "esbuild enables any website to send any requests to the development server and read the response",
+      "metadata": null,
+      "cves": [],
+      "access": "public",
+      "severity": "moderate",
+      "module_name": "esbuild",
+      "vulnerable_versions": "<=0.24.2",
+      "github_advisory_id": "GHSA-67mh-4wv8-2f99",
+      "recommendation": "Upgrade to version 0.25.0 or later",
+      "patched_versions": ">=0.25.0",
+      "updated": "2025-02-10T17:48:08.000Z",
+      "cvss": {
+        "score": 5.3,
+        "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:N/A:N"
+      },
+      "cwe": [
+        "CWE-346"
+      ],
+      "url": "https://github.com/advisories/GHSA-67mh-4wv8-2f99"
+    },
+    "1103907": {
+      "findings": [
+        {
+          "version": "0.4.2",
+          "paths": [
+            ".>lighthouse>@sentry/node>cookie"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/jshttp/cookie/security/advisories/GHSA-pxg6-pf52-xh8x\n- https://github.com/jshttp/cookie/pull/167\n- https://github.com/jshttp/cookie/commit/e10042845354fea83bd8f34af72475eed1dadf5c\n- https://github.com/advisories/GHSA-pxg6-pf52-xh8x",
+      "created": "2024-10-04T20:31:00.000Z",
+      "id": 1103907,
+      "npm_advisory_id": null,
+      "overview": "### Impact\n\nThe cookie name could be used to set other fields of the cookie, resulting in an unexpected cookie value. For example, `serialize(\"userName=<script>alert('XSS3')</script>; Max-Age=2592000; a\", value)` would result in `\"userName=<script>alert('XSS3')</script>; Max-Age=2592000; a=test\"`, setting `userName` cookie to `<script>` and ignoring `value`.\n\nA similar escape can be used for `path` and `domain`, which could be abused to alter other fields of the cookie.\n\n### Patches\n\nUpgrade to 0.7.0, which updates the validation for `name`, `path`, and `domain`.\n\n### Workarounds\n\nAvoid passing untrusted or arbitrary values for these fields, ensure they are set by the application instead of user input.\n\n### References\n\n* https://github.com/jshttp/cookie/pull/167",
+      "reported_by": null,
+      "title": "cookie accepts cookie name, path, and domain with out of bounds characters",
+      "metadata": null,
+      "cves": [
+        "CVE-2024-47764"
+      ],
+      "access": "public",
+      "severity": "low",
+      "module_name": "cookie",
+      "vulnerable_versions": "<0.7.0",
+      "github_advisory_id": "GHSA-pxg6-pf52-xh8x",
+      "recommendation": "Upgrade to version 0.7.0 or later",
+      "patched_versions": ">=0.7.0",
+      "updated": "2025-04-15T13:56:44.000Z",
+      "cvss": {
+        "score": 0,
+        "vectorString": null
+      },
+      "cwe": [
+        "CWE-74"
+      ],
+      "url": "https://github.com/advisories/GHSA-pxg6-pf52-xh8x"
+    },
+    "1104677": {
+      "findings": [
+        {
+          "version": "2.1.1",
+          "paths": [
+            "mobile>puppeteer>@puppeteer/browsers>tar-fs"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://nvd.nist.gov/vuln/detail/CVE-2024-12905\n- https://github.com/mafintosh/tar-fs/commit/a1dd7e7c7f4b4a8bd2ab60f513baca573b44e2ed\n- https://github.com/advisories/GHSA-pq67-2wwv-3xjx",
+      "created": "2025-03-27T18:31:28.000Z",
+      "id": 1104677,
+      "npm_advisory_id": null,
+      "overview": "An Improper Link Resolution Before File Access (\"Link Following\") and Improper Limitation of a Pathname to a Restricted Directory (\"Path Traversal\"). This vulnerability occurs when extracting a maliciously crafted tar file, which can result in unauthorized file writes or overwrites outside the intended extraction directory. The issue is associated with index.js in the tar-fs package.\n\nThis issue affects tar-fs: from 0.0.0 before 1.16.4, from 2.0.0 before 2.1.2, from 3.0.0 before 3.0.7.",
+      "reported_by": null,
+      "title": "tar-fs Vulnerable to Link Following and Path Traversal via Extracting a Crafted tar File",
+      "metadata": null,
+      "cves": [
+        "CVE-2024-12905"
+      ],
+      "access": "public",
+      "severity": "high",
+      "module_name": "tar-fs",
+      "vulnerable_versions": ">=2.0.0 <2.1.2",
+      "github_advisory_id": "GHSA-pq67-2wwv-3xjx",
+      "recommendation": "Upgrade to version 2.1.2 or later",
+      "patched_versions": ">=2.1.2",
+      "updated": "2025-05-20T17:57:27.000Z",
+      "cvss": {
+        "score": 7.5,
+        "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
+      },
+      "cwe": [
+        "CWE-22"
+      ],
+      "url": "https://github.com/advisories/GHSA-pq67-2wwv-3xjx"
+    },
+    "1105197": {
+      "findings": [
+        {
+          "version": "2.1.1",
+          "paths": [
+            "mobile>puppeteer>@puppeteer/browsers>tar-fs"
+          ]
+        }
+      ],
+      "found_by": null,
+      "deleted": null,
+      "references": "- https://github.com/mafintosh/tar-fs/security/advisories/GHSA-8cj5-5rvv-wf4v\n- https://nvd.nist.gov/vuln/detail/CVE-2025-48387\n- https://github.com/mafintosh/tar-fs/commit/647447b572bc135c41035e82ca7b894f02b17f0f\n- https://github.com/advisories/GHSA-8cj5-5rvv-wf4v",
+      "created": "2025-06-03T06:14:25.000Z",
+      "id": 1105197,
+      "npm_advisory_id": null,
+      "overview": "### Impact\n v3.0.8, v2.1.2, v1.16.4 and below\n\n### Patches\nHas been patched in 3.0.9, 2.1.3, and 1.16.5\n\n### Workarounds\nYou can use the ignore option to ignore non files/directories.\n\n```js\n  ignore (_, header) {\n    // pass files & directories, ignore e.g. symlinks\n    return header.type !== 'file' && header.type !== 'directory'\n  }\n```\n\n### Credit\nThank you Caleb Brown from Google Open Source Security Team for reporting this in detail.",
+      "reported_by": null,
+      "title": "tar-fs can extract outside the specified dir with a specific tarball",
+      "metadata": null,
+      "cves": [
+        "CVE-2025-48387"
+      ],
+      "access": "public",
+      "severity": "high",
+      "module_name": "tar-fs",
+      "vulnerable_versions": ">=2.0.0 <2.1.3",
+      "github_advisory_id": "GHSA-8cj5-5rvv-wf4v",
+      "recommendation": "Upgrade to version 2.1.3 or later",
+      "patched_versions": ">=2.1.3",
+      "updated": "2025-06-03T06:14:26.000Z",
+      "cvss": {
+        "score": 0,
+        "vectorString": null
+      },
+      "cwe": [
+        "CWE-22"
+      ],
+      "url": "https://github.com/advisories/GHSA-8cj5-5rvv-wf4v"
+    }
+  },
+  "muted": [],
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 1,
+      "moderate": 2,
+      "high": 3,
+      "critical": 0
+    },
+    "dependencies": 1118,
+    "devDependencies": 0,
+    "optionalDependencies": 0,
+    "totalDependencies": 1118
+  }
+}

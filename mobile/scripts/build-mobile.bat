@@ -13,11 +13,11 @@ if exist "..\..\frontend\dist" rmdir /s /q "..\..\frontend\dist"
 echo.
 echo [2/6] Installation des dépendances frontend...
 cd ..\..\frontend
-call npm install
+call pnpm install
 
 echo.
 echo [3/6] Build PWA optimisé mobile...
-call npm run build:mobile
+call pnpm run build:mobile
 
 echo.
 echo [4/6] Génération des assets mobiles...

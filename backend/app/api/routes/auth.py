@@ -18,6 +18,10 @@ from ...core.database import get_database
 settings = get_settings()
 router = APIRouter()
 
+# Constants pour les types de tokens
+TOKEN_TYPE_ACCESS = "access"
+TOKEN_TYPE_REFRESH = "refresh"
+
 # 🔒 Configuration sécurité
 security = HTTPBearer()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -86,7 +90,7 @@ def create_refresh_token(user_id: str) -> str:
     """Créer un token de rafraîchissement"""
     data = {
         "user_id": user_id,
-        "type": "refresh",
+        "type": TOKEN_TYPE_REFRESH,
         "exp": datetime.utcnow() + timedelta(days=settings.refresh_token_expire_days)
     }
     return jwt.encode(data, settings.secret_key, algorithm="HS256")
@@ -281,7 +285,7 @@ async def refresh_token(refresh_token: str):
         user_id: str = payload.get("user_id")
         token_type: str = payload.get("type")
         
-        if user_id is None or token_type != "refresh":
+        if user_id is None or token_type != TOKEN_TYPE_REFRESH:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Token de rafraîchissement invalide"

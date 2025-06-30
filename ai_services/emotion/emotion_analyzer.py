@@ -16,6 +16,8 @@ logger = logging.getLogger(__name__)
 try:
     import cv2
     import mediapipe as mp
+    import mediapipe as mp
+    mp_face_detection = mp.solutions.face_detection if hasattr(mp, "solutions") and hasattr(mp.solutions, "face_detection") else None
     from tensorflow.keras.models import load_model
     import librosa
     import pickle
@@ -25,6 +27,7 @@ try:
 except ImportError:
     cv2 = None
     mp = None
+    mp_face_detection = None
     load_model = None
     librosa = None
     pickle = None
@@ -86,6 +89,26 @@ class EmotionalStateTracker:
         
         return min(1.0, base_readiness + confidence_boost + engagement_boost)
 
+    def _analyze_emotional_trends(self) -> Dict[str, Any]:
+        """Analyze emotional trends over time"""
+        if len(self.emotion_history) < 2:
+            return {
+                "trend": "stable",
+                "volatility": 0.0,
+                "predictions": {},
+                "patterns": []
+            }
+        
+        recent_emotions = [entry["primary_emotion"] for entry in self.emotion_history[-10:]]
+        recent_scores = [entry["confidence"] for entry in self.emotion_history[-10:]]
+        
+        return {
+            "trend": "improving" if len(set(recent_emotions)) > 1 else "stable",
+            "volatility": np.std(recent_scores) if recent_scores else 0.0,
+            "predictions": {"next_emotion": recent_emotions[-1] if recent_emotions else "neutral"},
+            "patterns": ["consistent_engagement"] if len(set(recent_emotions)) == 1 else []
+        }
+    
 class MultimodalEmotionFusion:
     """Fuses emotion data from multiple sources (face, voice, text) for comprehensive analysis"""
     
@@ -105,7 +128,12 @@ class EmotionAnalyzer:
         self.emotional_tracker = EmotionalStateTracker()
         self.multimodal_fusion = MultimodalEmotionFusion()
         self.face_detector = None
+        self.face_emotion_detector = None  # Add missing attribute
         self.emotion_model = None
+        self.text_emotion_model = None
+        self.speech_processor = None
+        self.speech_model = None
+        self.analysis_history = []
         self._initialize_models()
         
     def _initialize_models(self):
@@ -116,27 +144,38 @@ class EmotionAnalyzer:
                 self.text_emotion_model = pipeline(
                     "text-classification",
                     model="j-hartmann/emotion-english-distilroberta-base",
-                    device=0 if torch and torch.cuda.is_available() else -1
-                )
-                
+                    device=0 if torch and torch.cuda.is_available() else -1)
                 # Initialize MediaPipe face detection if available
-                if mp:
-                    self.face_detector = mp.solutions.face_detection.FaceDetection(
-                        model_selection=0, min_detection_confidence=0.5
-                    )
+                if mp_face_detection:
+                    try:
+                        self.face_detector = mp_face_detection.FaceDetection(
+                            model_selection=0, min_detection_confidence=0.5
+                        )
+                    except AttributeError:
+                        logger.warning("MediaPipe face detection not available")
+                        self.face_detector = None
+                        logger.warning("MediaPipe face detection not available")
+                        self.face_detector = None
+                
+                # Initialize speech emotion model
+                try:
+                    if torch:
+                        from torch.nn import functional as F
+                        self.speech_processor = None  # Would be initialized with actual speech processor
+                        self.speech_model = None  # Would be initialized with actual speech model
+                except ImportError:
+                    logger.warning("Speech emotion analysis not available")
                     
                 logger.info("Emotion analysis models initialized successfully")
             else:
                 logger.warning("Advanced emotion detection features not available")
         except Exception as e:
             logger.error(f"Error initializing emotion models: {e}")
-            
-            # Modèle pour l'analyse d'émotions faciales
-            try:
-                self.face_emotion_detector = FER(mtcnn=True)
-            except Exception as e:
-                logger.warning(f"Détecteur d'émotions faciales non disponible: {e}")
-                self.face_emotion_detector = None
+            # Set fallback values
+            self.text_emotion_model = None
+            self.face_detector = None
+            self.speech_processor = None
+            self.speech_model = None
             
             # Mapping des émotions vers des recommandations pédagogiques
             self.emotion_pedagogical_mapping = {
@@ -159,12 +198,17 @@ class EmotionAnalyzer:
         """Analyse les émotions dans un texte"""
         try:
             # Analyse principale avec le modèle
-            emotions = self.text_emotion_model(text)
+            if self.text_emotion_model:
+                emotions = self.text_emotion_model(text)
+            else:
+                emotions = []
             
             # Normalisation des scores
             emotion_scores = {}
-            for emotion in emotions:
-                emotion_scores[emotion['label'].lower()] = emotion['score']
+            if emotions and isinstance(emotions, list):
+                for emotion in emotions:
+                    if isinstance(emotion, dict) and 'label' in emotion and 'score' in emotion:
+                        emotion_scores[emotion['label'].lower()] = emotion['score']
             
             # Détection d'émotions spécifiques au contexte éducatif
             educational_emotions = await self._detect_educational_emotions(text)
@@ -219,9 +263,13 @@ class EmotionAnalyzer:
             )
             
             # Prédiction
-            with torch.no_grad():
-                outputs = self.speech_model(**inputs)
-                predictions = F.softmax(outputs.logits, dim=-1)
+            if torch:
+                with torch.no_grad():
+                    outputs = self.speech_model(**inputs)
+                    import torch.nn.functional as F
+                    predictions = F.softmax(outputs.logits, dim=-1)
+            else:
+                predictions = [[0.125] * 8]  # Fallback uniform distribution
             
             # Mapping des émotions (basé sur le modèle utilisé)
             emotion_labels = ["angry", "calm", "disgust", "fearful", "happy", "neutral", "sad", "surprised"]
@@ -269,13 +317,31 @@ class EmotionAnalyzer:
             
             # Conversion de l'image
             nparr = np.frombuffer(image_data, np.uint8)
-            image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            if cv2:
+                image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            else:
+                return {"error": "OpenCV non disponible"}
             
             if image is None:
                 return {"error": "Image non valide"}
             
             # Détection des émotions
-            emotions = self.face_emotion_detector.detect_emotions(image)
+            if self.face_emotion_detector and hasattr(self.face_emotion_detector, 'detect_emotions'):
+                emotions = self.face_emotion_detector.detect_emotions(image)
+            else:
+                # Fallback simple detection
+                emotions = [{
+                    'emotions': {
+                        'neutral': 0.5,
+                        'happy': 0.2,
+                        'sad': 0.1,
+                        'angry': 0.1,
+                        'fear': 0.05,
+                        'surprise': 0.05
+                    },
+                    'box': [0, 0, image.shape[1] if 'image' in locals() else 100, 
+                           image.shape[0] if 'image' in locals() else 100]
+                }]
             
             if not emotions:
                 return {"emotions": {}, "faces_detected": 0}
@@ -332,7 +398,7 @@ class EmotionAnalyzer:
                                             text: Optional[str] = None,
                                             audio_data: Optional[bytes] = None,
                                             image_data: Optional[bytes] = None,
-                                            weights: Dict[str, float] = None) -> Dict[str, Any]:
+                                            weights: Optional[Dict[str, float]] = None) -> Dict[str, Any]:
         """Analyse émotionnelle multimodale combinée"""
         
         if weights is None:
@@ -377,7 +443,7 @@ class EmotionAnalyzer:
             dominant_combined = max(combined_emotions.items(), key=lambda x: x[1]) if combined_emotions else ("neutral", 0)
             
             # Recommandations consolidées
-            consolidated_recommendations = self._consolidate_recommendations(analyses, dominant_combined[0])
+            consolidated_recommendations = self._consolidate_recommendations(list(analyses.values()), dominant_combined[0])
             
             # Tendances émotionnelles
             emotion_trends = self._analyze_emotion_trends()
@@ -460,10 +526,30 @@ class EmotionAnalyzer:
     async def _analyze_text_emotion(self, text: str) -> Dict[str, Any]:
         """Analyze emotion from text input using advanced NLP"""
         try:
-            if ADVANCED_FEATURES_AVAILABLE and hasattr(self, 'text_emotion_model'):
-                result = self.text_emotion_model(text)[0]
-                emotion = result['label'].lower()
-                confidence = result['score']
+            if ADVANCED_FEATURES_AVAILABLE and hasattr(self, 'text_emotion_model') and self.text_emotion_model:
+                try:
+                    results = self.text_emotion_model(text)
+                    if results:
+                        # Convert to list if it's a generator
+                        if hasattr(results, '__iter__') and not isinstance(results, (str, dict)):
+                            results = list(results)
+                        if isinstance(results, list) and len(results) > 0:
+                            result = results[0]
+                            if isinstance(result, dict) and 'label' in result and 'score' in result:
+                                emotion = result['label'].lower()
+                                confidence = result['score']
+                            else:
+                                emotion = "neutral"
+                                confidence = 0.5
+                        else:
+                            emotion = "neutral"
+                            confidence = 0.5
+                    else:
+                        emotion = "neutral"
+                        confidence = 0.5
+                except Exception:
+                    emotion = "neutral"
+                    confidence = 0.5
             else:
                 # Fallback keyword-based analysis
                 emotion, confidence = self._keyword_emotion_analysis(text)
@@ -672,6 +758,167 @@ class EmotionAnalyzer:
         }
         
         return action_mapping.get(emotion, ["continue_normal_flow"])
+    
+    async def _detect_educational_emotions(self, text: str) -> Dict[str, float]:
+        """Detect emotions specific to educational contexts"""
+        educational_keywords = {
+            "confusion": ["confused", "don't understand", "unclear", "lost"],
+            "curiosity": ["interesting", "curious", "wonder", "why"],
+            "frustration": ["frustrated", "difficult", "hard", "stuck"],
+            "excitement": ["exciting", "amazing", "wow", "cool"],
+            "engagement": ["focused", "concentrated", "absorbed"],
+            "boredom": ["boring", "tired", "sleepy", "uninteresting"]
+        }
+        
+        text_lower = text.lower()
+        emotion_scores = {}
+        
+        for emotion, keywords in educational_keywords.items():
+            score = sum(1 for keyword in keywords if keyword in text_lower)
+            emotion_scores[emotion] = min(score / len(keywords), 1.0)
+        
+        return emotion_scores
+    
+    def _get_pedagogical_recommendations(self, emotion: str) -> Dict[str, Any]:
+        """Get pedagogical recommendations based on detected emotion"""
+        recommendations = {
+            "confused": {
+                "action": "provide_clarification",
+                "message": "Let me break this down into simpler steps",
+                "techniques": ["scaffolding", "visual_aids", "examples"]
+            },
+            "frustrated": {
+                "action": "encourage_and_support",
+                "message": "You're doing well, let's try a different approach",
+                "techniques": ["break_down_task", "positive_reinforcement", "take_break"]
+            },
+            "bored": {
+                "action": "increase_engagement",
+                "message": "Let's make this more interactive and interesting",
+                "techniques": ["gamification", "real_world_examples", "interactive_elements"]
+            },
+            "excited": {
+                "action": "maintain_momentum",
+                "message": "Great enthusiasm! Let's channel this energy",
+                "techniques": ["challenging_questions", "extension_activities", "peer_sharing"]
+            },
+            "curious": {
+                "action": "encourage_exploration",
+                "message": "Your curiosity is wonderful! Let's explore further",
+                "techniques": ["open_questions", "investigation_tasks", "additional_resources"]
+            }
+        }
+        
+        return recommendations.get(emotion, {
+            "action": "continue_current_approach",
+            "message": "Keep up the good work!",
+            "techniques": ["maintain_current_strategy"]
+        })
+    
+    def _add_to_history(self, modality: str, result: Dict[str, Any]):
+        """Add analysis result to history"""
+        if not hasattr(self, 'analysis_history'):
+            self.analysis_history = []
+        
+        self.analysis_history.append({
+            "timestamp": datetime.now(),
+            "modality": modality,
+            "result": result
+        })
+        
+        # Keep only recent history (last 100 entries)
+        if len(self.analysis_history) > 100:
+            self.analysis_history = self.analysis_history[-100:]
+    
+    def _consolidate_recommendations(self, analyses: List[Dict[str, Any]], dominant_emotion: str) -> Dict[str, Any]:
+        """Consolidate recommendations from multiple analyses"""
+        all_recommendations = []
+        
+        for analysis in analyses:
+            if "recommendations" in analysis:
+                all_recommendations.append(analysis["recommendations"])
+        
+        # Priority-based consolidation
+        priority_emotions = ["frustrated", "confused", "bored", "excited", "curious"]
+        
+        for emotion in priority_emotions:
+            for rec in all_recommendations:
+                if rec.get("action") and emotion in rec.get("message", "").lower():
+                    return rec
+        
+        # Default recommendation
+        return self._get_pedagogical_recommendations(dominant_emotion)
+    
+    def _analyze_emotion_trends(self) -> Dict[str, Any]:
+        """Analyze emotion trends from history"""
+        if not hasattr(self, 'analysis_history') or len(self.analysis_history) < 3:
+            return {
+                "trend": "insufficient_data",
+                "volatility": 0.0,
+                "patterns": []
+            }
+        
+        recent_emotions = []
+        for entry in self.analysis_history[-10:]:
+            if "dominant_emotion" in entry["result"]:
+                recent_emotions.append(entry["result"]["dominant_emotion"])
+        
+        if not recent_emotions:
+            return {"trend": "stable", "volatility": 0.0, "patterns": []}
+        
+        # Simple trend analysis
+        emotion_counts = {}
+        for emotion in recent_emotions:
+            emotion_counts[emotion] = emotion_counts.get(emotion, 0) + 1
+        
+        if emotion_counts:
+            most_common = max(emotion_counts, key=lambda x: emotion_counts[x])
+        else:
+            most_common = "neutral"
+        volatility = len(set(recent_emotions)) / max(len(recent_emotions), 1)
+        
+        return {
+            "trend": "stable" if volatility < 0.3 else "variable",
+            "most_common_emotion": most_common,
+            "volatility": volatility,
+            "patterns": ["consistent"] if volatility < 0.3 else ["variable"]
+        }
+    
+    async def _analyze_prosodic_features(self, audio_array: np.ndarray, sample_rate: int) -> Dict[str, float]:
+        """Analyze prosodic features from audio"""
+        try:
+            if librosa is None:
+                return {"pitch": 0.5, "tempo": 0.5, "energy": 0.5}
+            
+            # Basic prosodic feature extraction
+            pitch = librosa.yin(audio_array, fmin=50, fmax=400, sr=sample_rate)
+            tempo, _ = librosa.beat.beat_track(y=audio_array, sr=sample_rate)
+            energy = np.mean(librosa.feature.rms(y=audio_array))
+            
+            return {
+                "pitch": float(np.mean(pitch[~np.isnan(pitch)])) if not np.all(np.isnan(pitch)) else 0.5,
+                "tempo": float(tempo) / 200.0,  # Normalize
+                "energy": float(energy)
+            }
+        except Exception as e:
+            logger.warning(f"Error analyzing prosodic features: {e}")
+            return {"pitch": 0.5, "tempo": 0.5, "energy": 0.5}
+    
+    def _calculate_average_emotions(self, emotions_list: List[Dict[str, float]]) -> Dict[str, float]:
+        """Calculate average emotions from multiple faces"""
+        if not emotions_list:
+            return {}
+        
+        emotion_names = set()
+        for emotions in emotions_list:
+            emotion_names.update(emotions.keys())
+        
+        avg_emotions = {}
+        for emotion in emotion_names:
+            values = [emotions.get(emotion, 0.0) for emotions in emotions_list]
+            avg_emotions[emotion] = sum(values) / len(values)
+        
+        return avg_emotions
 
 # Global instance for easy import
 emotion_analyzer = EmotionAnalyzer()

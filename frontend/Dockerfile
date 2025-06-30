@@ -9,17 +9,20 @@ LABEL description="📱 PWA Frontend pour EduAI Enhanced"
 
 WORKDIR /app
 
+# Installer pnpm
+RUN npm install -g pnpm
+
 # Copier les fichiers de dépendances
-COPY package*.json ./
+COPY package.json pnpm-lock.yaml ./
 
 # Installer les dépendances
-RUN npm ci --only=production
+RUN pnpm install --frozen-lockfile
 
 # Copier le code source
 COPY . .
 
 # Build de l'application PWA
-RUN npm run build
+RUN pnpm build
 
 # Stage 2: Production avec Nginx
 FROM nginx:alpine

@@ -16,7 +16,7 @@ import json
 from datetime import datetime
 
 # Import des processeurs IA
-from nlp.text_processor import nlp_processor
+from nlp.text_processor import NLPProcessor
 from emotion.emotion_analyzer import emotion_analyzer
 from speech.speech_processor import speech_processor
 from vision.vision_processor import vision_processor
@@ -24,6 +24,9 @@ from vision.vision_processor import vision_processor
 # Configuration du logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Création des instances des processeurs IA
+nlp_processor = NLPProcessor()
 
 app = FastAPI(
     title="EduAI Enhanced AI Services",

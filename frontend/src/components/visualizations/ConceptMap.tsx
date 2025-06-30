@@ -2,24 +2,23 @@ import React, { useEffect, useRef, useMemo } from 'react';
 import * as d3 from 'd3';
 
 // Interface pour définir la structure des données attendues
-interface ConceptMapData {
+export interface ConceptMapData {
   nodes: { id: string; group: string; size?: number }[];
   links: { source: string; target: string; value: number }[];
-}
-
-// Interface pour les nœuds avec coordonnées (après simulation D3)
-interface NodeWithPosition {
-  id: string;
-  group: string;
-  size?: number;
-  degree: number;
-  x: number;
-  y: number;
 }
 
 interface ConceptMapProps {
   data: ConceptMapData;
 }
+
+type ConceptMapNode = {
+  id: string;
+  group: string;
+  degree: number;
+  size?: number;
+  x: number;
+  y: number;
+};
 
 const ConceptMap: React.FC<ConceptMapProps> = ({ data }) => {
   const ref = useRef<SVGSVGElement>(null);
@@ -239,18 +238,17 @@ Groupe: ${d.group}`);
     }
 
     // --- Gestion de la navigation au clavier ---
-    function findClosestNode(currentNode: NodeWithPosition, direction: 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight') {
-        if (!currentNode) return processedData.nodes[0] as NodeWithPosition;
+    function findClosestNode(currentNode: any, direction: 'ArrowUp' | 'ArrowDown' | 'ArrowLeft' | 'ArrowRight') {
+        if (!currentNode) return processedData.nodes[0];
 
-        let closestNode: NodeWithPosition | null = null;
+        let closestNode: any = null;
         let minDistance = Infinity;
 
-        processedData.nodes.forEach(node => {
-            const nodeWithPos = node as NodeWithPosition;
-            if (nodeWithPos.id === currentNode.id) return;
+        (processedData.nodes as any[]).forEach(node => {
+            if (node.id === currentNode.id) return;
 
-            const dx = nodeWithPos.x - currentNode.x;
-            const dy = nodeWithPos.y - currentNode.y;
+            const dx = node.x - currentNode.x;
+            const dy = node.y - currentNode.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
 
             let isDirectionMatch = false;
@@ -263,7 +261,7 @@ Groupe: ${d.group}`);
 
             if (isDirectionMatch && distance < minDistance) {
                 minDistance = distance;
-                closestNode = nodeWithPos;
+                closestNode = node;
             }
         });
 

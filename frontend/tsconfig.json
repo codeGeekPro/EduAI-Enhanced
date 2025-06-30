@@ -18,8 +18,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+    "types": ["@react-three/fiber", "@react-three/drei", "three"]
   },
-  "include": ["src", "src/types/*.d.ts"],
+  "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }

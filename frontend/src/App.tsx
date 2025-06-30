@@ -1,22 +1,88 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import DashboardPage from './pages/DashboardPage';
-import { ThemeToggle } from './components/ui/ThemeToggle';
+import LandingPage from './pages/LandingPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import CoursesPage from './pages/CoursesPage';
+import ProfilePage from './pages/ProfilePage';
+import FAQPage from './pages/FAQPage';
+import AIServicesPage from './pages/AIServicesPage';
+import SettingsPage from './pages/SettingsPage';
+import AnalyticsPageSimple from './pages/AnalyticsPageSimple';
+import AppLayout from './components/layout/AppLayout';
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-      <Router>
-        <header className="p-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold">EduAI Enhanced</h1>
-          <ThemeToggle />
-        </header>
-        <main>
-          <Routes>
-            <Route path="/" element={<DashboardPage />} />
-          </Routes>
-        </main>
-      </Router>
-    </div>
+    <Router>
+      <Routes>
+        {/* Public routes */}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/faq" element={<FAQPage />} />
+        
+        {/* Protected routes with layout */}
+        <Route 
+          path="/dashboard" 
+          element={
+            <AppLayout>
+              <DashboardPage />
+            </AppLayout>
+          } 
+        />
+        <Route 
+          path="/courses" 
+          element={
+            <AppLayout>
+              <CoursesPage />
+            </AppLayout>
+          } 
+        />
+        <Route 
+          path="/profile" 
+          element={
+            <AppLayout>
+              <ProfilePage />
+            </AppLayout>
+          } 
+        />
+        <Route 
+          path="/ai-services" 
+          element={
+            <AppLayout>
+              <AIServicesPage />
+            </AppLayout>
+          } 
+        />
+        {/* TODO: Add more protected routes */}
+        <Route 
+          path="/analytics" 
+          element={
+            <AppLayout>
+              <AnalyticsPageSimple />
+            </AppLayout>
+          } 
+        />
+        <Route 
+          path="/settings" 
+          element={
+            <AppLayout>
+              <SettingsPage />
+            </AppLayout>
+          } 
+        />
+        <Route 
+          path="/support" 
+          element={
+            <AppLayout>
+              <div className="p-8">
+                <h1 className="text-2xl font-bold">Support - En développement</h1>
+              </div>
+            </AppLayout>
+          } 
+        />
+      </Routes>
+    </Router>
   );
 }
 

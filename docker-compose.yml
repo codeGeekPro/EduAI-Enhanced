@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # 🗄️ Base de données MongoDB
   mongodb:
@@ -60,7 +58,7 @@ services:
   # 🤖 Services IA
   ai_services:
     build:
-      context: ./ai-services
+      context: ./ai_services
       dockerfile: Dockerfile
     container_name: eduai_ai_services
     restart: unless-stopped
@@ -71,7 +69,7 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - HF_API_KEY=${HF_API_KEY}
     volumes:
-      - ./ai-services/models:/app/models
+      - ./ai_services/models:/app/models
       - ./temp:/app/temp
     networks:
       - eduai_network

@@ -340,6 +340,8 @@ class TestOpenRouterIntegration:
     async def test_real_api_call(self):
         """Test avec la vraie API OpenRouter"""
         api_key = os.getenv("OPENROUTER_API_KEY")
+        if api_key is None:
+            pytest.skip("OPENROUTER_API_KEY non définie")
         
         async with OpenRouterClient(api_key=api_key) as client:
             # Test simple
@@ -358,8 +360,9 @@ class TestOpenRouterIntegration:
     )
     @pytest.mark.asyncio
     async def test_real_educational_response(self):
-        """Test de réponse éducative avec la vraie API"""
         api_key = os.getenv("OPENROUTER_API_KEY")
+        if api_key is None:
+            pytest.skip("OPENROUTER_API_KEY non définie")
         
         async with OpenRouterClient(api_key=api_key) as client:
             response = await client.educational_response(

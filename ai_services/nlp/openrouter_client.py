@@ -6,7 +6,7 @@ Intégration avec l'API OpenRouter pour accéder à de multiples modèles gratui
 import asyncio
 import json
 import logging
-from typing import Dict, List, Optional, Any, Union
+from typing import Dict, List, Optional, Any, Union, Sequence
 from dataclasses import dataclass
 import aiohttp
 import time
@@ -129,7 +129,7 @@ class OpenRouterClient:
     
     async def chat_completion(
         self,
-        messages: List[Union[OpenRouterMessage, Dict[str, str]]],
+        messages: Sequence[Union[OpenRouterMessage, Dict[str, str]]],
         model: str = "mistralai/mistral-7b-instruct:free",
         max_tokens: int = 1000,
         temperature: float = 0.7,

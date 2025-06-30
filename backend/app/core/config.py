@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     debug: bool = True
     
     # 🌍 Configuration API
-    api_host: str = "0.0.0.0"
+    api_host: str = "127.0.0.1"  # Bind local par défaut pour la sécurité
     api_port: int = 8000
     api_prefix: str = "/api"
     
@@ -122,12 +122,32 @@ class Settings(BaseSettings):
     default_language: str = "fr"
     
     @validator("cors_origins", pre=True)
-    def assemble_cors_origins(cls, v: str | List[str]) -> List[str]:
+    def assemble_cors_origins(cls, v) -> List[str]:
+        if v is None or v == "" or v == "[]":
+            # Valeur par défaut si vide
+            return [
+                "http://localhost:3000",
+                "http://localhost:3001", 
+                "http://127.0.0.1:3000"
+            ]
         if isinstance(v, str) and not v.startswith("["):
-            return [i.strip() for i in v.split(",")]
-        elif isinstance(v, (list, str)):
+            # Format: "url1,url2,url3"
+            return [i.strip() for i in v.split(",") if i.strip()]
+        elif isinstance(v, list):
             return v
-        raise ValueError(v)
+        elif isinstance(v, str) and v.startswith("[") and len(v.strip()) > 2:
+            # Essayer de parser le JSON seulement si ce n'est pas vide
+            try:
+                import json
+                return json.loads(v)
+            except json.JSONDecodeError:
+                # Si le parsing échoue, traiter comme une string simple
+                return [v]
+        return [str(v)] if v else [
+            "http://localhost:3000",
+            "http://localhost:3001", 
+            "http://127.0.0.1:3000"
+        ]
     
     @validator("openai_api_key", "anthropic_api_key", "elevenlabs_api_key", "pinecone_api_key", "openrouter_api_key")
     def validate_api_keys(cls, v):
