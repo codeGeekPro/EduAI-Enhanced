@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Thème Clair (par défaut) - Inspiré de Kalvi/TutorTrek */
+    --background: 245 245 220; /* beige */
+    --foreground: 44 62 80;    /* dark-text */
+    --primary: 169 216 184;   /* soft-green */
+    --primary-foreground: 44 62 80; /* dark-text */
+    --accent: 168 216 234;    /* light-blue */
+    --accent-foreground: 44 62 80; /* dark-text */
+    --card: 255 255 255;
+    --card-foreground: 44 62 80;
+  }
+
+  .dark {
+    /* Thème Sombre */
+    --background: 52 73 94;     /* dark-bg */
+    --foreground: 236 240 241;   /* light-text */
+    --primary: 169 216 184;    /* soft-green */
+    --primary-foreground: 44 62 80;  /* dark-text */
+    --accent: 168 216 234;     /* light-blue */
+    --accent-foreground: 44 62 80;  /* dark-text */
+    --card: 44 62 80; /* card un peu plus clair que le fond sombre */
+    --card-foreground: 236 240 241;
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Poppins', sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+}

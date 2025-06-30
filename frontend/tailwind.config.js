@@ -7,33 +7,21 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#667eea',
-          600: '#4f46e5',
-          700: '#4338ca',
-          800: '#3730a3',
-          900: '#312e81',
-        },
-        secondary: {
-          50: '#fdf4ff',
-          100: '#fae8ff',
-          200: '#f5d0fe',
-          300: '#f0abfc',
-          400: '#e879f9',
-          500: '#764ba2',
-          600: '#c026d3',
-          700: '#a21caf',
-          800: '#86198f',
-          900: '#701a75',
-        }
+        // Palette inspirée par TutorTrek/Kalvi (vert doux, beige, bleu clair)
+        'beige': '#F5F5DC',
+        'soft-green': '#A9D8B8',
+        'light-blue': '#A8D8EA',
+        'dark-text': '#2C3E50',
+        'light-text': '#ECF0F1',
+        'dark-bg': '#34495E',
+
+        // Mappage sémantique pour le thème
+        'brand': 'var(--color-primary)',
+        'accent': 'var(--color-accent)',
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Poppins', 'sans-serif'],
+        serif: ['Georgia', 'serif'],
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
