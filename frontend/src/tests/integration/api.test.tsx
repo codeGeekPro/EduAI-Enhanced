@@ -8,10 +8,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useLogin, useCourses, useAITutorChat } from '../../hooks/useAPI';
 import { authService } from '../../services/auth';
 import { backendAPI } from '../../services/api';
+import { vi } from 'vitest';
 
 // Mock des services
-jest.mock('../../services/auth');
-jest.mock('../../services/api');
+vi.mock('../../services/auth');
+vi.mock('../../services/api');
 
 const createWrapper = () => {
   const queryClient = new QueryClient({
@@ -30,7 +31,7 @@ const createWrapper = () => {
 
 describe('API Integration Tests', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('Authentication Flow', () => {

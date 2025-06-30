@@ -1,6 +1,12 @@
 /**
- * Tests d'intégration des composants
- */
+ * Tests d'intégration des comdescribe('Components Integration Tests', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  describe('LoginPage Component', () => {
+    test('should render login form', () => {
+      (useAuthStore as unknown as ReturnType<typeof vi.fn>).mockReturnValue({ */
 
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
@@ -9,10 +15,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import LoginPage from '../../pages/LoginPage';
 import CoursesPage from '../../pages/CoursesPage';
 import { useAuthStore } from '../../stores/authStore';
+import { vi } from 'vitest';
 
 // Mock des stores
-jest.mock('../../stores/authStore');
-jest.mock('../../hooks/useAPI');
+vi.mock('../../stores/authStore');
+vi.mock('../../hooks/useAPI');
 
 const createWrapper = () => {
   const queryClient = new QueryClient({
