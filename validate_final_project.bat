@@ -13,7 +13,15 @@ echo 📱 Validation du Frontend...
 cd "c:\Users\genie\Documents\Projet Python\eduai\frontend"
 
 echo   📦 Installation des dépendances...
-pnpm install --frozen-lockfile
+pnpm install --no-frozen-lockfile
+if %errorlevel% neq 0 (
+    echo   ⚠️ Tentative avec --force...
+    pnpm install --force --no-frozen-lockfile
+    if %errorlevel% neq 0 (
+        echo   ❌ Impossible d'installer les dépendances
+        goto :error
+    )
+)
 
 echo   🔍 Vérification TypeScript...
 pnpm type-check

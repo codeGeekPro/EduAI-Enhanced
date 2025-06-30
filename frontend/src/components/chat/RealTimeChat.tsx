@@ -5,7 +5,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Users, Wifi, WifiOff, Paperclip, Smile } from 'lucide-react';
 import { useWebSocket, ChatMessage, TypingIndicator } from '../../hooks/useWebSocket';
-import { useAuthStore } from '../stores/authStore';
+import { useAuthStore } from '../../stores/authStore';
 import FileUploader from '../upload/FileUploader';
 
 const RealTimeChat: React.FC = () => {
