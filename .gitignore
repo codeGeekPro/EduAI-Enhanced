@@ -66,6 +66,7 @@ pnpm-debug.log*
 .env.test.local
 .env.production.local
 .env.staging
+.env.demo
 
 # Clés API (IMPORTANT pour la sécurité)
 *.key
