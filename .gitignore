@@ -43,6 +43,26 @@ mobile/build/
 *~
 .DS_Store
 
+# Dependency resolution files
+pip-selfcheck.json
+*.egg-info/
+.installed.cfg
+*.egg
+
+# CI/CD temporary files
+.coverage.*
+*.coverage
+coverage.xml
+.pytest_cache/
+test-results.xml
+
+# Package manager locks and caches
+.pnpm-debug.log*
+.pnpm-store/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
 # Système d'exploitation
 .DS_Store?
 ._*

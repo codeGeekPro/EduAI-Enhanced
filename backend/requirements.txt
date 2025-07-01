@@ -7,7 +7,7 @@ uvicorn[standard]==0.27.1
 pydantic==2.9.2
 pydantic-settings==2.1.0
 python-multipart==0.0.6
-starlette==0.27.0
+# starlette version will be automatically managed by fastapi
 
 # HTTP Client for APIs
 aiohttp>=3.9.0
@@ -57,10 +57,10 @@ tokenizers==0.15.0
 accelerate==0.25.0
 
 # 🧠 Deep Learning Frameworks
-torch>=2.0.0
-torchaudio>=2.0.0
-tensorflow>=2.15.0
-keras>=3.0.0
+torch>=2.0.0,<3.0.0
+torchaudio>=2.0.0,<3.0.0
+tensorflow>=2.15.0,<2.17.0
+keras>=3.0.0,<4.0.0
 
 # 📊 Data Science & Analytics
 scikit-learn==1.3.2

@@ -20,9 +20,9 @@ nltk>=3.8.0
 huggingface-hub>=0.14.1
 
 # Deep Learning
-torch==2.2.0
-torchaudio==2.2.0
-tensorflow==2.19.0
+torch>=2.0.0,<3.0.0
+torchaudio>=2.0.0,<3.0.0
+tensorflow>=2.15.0,<2.17.0
 
 # Speech Processing
 openai-whisper==20231117
