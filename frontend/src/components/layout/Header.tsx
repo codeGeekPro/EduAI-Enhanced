@@ -1,45 +1,127 @@
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { Button } from '../ui/Button';
 import ThemeSwitcher from '../ui/ThemeSwitcher';
-import { BookOpen, Home, BarChart2 } from 'lucide-react';
+import { Menu, X, BookOpen, BarChart3, GraduationCap, User } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const navItems = [
+  { name: 'Accueil', path: '/', icon: BookOpen },
+  { name: 'Cours', path: '/courses', icon: GraduationCap },
+  { name: 'Progrès', path: '/progress', icon: BarChart3 },
+];
 
 const Header = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
+
   return (
-    <motion.header
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5, ease: 'easeOut' }}
-      className="sticky top-0 left-0 right-0 z-50 bg-background/80 dark:bg-dark-bg/80 backdrop-blur-sm shadow-sm"
-    >
-      <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
-        <Link to="/" className="flex items-center space-x-2">
-          <BookOpen className="w-8 h-8 text-primary" />
-          <span className="text-2xl font-bold text-foreground">EduAI</span>
-        </Link>
+    <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
+          {/* Logo */}
+          <Link to="/" className="flex items-center space-x-2 group">
+            <div className="flex items-center justify-center w-8 h-8 bg-primary rounded-lg text-primary-foreground font-bold text-sm group-hover:scale-110 transition-transform">
+              🎓
+            </div>
+            <span className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+              EduAI
+            </span>
+          </Link>
 
-        <div className="hidden md:flex items-center space-x-8 font-medium">
-          <Link to="/" className="text-foreground/80 hover:text-primary transition-colors">
-            Accueil
-          </Link>
-          <Link to="/courses" className="text-foreground/80 hover:text-primary transition-colors">
-            Cours
-          </Link>
-          <Link to="/progress" className="text-foreground/80 hover:text-primary transition-colors">
-            Progrès
-          </Link>
+          {/* Navigation Desktop */}
+          <nav className="hidden md:flex items-center space-x-1">
+            {navItems.map((item) => {
+              const isActive = location.pathname === item.path;
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`
+                    flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-all
+                    ${isActive 
+                      ? 'bg-primary/10 text-primary' 
+                      : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+                    }
+                  `}
+                >
+                  <item.icon className="h-4 w-4" />
+                  <span>{item.name}</span>
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* Actions Desktop */}
+          <div className="hidden md:flex items-center space-x-4">
+            <ThemeSwitcher />
+            <Button variant="ghost" size="icon">
+              <User className="h-4 w-4" />
+            </Button>
+            <Button size="sm">
+              Connexion
+            </Button>
+          </div>
+
+          {/* Menu Mobile */}
+          <div className="md:hidden flex items-center space-x-2">
+            <ThemeSwitcher />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </Button>
+          </div>
         </div>
+      </div>
 
-        <div className="flex items-center space-x-4">
-          <ThemeSwitcher />
-          <Link
-            to="/login"
-            className="px-5 py-2 text-sm font-semibold bg-primary text-primary-foreground rounded-full hover:bg-primary/90 transition-colors"
+      {/* Menu Mobile */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden border-t border-border bg-background/95 backdrop-blur"
           >
-            Connexion
-          </Link>
-        </div>
-      </nav>
-    </motion.header>
+            <nav className="container mx-auto px-4 py-4 space-y-2">
+              {navItems.map((item) => {
+                const isActive = location.pathname === item.path;
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`
+                      flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all
+                      ${isActive 
+                        ? 'bg-primary/10 text-primary' 
+                        : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+                      }
+                    `}
+                  >
+                    <item.icon className="h-5 w-5" />
+                    <span>{item.name}</span>
+                  </Link>
+                );
+              })}
+              <div className="pt-4 border-t border-border">
+                <Button fullWidth className="mb-2">
+                  Connexion
+                </Button>
+                <Button variant="outline" fullWidth>
+                  <User className="h-4 w-4 mr-2" />
+                  Profil
+                </Button>
+              </div>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
   );
 };
 

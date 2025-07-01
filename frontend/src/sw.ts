@@ -111,14 +111,14 @@ registerRoute(
 // 📡 Gestion des événements
 
 // Sync en arrière-plan
-self.addEventListener('sync', (event) => {
+(self as any).addEventListener('sync', (event: any) => {
   if (event.tag === 'background-sync') {
     event.waitUntil(syncData());
   }
 });
 
 // Notifications push
-self.addEventListener('push', (event) => {
+(self as any).addEventListener('push', (event: any) => {
   const options = {
     body: event.data?.text() || 'Nouvelle notification EduAI',
     icon: '/icons/icon-192x192.png',
@@ -143,27 +143,35 @@ self.addEventListener('push', (event) => {
   };
 
   event.waitUntil(
-    self.registration.showNotification('EduAI Enhanced', options)
+    (self as any).registration.showNotification('EduAI Enhanced', options)
   );
 });
 
 // Clic sur notification
-self.addEventListener('notificationclick', (event) => {
+(self as any).addEventListener('notificationclick', (event: any) => {
   event.notification.close();
 
   if (event.action === 'explore') {
     event.waitUntil(
-      self.clients.openWindow('/dashboard')
+      (self as any).clients.openWindow('/dashboard')
     );
   }
 });
 
 // 🔄 Fonctions utilitaires
 
+type PendingData = {
+  id: string;
+  url: string;
+  method: string;
+  headers?: Record<string, string>;
+  body?: BodyInit | null;
+};
+
 async function syncData() {
   try {
     // Récupérer les données en attente depuis IndexedDB
-    const pendingData = await getPendingData();
+    const pendingData: PendingData[] = await getPendingData();
     
     // Envoyer au serveur
     for (const data of pendingData) {
@@ -185,7 +193,7 @@ async function syncData() {
   }
 }
 
-async function getPendingData() {
+async function getPendingData(): Promise<PendingData[]> {
   // Implémentation avec IndexedDB
   return [];
 }
@@ -195,7 +203,7 @@ async function removePendingData(id: string) {
 }
 
 // 📊 Événements de performance
-self.addEventListener('message', (event) => {
+(self as any).addEventListener('message', (event: any) => {
   if (event.data && event.data.type === 'PERFORMANCE_MEASURE') {
     // Envoyer les métriques de performance
     console.log('Performance measure:', event.data.measure);
@@ -203,9 +211,9 @@ self.addEventListener('message', (event) => {
 });
 
 // 🔧 Skip waiting pour mise à jour immédiate
-self.addEventListener('message', (event) => {
+(self as any).addEventListener('message', (event: any) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
+    (self as any).skipWaiting();
   }
 });
 

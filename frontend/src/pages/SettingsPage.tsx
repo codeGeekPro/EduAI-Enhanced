@@ -16,9 +16,11 @@ import {
   Trash2
 } from 'lucide-react';
 import { useUIStore } from '../stores/uiStore';
+import { useThemeStore } from '../stores/themeStore';
 
 const SettingsPage: React.FC = () => {
-  const { isDarkMode, toggleDarkMode } = useUIStore();
+  const { theme, toggleTheme } = useThemeStore();
+  const isDarkMode = theme === 'dark';
   const [notifications, setNotifications] = useState({
     courses: true,
     achievements: true,
@@ -128,7 +130,7 @@ const SettingsPage: React.FC = () => {
               </p>
             </div>
             <button
-              onClick={toggleDarkMode}
+              onClick={toggleTheme}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                 isDarkMode ? 'bg-blue-600' : 'bg-gray-200'
               }`}

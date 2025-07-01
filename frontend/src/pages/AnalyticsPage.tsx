@@ -57,8 +57,12 @@ const AnalyticsPage: React.FC = () => {
       setLoading(true);
       try {
         const response = await getAnalytics(timeRange);
-        // Suppose your API response has a 'data' property containing the analytics data
-        setAnalyticsData(response.data as AnalyticsData);
+        // Vérifier si la réponse a une propriété 'data'
+        if (response && typeof response === 'object' && 'data' in response) {
+          setAnalyticsData(response.data as AnalyticsData);
+        } else {
+          setAnalyticsData(response as AnalyticsData);
+        }
       } catch (error) {
         console.error('Erreur lors du chargement des analytics:', error);
         // Données de démonstration

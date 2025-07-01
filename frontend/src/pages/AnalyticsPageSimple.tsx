@@ -52,9 +52,12 @@ const AnalyticsPageSimple: React.FC = () => {
   useEffect(() => {
     const fetchAnalytics = async () => {
       setLoading(true);
-      try {
-        const data = await getAnalytics(timeRange);
-        setAnalyticsData(data);
+      try {      const data = await getAnalytics(timeRange);
+      if (data && typeof data === 'object' && 'data' in data) {
+        setAnalyticsData(data.data as AnalyticsData);
+      } else {
+        setAnalyticsData(data as AnalyticsData);
+      }
       } catch (error) {
         console.error('Erreur lors du chargement des analytics:', error);
         // Données de démonstration

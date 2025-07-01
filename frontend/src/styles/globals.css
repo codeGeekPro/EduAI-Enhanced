@@ -1,37 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    /* Thème Clair (par défaut) - Inspiré de Kalvi/TutorTrek */
-    --background: 245 245 220; /* beige */
-    --foreground: 44 62 80;    /* dark-text */
-    --primary: 169 216 184;   /* soft-green */
-    --primary-foreground: 44 62 80; /* dark-text */
-    --accent: 168 216 234;    /* light-blue */
-    --accent-foreground: 44 62 80; /* dark-text */
-    --card: 255 255 255;
-    --card-foreground: 44 62 80;
+    /* Système de couleurs inspiré de Kalvi mais adapté à l'éducation */
+    --background: hsl(0, 0%, 100%); /* blanc pur */
+    --foreground: hsl(220, 9%, 11%); /* texte sombre moderne */
+    --primary: hsl(217, 100%, 47%); /* bleu éducatif */
+    --primary-foreground: hsl(0, 0%, 100%);
+    --secondary: hsl(210, 40%, 96%); /* gris très clair */
+    --secondary-foreground: hsl(220, 9%, 11%);
+    --accent: hsl(142, 76%, 36%); /* vert succès */
+    --accent-foreground: hsl(0, 0%, 100%);
+    --success: hsl(142, 76%, 36%); /* vert */
+    --success-foreground: hsl(0, 0%, 100%);
+    --warning: hsl(38, 92%, 50%); /* orange */
+    --warning-foreground: hsl(220, 9%, 11%);
+    --danger: hsl(346, 87%, 43%); /* rouge */
+    --danger-foreground: hsl(0, 0%, 100%);
+    --card: hsl(0, 0%, 100%);
+    --card-foreground: hsl(220, 9%, 11%);
+    --border: hsl(220, 13%, 91%);
+    --input: hsl(220, 13%, 91%);
+    --ring: hsl(217, 100%, 47%);
+    --muted: hsl(210, 40%, 96%);
+    --muted-foreground: hsl(220, 9%, 46%);
   }
 
   .dark {
     /* Thème Sombre */
-    --background: 52 73 94;     /* dark-bg */
-    --foreground: 236 240 241;   /* light-text */
-    --primary: 169 216 184;    /* soft-green */
-    --primary-foreground: 44 62 80;  /* dark-text */
-    --accent: 168 216 234;     /* light-blue */
-    --accent-foreground: 44 62 80;  /* dark-text */
-    --card: 44 62 80; /* card un peu plus clair que le fond sombre */
-    --card-foreground: 236 240 241;
+    --background: hsl(220, 27%, 4%); /* noir profond */
+    --foreground: hsl(210, 40%, 92%);
+    --primary: hsl(217, 100%, 60%); /* bleu plus clair en mode sombre */
+    --primary-foreground: hsl(220, 27%, 4%);
+    --secondary: hsl(215, 28%, 17%);
+    --secondary-foreground: hsl(210, 40%, 92%);
+    --accent: hsl(142, 76%, 46%);
+    --accent-foreground: hsl(220, 27%, 4%);
+    --success: hsl(142, 76%, 46%);
+    --success-foreground: hsl(220, 27%, 4%);
+    --warning: hsl(38, 92%, 60%);
+    --warning-foreground: hsl(220, 27%, 4%);
+    --danger: hsl(346, 87%, 53%);
+    --danger-foreground: hsl(0, 0%, 100%);
+    --card: hsl(220, 27%, 6%);
+    --card-foreground: hsl(210, 40%, 92%);
+    --border: hsl(215, 28%, 17%);
+    --input: hsl(215, 28%, 17%);
+    --ring: hsl(217, 100%, 60%);
+    --muted: hsl(215, 28%, 17%);
+    --muted-foreground: hsl(220, 9%, 65%);
   }
 }
 
 @layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html,
+  body {
+    scroll-behavior: smooth;
+    --header-height: 74px;
+    --footer-height: 60px;
+  }
+  
   body {
     @apply bg-background text-foreground;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', sans-serif;
+    font-feature-settings: 'cv11', 'ss01';
+    font-variation-settings: 'opsz' 32;
     transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  /* Scrollbar personnalisée */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background: hsl(var(--muted-foreground));
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--foreground) / 0.7);
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    letter-spacing: -0.025em;
+  }
+  
+  /* Effet de grille en arrière-plan inspiré de Kalvi */
+  .grid-background {
+    background-size: 2.5rem 2.5rem;
+    background-image: 
+      linear-gradient(90deg, hsl(var(--border)) 0.063rem, transparent 0), 
+      linear-gradient(180deg, hsl(var(--border)) 0.063rem, transparent 0);
+  }
+  
+  .grid-background::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle, hsl(var(--background) / 0.6) 0%, hsl(var(--background)) 70%);
+    pointer-events: none;
   }
 }
