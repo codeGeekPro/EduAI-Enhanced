@@ -2,18 +2,21 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '../ui/Button';
 import ThemeSwitcher from '../ui/ThemeSwitcher';
+import LanguageSwitcher from '../ui/LanguageSwitcher';
+import { useI18nStore } from '../../stores/i18nStore';
 import { Menu, X, BookOpen, BarChart3, GraduationCap, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-
-const navItems = [
-  { name: 'Accueil', path: '/', icon: BookOpen },
-  { name: 'Cours', path: '/courses', icon: GraduationCap },
-  { name: 'Progrès', path: '/progress', icon: BarChart3 },
-];
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const { t } = useI18nStore();
+
+  const navItems = [
+    { name: t('nav.home'), path: '/', icon: BookOpen },
+    { name: t('nav.courses'), path: '/courses', icon: GraduationCap },
+    { name: t('nav.progress'), path: '/progress', icon: BarChart3 },
+  ];
 
   return (
     <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
@@ -54,17 +57,19 @@ const Header = () => {
 
           {/* Actions Desktop */}
           <div className="hidden md:flex items-center space-x-4">
+            <LanguageSwitcher />
             <ThemeSwitcher />
             <Button variant="ghost" size="icon">
               <User className="h-4 w-4" />
             </Button>
             <Button size="sm">
-              Connexion
+              {t('nav.login')}
             </Button>
           </div>
 
           {/* Menu Mobile */}
           <div className="md:hidden flex items-center space-x-2">
+            <LanguageSwitcher />
             <ThemeSwitcher />
             <Button
               variant="ghost"

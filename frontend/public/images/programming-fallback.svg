@@ -1,0 +1,56 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="programmingGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B5CF6;stop-opacity:0.1" />
+      <stop offset="100%" style="stop-color:#7C3AED;stop-opacity:0.2" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="400" height="300" fill="url(#programmingGradient)" rx="12"/>
+  
+  <!-- Code brackets -->
+  <g fill="none" stroke="#8B5CF6" stroke-width="3" opacity="0.6">
+    <path d="M80 80 L60 100 L60 150 L80 170"/>
+    <path d="M320 80 L340 100 L340 150 L320 170"/>
+  </g>
+  
+  <!-- Binary code -->
+  <g fill="#7C3AED" opacity="0.4" font-family="monospace" font-size="12">
+    <text x="100" y="70">1010</text>
+    <text x="150" y="70">0110</text>
+    <text x="200" y="70">1101</text>
+    <text x="250" y="70">0011</text>
+    <text x="120" y="90">1001</text>
+    <text x="170" y="90">0101</text>
+    <text x="220" y="90">1110</text>
+  </g>
+  
+  <!-- Code lines -->
+  <g fill="#8B5CF6" opacity="0.5" font-family="monospace" font-size="14">
+    <text x="80" y="130">function calculate() {</text>
+    <text x="100" y="150">  return x + y;</text>
+    <text x="80" y="170">}</text>
+  </g>
+  
+  <!-- HTML tags -->
+  <g fill="#7C3AED" opacity="0.4" font-family="monospace" font-size="12">
+    <text x="80" y="210">&lt;div&gt;</text>
+    <text x="150" y="210">&lt;/div&gt;</text>
+    <text x="220" y="210">&lt;span&gt;</text>
+    <text x="290" y="210">&lt;/span&gt;</text>
+  </g>
+  
+  <!-- Terminal cursor -->
+  <rect x="80" y="245" width="8" height="16" fill="#8B5CF6" opacity="0.7">
+    <animate attributeName="opacity" values="0.7;0;0.7" dur="1s" repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Code symbols -->
+  <g fill="#7C3AED" opacity="0.3" font-size="20">
+    <text x="300" y="130">{}</text>
+    <text x="320" y="130">[]</text>
+    <text x="300" y="150">()</text>
+    <text x="320" y="150">;</text>
+  </g>
+</svg>

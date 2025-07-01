@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { 
-  Settings, 
-  Bell, 
-  Globe, 
-  Moon, 
-  Sun, 
-  Volume2, 
-  VolumeX, 
-  Eye, 
+import {
+  Settings,
+  Bell,
+  Globe,
+  Moon,
+  Sun,
+  Volume2,
+  VolumeX,
+  Eye,
   EyeOff,
   Smartphone,
   Monitor,
@@ -15,12 +15,52 @@ import {
   Download,
   Trash2
 } from 'lucide-react';
-import { useUIStore } from '../stores/uiStore';
 import { useThemeStore } from '../stores/themeStore';
+import { useI18nStore } from '../stores/i18nStore';
+import { cn } from '../lib/utils';
+
+// Section générique pour les paramètres
+const SettingsSection: React.FC<{ title: string; description: string; children: React.ReactNode }> = ({ title, description, children }) => (
+  <div className="mb-8">
+    <h2 className="text-2xl font-bold mb-2 text-gray-800 dark:text-gray-200">{title}</h2>
+    <p className="text-gray-600 dark:text-gray-400 mb-6">{description}</p>
+    <div className="bg-white dark:bg-gray-800/50 p-6 rounded-lg shadow-sm">
+      {children}
+    </div>
+  </div>
+);
+
+// Ligne de paramètre avec un interrupteur
+const ToggleSetting: React.FC<{ label: string; checked: boolean; onChange: () => void; icon: React.ReactNode }> = ({ label, checked, onChange, icon }) => {
+  // Generate a unique id for the checkbox for accessibility
+  const id = React.useId();
+
+  return (
+    <div className="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700 last:border-b-0">
+      <div className="flex items-center">
+        <span className="mr-3 text-gray-500 dark:text-gray-400">{icon}</span>
+        <span className="text-gray-700 dark:text-gray-300">{label}</span>
+      </div>
+      <label className="relative inline-flex items-center cursor-pointer" htmlFor={id} title={label}>
+        <input
+          id={id}
+          type="checkbox"
+          checked={checked}
+          onChange={onChange}
+          className="sr-only peer"
+          aria-label={label}
+        />
+        <div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+      </label>
+    </div>
+  );
+};
 
 const SettingsPage: React.FC = () => {
+  const { t, language, setLanguage } = useI18nStore();
   const { theme, toggleTheme } = useThemeStore();
   const isDarkMode = theme === 'dark';
+
   const [notifications, setNotifications] = useState({
     courses: true,
     achievements: true,
@@ -32,65 +72,32 @@ const SettingsPage: React.FC = () => {
     progressVisible: true,
     analyticsEnabled: true
   });
-  const [preferences, setPreferences] = useState({
-    language: 'fr',
-    soundEnabled: true,
-    animationsEnabled: true,
-    autoSave: true
-  });
+  const [soundEnabled, setSoundEnabled] = useState(true);
 
   const handleNotificationChange = (key: keyof typeof notifications) => {
-    setNotifications(prev => ({
-      ...prev,
-      [key]: !prev[key]
-    }));
+    setNotifications(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
   const handlePrivacyChange = (key: keyof typeof privacy) => {
-    setPrivacy(prev => ({
-      ...prev,
-      [key]: !prev[key]
-    }));
+    setPrivacy(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const handlePreferenceChange = (key: keyof typeof preferences, value: any) => {
-    setPreferences(prev => ({
-      ...prev,
-      [key]: value
-    }));
-  };
-
-  const handleSaveSettings = async () => {
-    try {
-      // Simulation sauvegarde des paramètres
-      const settings = {
-        notifications,
-        privacy,
-        preferences,
-        theme: isDarkMode ? 'dark' : 'light'
-      };
-      
-      localStorage.setItem('eduai-settings', JSON.stringify(settings));
-      alert('Paramètres sauvegardés avec succès !');
-    } catch (error) {
-      console.error('Erreur lors de la sauvegarde:', error);
-      alert('Erreur lors de la sauvegarde des paramètres');
-    }
+  const handleSaveSettings = () => {
+    const settings = { notifications, privacy, soundEnabled, theme, language };
+    localStorage.setItem('eduai-settings', JSON.stringify(settings));
+    alert(t('settings.messages.saveSuccess'));
   };
 
   const handleExportData = () => {
     const data = {
-      settings: { notifications, privacy, preferences },
+      settings: { notifications, privacy, soundEnabled, theme, language },
       timestamp: new Date().toISOString()
     };
-    
-    const blob = new Blob([JSON.stringify(data, null, 2)], { 
-      type: 'application/json' 
-    });
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `eduai-settings-${new Date().toLocaleDateString()}.json`;
+    a.download = `${t('settings.messages.exportFilename')}-${new Date().toLocaleDateString()}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -98,277 +105,106 @@ const SettingsPage: React.FC = () => {
   };
 
   const handleDeleteAccount = () => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')) {
-      // Simulation suppression de compte
-      alert('Fonctionnalité de suppression de compte non implémentée dans cette démo');
+    if (window.confirm(t('settings.account.deleteConfirmation') + '\n' + t('settings.account.deleteWarning'))) {
+      // Logique de suppression de compte
+      console.log("Compte supprimé (simulation)");
+      alert('Compte supprimé');
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      <div className="flex items-center space-x-3 mb-8">
-        <Settings className="h-8 w-8 text-blue-600" />
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-          Paramètres
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <header className="mb-10 text-center">
+        <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-5xl md:text-6xl">
+          <Settings className="inline-block w-10 h-10 mr-4 align-text-bottom" />
+          {t('settings.title')}
         </h1>
-      </div>
+        <p className="mt-4 max-w-2xl mx-auto text-lg text-gray-500 dark:text-gray-400">
+          {t('settings.subtitle')}
+        </p>
+      </header>
 
-      {/* Apparence */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-          <Monitor className="h-5 w-5 mr-2" />
-          Apparence
-        </h2>
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Mode sombre
-              </label>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Activer le mode sombre pour réduire la fatigue oculaire
-              </p>
+      <div className="max-w-4xl mx-auto">
+        {/* Section Apparence */}
+        <SettingsSection title={t('settings.theme.title')} description={t('settings.theme.description')}>
+            <div className="flex items-center justify-between py-3">
+                <div className="flex items-center">
+                    <span className="mr-3 text-gray-500 dark:text-gray-400"><Sun className="w-5 h-5"/></span>
+                    <span className="text-gray-700 dark:text-gray-300">{t('settings.theme.light')} / {t('settings.theme.dark')}</span>
+                </div>
+                <button
+                  onClick={toggleTheme}
+                  className="relative inline-flex items-center h-6 rounded-full w-11 focus:outline-none"
+                  title={t('settings.theme.toggle')}
+                >
+                    <span className={cn(
+                        'inline-block w-4 h-4 transform transition-transform duration-200 ease-in-out bg-white rounded-full shadow-md',
+                        isDarkMode ? 'translate-x-6' : 'translate-x-1'
+                    )} />
+                     <span className={cn(
+                        'absolute inset-0 h-full w-full rounded-full bg-gray-300 dark:bg-blue-600 transition-colors duration-200 ease-in-out'
+                    )}></span>
+                </button>
             </div>
-            <button
-              onClick={toggleTheme}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                isDarkMode ? 'bg-blue-600' : 'bg-gray-200'
-              }`}
-              aria-label="Toggle dark mode"
+        </SettingsSection>
+
+        {/* Section Langue */}
+        <SettingsSection title={t('settings.language.title')} description={t('settings.language.description')}>
+            <div className="flex items-center justify-between py-3">
+                 <div className="flex items-center">
+                    <span className="mr-3 text-gray-500 dark:text-gray-400"><Globe className="w-5 h-5"/></span>
+                    <span className="text-gray-700 dark:text-gray-300">{t('settings.language.english')} / {t('settings.language.french')}</span>
+                </div>
+                <div className="flex space-x-2">
+                    <button onClick={() => setLanguage('en')} className={cn('px-4 py-2 rounded-md text-sm font-medium', language === 'en' ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200')}>EN</button>
+                    <button onClick={() => setLanguage('fr')} className={cn('px-4 py-2 rounded-md text-sm font-medium', language === 'fr' ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200')}>FR</button>
+                </div>
+            </div>
+        </SettingsSection>
+
+        {/* Section Notifications */}
+        <SettingsSection title={t('settings.notifications.title')} description={t('settings.notifications.description')}>
+          <ToggleSetting icon={<Bell className="w-5 h-5"/>} label={t('settings.notifications.courses')} checked={notifications.courses} onChange={() => handleNotificationChange('courses')} />
+          <ToggleSetting icon={<Bell className="w-5 h-5"/>} label={t('settings.notifications.achievements')} checked={notifications.achievements} onChange={() => handleNotificationChange('achievements')} />
+          <ToggleSetting icon={<Bell className="w-5 h-5"/>} label={t('settings.notifications.reminders')} checked={notifications.reminders} onChange={() => handleNotificationChange('reminders')} />
+          <ToggleSetting icon={<Bell className="w-5 h-5"/>} label={t('settings.notifications.marketing')} checked={notifications.marketing} onChange={() => handleNotificationChange('marketing')} />
+        </SettingsSection>
+
+        {/* Section Audio */}
+        <SettingsSection title={t('settings.sound.title')} description={t('settings.sound.description')}>
+            <ToggleSetting icon={soundEnabled ? <Volume2 className="w-5 h-5"/> : <VolumeX className="w-5 h-5"/>} label={t('settings.sound.enabled')} checked={soundEnabled} onChange={() => setSoundEnabled(!soundEnabled)} />
+        </SettingsSection>
+
+        {/* Section Confidentialité */}
+        <SettingsSection title={t('settings.privacy.title')} description={t('settings.privacy.description')}>
+          <ToggleSetting icon={privacy.profilePublic ? <Eye className="w-5 h-5"/> : <EyeOff className="w-5 h-5"/>} label={t('settings.privacy.profilePublic')} checked={privacy.profilePublic} onChange={() => handlePrivacyChange('profilePublic')} />
+          <ToggleSetting icon={privacy.progressVisible ? <Eye className="w-5 h-5"/> : <EyeOff className="w-5 h-5"/>} label={t('settings.privacy.progressVisible')} checked={privacy.progressVisible} onChange={() => handlePrivacyChange('progressVisible')} />
+          <ToggleSetting icon={privacy.analyticsEnabled ? <Monitor className="w-5 h-5"/> : <Smartphone className="w-5 h-5"/>} label={t('settings.privacy.analyticsEnabled')} checked={privacy.analyticsEnabled} onChange={() => handlePrivacyChange('analyticsEnabled')} />
+        </SettingsSection>
+
+        {/* Section Compte */}
+        <SettingsSection title={t('settings.account.title')} description={t('settings.account.description')}>
+            <div className="space-y-4">
+                <button onClick={handleExportData} className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                    <Download className="w-5 h-5 mr-2" />
+                    {t('settings.account.exportData')}
+                </button>
+                <button onClick={handleDeleteAccount} className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                    <Trash2 className="w-5 h-5 mr-2" />
+                    {t('settings.account.deleteAccount')}
+                </button>
+            </div>
+        </SettingsSection>
+
+        {/* Bouton de sauvegarde flottant */}
+        <div className="mt-12 text-center">
+             <button 
+                onClick={handleSaveSettings} 
+                className="px-8 py-3 border border-transparent text-base font-medium rounded-full text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-lg transform hover:scale-105 transition-transform duration-200"
             >
-              <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                  isDarkMode ? 'translate-x-6' : 'translate-x-1'
-                }`}
-              />
-              {isDarkMode ? (
-                <Moon className="absolute left-1 h-3 w-3 text-blue-600" />
-              ) : (
-                <Sun className="absolute right-1 h-3 w-3 text-gray-400" />
-              )}
+                <Save className="inline-block w-5 h-5 mr-2"/>
+                {t('settings.saveButton')}
             </button>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Animations
-              </label>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Activer les animations et transitions
-              </p>
-            </div>
-            <button
-              onClick={() => handlePreferenceChange('animationsEnabled', !preferences.animationsEnabled)}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                preferences.animationsEnabled ? 'bg-blue-600' : 'bg-gray-200'
-              }`}
-              aria-label="Toggle animations"
-            >
-              <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                  preferences.animationsEnabled ? 'translate-x-6' : 'translate-x-1'
-                }`}
-              />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Notifications */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-          <Bell className="h-5 w-5 mr-2" />
-          Notifications
-        </h2>
-        <div className="space-y-4">
-          {Object.entries(notifications).map(([key, value]) => (
-            <div key={key} className="flex items-center justify-between">
-              <div>
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {key === 'courses' && 'Nouveaux cours'}
-                  {key === 'achievements' && 'Réussites'}
-                  {key === 'reminders' && 'Rappels'}
-                  {key === 'marketing' && 'Marketing'}
-                </label>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {key === 'courses' && 'Notifications pour les nouveaux cours disponibles'}
-                  {key === 'achievements' && 'Notifications pour les badges et récompenses'}
-                  {key === 'reminders' && 'Rappels pour les cours en cours'}
-                  {key === 'marketing' && 'Offres spéciales et actualités'}
-                </p>
-              </div>
-              <button
-                onClick={() => handleNotificationChange(key as keyof typeof notifications)}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  value ? 'bg-blue-600' : 'bg-gray-200'
-                }`}
-                aria-label={`Toggle ${key} notifications`}
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    value ? 'translate-x-6' : 'translate-x-1'
-                  }`}
-                />
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Confidentialité */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-          <Eye className="h-5 w-5 mr-2" />
-          Confidentialité
-        </h2>
-        <div className="space-y-4">
-          {Object.entries(privacy).map(([key, value]) => (
-            <div key={key} className="flex items-center justify-between">
-              <div>
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {key === 'profilePublic' && 'Profil public'}
-                  {key === 'progressVisible' && 'Progression visible'}
-                  {key === 'analyticsEnabled' && 'Analytics activées'}
-                </label>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {key === 'profilePublic' && 'Rendre votre profil visible aux autres utilisateurs'}
-                  {key === 'progressVisible' && 'Permettre aux autres de voir votre progression'}
-                  {key === 'analyticsEnabled' && 'Collecter des données pour améliorer l\'expérience'}
-                </p>
-              </div>
-              <button
-                onClick={() => handlePrivacyChange(key as keyof typeof privacy)}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  value ? 'bg-blue-600' : 'bg-gray-200'
-                }`}
-                aria-label={`Toggle ${key}`}
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    value ? 'translate-x-6' : 'translate-x-1'
-                  }`}
-                />
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Préférences */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-          <Globe className="h-5 w-5 mr-2" />
-          Préférences
-        </h2>
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Langue
-              </label>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Choisir la langue de l'interface
-              </p>
-            </div>
-            <select
-              value={preferences.language}
-              onChange={(e) => handlePreferenceChange('language', e.target.value)}
-              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-              aria-label="Sélectionner la langue"
-              title="Sélectionner la langue de l'interface"
-            >
-              <option value="fr">Français</option>
-              <option value="en">English</option>
-              <option value="es">Español</option>
-              <option value="de">Deutsch</option>
-            </select>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Son activé
-              </label>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Activer les effets sonores et notifications audio
-              </p>
-            </div>
-            <button
-              onClick={() => handlePreferenceChange('soundEnabled', !preferences.soundEnabled)}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                preferences.soundEnabled ? 'bg-blue-600' : 'bg-gray-200'
-              }`}
-              aria-label="Toggle sound"
-            >
-              <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                  preferences.soundEnabled ? 'translate-x-6' : 'translate-x-1'
-                }`}
-              />
-              {preferences.soundEnabled ? (
-                <Volume2 className="absolute left-1 h-3 w-3 text-blue-600" />
-              ) : (
-                <VolumeX className="absolute right-1 h-3 w-3 text-gray-400" />
-              )}
-            </button>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Sauvegarde automatique
-              </label>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Sauvegarder automatiquement votre progression
-              </p>
-            </div>
-            <button
-              onClick={() => handlePreferenceChange('autoSave', !preferences.autoSave)}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                preferences.autoSave ? 'bg-blue-600' : 'bg-gray-200'
-              }`}
-              aria-label="Toggle auto-save"
-            >
-              <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                  preferences.autoSave ? 'translate-x-6' : 'translate-x-1'
-                }`}
-              />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Actions */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-          Actions
-        </h2>
-        <div className="space-y-4">
-          <button
-            onClick={handleSaveSettings}
-            className="w-full flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-          >
-            <Save className="h-4 w-4 mr-2" />
-            Sauvegarder les paramètres
-          </button>
-
-          <button
-            onClick={handleExportData}
-            className="w-full flex items-center justify-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
-          >
-            <Download className="h-4 w-4 mr-2" />
-            Exporter mes données
-          </button>
-
-          <button
-            onClick={handleDeleteAccount}
-            className="w-full flex items-center justify-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
-          >
-            <Trash2 className="h-4 w-4 mr-2" />
-            Supprimer mon compte
-          </button>
         </div>
       </div>
     </div>

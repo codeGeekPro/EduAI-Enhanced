@@ -6,52 +6,54 @@
 @layer base {
   :root {
     /* Système de couleurs inspiré de Kalvi mais adapté à l'éducation */
-    --background: hsl(0, 0%, 100%); /* blanc pur */
-    --foreground: hsl(220, 9%, 11%); /* texte sombre moderne */
-    --primary: hsl(217, 100%, 47%); /* bleu éducatif */
-    --primary-foreground: hsl(0, 0%, 100%);
-    --secondary: hsl(210, 40%, 96%); /* gris très clair */
-    --secondary-foreground: hsl(220, 9%, 11%);
-    --accent: hsl(142, 76%, 36%); /* vert succès */
-    --accent-foreground: hsl(0, 0%, 100%);
-    --success: hsl(142, 76%, 36%); /* vert */
-    --success-foreground: hsl(0, 0%, 100%);
-    --warning: hsl(38, 92%, 50%); /* orange */
-    --warning-foreground: hsl(220, 9%, 11%);
-    --danger: hsl(346, 87%, 43%); /* rouge */
-    --danger-foreground: hsl(0, 0%, 100%);
-    --card: hsl(0, 0%, 100%);
-    --card-foreground: hsl(220, 9%, 11%);
-    --border: hsl(220, 13%, 91%);
-    --input: hsl(220, 13%, 91%);
-    --ring: hsl(217, 100%, 47%);
-    --muted: hsl(210, 40%, 96%);
-    --muted-foreground: hsl(220, 9%, 46%);
+    --background: 0 0% 100%; /* blanc pur */
+    --foreground: 220 9% 11%; /* texte sombre moderne */
+    --primary: 217 100% 47%; /* bleu éducatif */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96%; /* gris très clair */
+    --secondary-foreground: 220 9% 11%;
+    --accent: 142 76% 36%; /* vert succès */
+    --accent-foreground: 0 0% 100%;
+    --success: 142 76% 36%; /* vert */
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%; /* orange */
+    --warning-foreground: 220 9% 11%;
+    --danger: 346 87% 43%; /* rouge */
+    --danger-foreground: 0 0% 100%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 9% 11%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 217 100% 47%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 220 9% 46%;
   }
 
-  .dark {
+  [data-theme="dark"],
+  .dark,
+  :root.dark {
     /* Thème Sombre */
-    --background: hsl(220, 27%, 4%); /* noir profond */
-    --foreground: hsl(210, 40%, 92%);
-    --primary: hsl(217, 100%, 60%); /* bleu plus clair en mode sombre */
-    --primary-foreground: hsl(220, 27%, 4%);
-    --secondary: hsl(215, 28%, 17%);
-    --secondary-foreground: hsl(210, 40%, 92%);
-    --accent: hsl(142, 76%, 46%);
-    --accent-foreground: hsl(220, 27%, 4%);
-    --success: hsl(142, 76%, 46%);
-    --success-foreground: hsl(220, 27%, 4%);
-    --warning: hsl(38, 92%, 60%);
-    --warning-foreground: hsl(220, 27%, 4%);
-    --danger: hsl(346, 87%, 53%);
-    --danger-foreground: hsl(0, 0%, 100%);
-    --card: hsl(220, 27%, 6%);
-    --card-foreground: hsl(210, 40%, 92%);
-    --border: hsl(215, 28%, 17%);
-    --input: hsl(215, 28%, 17%);
-    --ring: hsl(217, 100%, 60%);
-    --muted: hsl(215, 28%, 17%);
-    --muted-foreground: hsl(220, 9%, 65%);
+    --background: 220 27% 4%; /* noir profond */
+    --foreground: 210 40% 92%;
+    --primary: 217 100% 60%; /* bleu plus clair en mode sombre */
+    --primary-foreground: 220 27% 4%;
+    --secondary: 215 28% 17%;
+    --secondary-foreground: 210 40% 92%;
+    --accent: 142 76% 46%;
+    --accent-foreground: 220 27% 4%;
+    --success: 142 76% 46%;
+    --success-foreground: 220 27% 4%;
+    --warning: 38 92% 60%;
+    --warning-foreground: 220 27% 4%;
+    --danger: 346 87% 53%;
+    --danger-foreground: 0 0% 100%;
+    --card: 220 27% 6%;
+    --card-foreground: 210 40% 92%;
+    --border: 215 28% 17%;
+    --input: 215 28% 17%;
+    --ring: 217 100% 60%;
+    --muted: 215 28% 17%;
+    --muted-foreground: 220 9% 65%;
   }
 }
 

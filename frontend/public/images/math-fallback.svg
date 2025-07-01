@@ -1,0 +1,37 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="mathGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:0.1" />
+      <stop offset="100%" style="stop-color:#1D4ED8;stop-opacity:0.2" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="400" height="300" fill="url(#mathGradient)" rx="12"/>
+  
+  <!-- Mathematical symbols -->
+  <g fill="currentColor" opacity="0.6">
+    <!-- Pi symbol -->
+    <text x="80" y="100" font-size="48" font-family="serif" fill="#3B82F6">π</text>
+    <!-- Integral symbol -->
+    <text x="200" y="120" font-size="36" font-family="serif" fill="#1D4ED8">∫</text>
+    <!-- Square root -->
+    <text x="300" y="80" font-size="32" font-family="serif" fill="#3B82F6">√</text>
+    <!-- Infinity -->
+    <text x="150" y="200" font-size="28" font-family="serif" fill="#1D4ED8">∞</text>
+    <!-- Sigma -->
+    <text x="250" y="220" font-size="32" font-family="serif" fill="#3B82F6">Σ</text>
+  </g>
+  
+  <!-- Geometric shapes -->
+  <g fill="none" stroke="currentColor" stroke-width="2" opacity="0.4">
+    <circle cx="120" cy="180" r="25" stroke="#3B82F6"/>
+    <polygon points="320,150 340,190 300,190" stroke="#1D4ED8"/>
+    <rect x="60" y="220" width="30" height="30" stroke="#3B82F6"/>
+  </g>
+  
+  <!-- Mathematical equation -->
+  <text x="50" y="260" font-size="16" font-family="monospace" fill="#374151" opacity="0.7">
+    y = mx + b
+  </text>
+</svg>

@@ -11,6 +11,7 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { useAPI } from '../hooks/useAPI';
+import { useI18nStore } from '../stores/i18nStore';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 
 interface AnalyticsData {
@@ -46,6 +47,7 @@ interface AnalyticsData {
 const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4'];
 
 const AnalyticsPage: React.FC = () => {
+  const { t } = useI18nStore();
   const [timeRange, setTimeRange] = useState<'week' | 'month' | 'year'>('month');
   const [loading, setLoading] = useState(true);
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
@@ -115,20 +117,20 @@ const AnalyticsPage: React.FC = () => {
 
   const handleExportReport = () => {
     if (!analyticsData) return;
-    
+
     const report = {
       généré: new Date().toISOString(),
       période: timeRange,
       données: analyticsData
     };
-    
-    const blob = new Blob([JSON.stringify(report, null, 2)], { 
-      type: 'application/json' 
+
+    const blob = new Blob([JSON.stringify(report, null, 2)], {
+      type: 'application/json'
     });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `rapport-analytics-${new Date().toLocaleDateString()}.json`;
+    a.download = `${t('analytics.reportFilename')}-${new Date().toLocaleDateString()}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -139,7 +141,7 @@ const AnalyticsPage: React.FC = () => {
     return (
       <div className="flex items-center justify-center h-64">
         <RefreshCw className="h-8 w-8 animate-spin text-blue-600" />
-        <span className="ml-2 text-lg">Chargement des analytics...</span>
+        <span className="ml-2 text-lg">{t('analytics.loading')}</span>
       </div>
     );
   }
@@ -149,10 +151,10 @@ const AnalyticsPage: React.FC = () => {
       <div className="text-center py-12">
         <BarChart3 className="h-16 w-16 text-gray-400 mx-auto mb-4" />
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-          Aucune donnée disponible
+          {t('analytics.noData')}
         </h2>
         <p className="text-gray-600 dark:text-gray-400">
-          Commencez à utiliser la plateforme pour voir vos analytics
+          {t('analytics.noDataSubtitle')}
         </p>
       </div>
     );
@@ -165,10 +167,10 @@ const AnalyticsPage: React.FC = () => {
         <div className="flex items-center space-x-3">
           <BarChart3 className="h-8 w-8 text-blue-600" />
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Analytics
+            {t('analytics.title')}
           </h1>
         </div>
-        
+
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
             <Filter className="h-4 w-4 text-gray-500" />
@@ -176,20 +178,20 @@ const AnalyticsPage: React.FC = () => {
               value={timeRange}
               onChange={(e) => setTimeRange(e.target.value as 'week' | 'month' | 'year')}
               className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-              aria-label="Sélectionner la période"
+              aria-label={t('analytics.selectPeriod')}
             >
-              <option value="week">Cette semaine</option>
-              <option value="month">Ce mois</option>
-              <option value="year">Cette année</option>
+              <option value="week">{t('analytics.thisWeek')}</option>
+              <option value="month">{t('analytics.thisMonth')}</option>
+              <option value="year">{t('analytics.thisYear')}</option>
             </select>
           </div>
-          
+
           <button
             onClick={handleExportReport}
             className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
           >
             <Download className="h-4 w-4 mr-2" />
-            Exporter
+            {t('analytics.export')}
           </button>
         </div>
       </div>
@@ -203,7 +205,7 @@ const AnalyticsPage: React.FC = () => {
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                Temps total
+                {t('analytics.totalTime')}
               </p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {analyticsData.learningTime.weekly.reduce((acc, w) => acc + w.hours, 0)}h
@@ -219,7 +221,7 @@ const AnalyticsPage: React.FC = () => {
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                Cours actifs
+                {t('analytics.activeCourses')}
               </p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {analyticsData.courseProgress.length}
@@ -235,7 +237,7 @@ const AnalyticsPage: React.FC = () => {
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                Réussites
+                {t('analytics.achievements')}
               </p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {analyticsData.achievements.length}
@@ -251,7 +253,7 @@ const AnalyticsPage: React.FC = () => {
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                Progression moy.
+                {t('analytics.avgProgress')}
               </p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {Math.round(analyticsData.courseProgress.reduce((acc, c) => acc + c.progress, 0) / analyticsData.courseProgress.length)}%
@@ -266,7 +268,7 @@ const AnalyticsPage: React.FC = () => {
         {/* Temps d'apprentissage */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            Temps d'apprentissage quotidien
+            {t('analytics.dailyLearningTime')}
           </h3>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={analyticsData.learningTime.daily}>
@@ -288,7 +290,7 @@ const AnalyticsPage: React.FC = () => {
         {/* Progression par cours */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            Progression par cours
+            {t('analytics.courseProgress')}
           </h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={analyticsData.courseProgress}>
@@ -306,7 +308,7 @@ const AnalyticsPage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            Points forts
+            {t('analytics.strengths')}
           </h3>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
@@ -332,7 +334,7 @@ const AnalyticsPage: React.FC = () => {
         {/* Objectifs */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            Objectifs en cours
+            {t('analytics.currentGoals')}
           </h3>
           <div className="space-y-4">
             {analyticsData.goals.map((goal, index) => (
@@ -367,7 +369,7 @@ const AnalyticsPage: React.FC = () => {
       {/* Réussites récentes */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          Réussites récentes
+          {t('analytics.recentAchievements')}
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {analyticsData.achievements.map((achievement, index) => (

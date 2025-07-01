@@ -3,6 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card'
 import { Button } from '../components/ui/Button';
 import { ArrowRight, Book, Target, TrendingUp, PlayCircle, Star, Users, Award, Zap } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { useImageGeneration } from '../hooks/useImageGeneration';
+import { useI18nStore } from '../stores/i18nStore';
+import { useEffect } from 'react';
 
 // Données de simulation améliorées inspirées de Kalvi
 const featuredCourses = [
@@ -13,7 +16,9 @@ const featuredCourses = [
     students: '2,847',
     rating: 4.9,
     color: 'text-primary',
-    badge: 'Populaire'
+    badge: 'Populaire',
+    imagePrompt: 'mathematics equations, geometric shapes, numbers, educational style',
+    fallbackCategory: 'mathematics' as const,
   },
   { 
     title: 'Laboratoire de Sciences', 
@@ -22,16 +27,20 @@ const featuredCourses = [
     students: '1,923',
     rating: 4.8,
     color: 'text-success',
-    badge: 'Nouveau'
+    badge: 'Nouveau',
+    imagePrompt: 'laboratory, scientific equipment, molecules, chemistry, physics experiments',
+    fallbackCategory: 'science' as const,
   },
   { 
-    title: 'Voyage dans l\'Histoire', 
+    title: 'Programmation Créative', 
     icon: TrendingUp, 
-    description: 'Découvrez les civilisations et événements qui ont façonné notre monde.',
+    description: 'Apprenez à coder de manière ludique avec des projets créatifs et interactifs.',
     students: '3,156',
     rating: 4.9,
     color: 'text-warning',
-    badge: 'Tendance'
+    badge: 'Tendance',
+    imagePrompt: 'programming code, computer screen, coding symbols, software development',
+    fallbackCategory: 'programming' as const,
   },
 ];
 
@@ -50,6 +59,60 @@ const stats = [
 ];
 
 const HomePage = () => {
+  const { generateImage, getImageResult, preloadFallbackImages } = useImageGeneration();
+  const { t } = useI18nStore();
+  
+  // Données de simulation améliorées inspirées de Kalvi
+  const featuredCourses = [
+    { 
+      title: t('courseData.mathematics.title'), 
+      icon: Book, 
+      description: t('courseData.mathematics.description'),
+      students: '2,847',
+      rating: 4.9,
+      color: 'text-primary',
+      badge: t('home.courses.popular'),
+      imagePrompt: 'mathematics equations, geometric shapes, numbers, educational style',
+      fallbackCategory: 'mathematics' as const,
+    },
+    { 
+      title: t('courseData.science.title'), 
+      icon: Target, 
+      description: t('courseData.science.description'),
+      students: '1,923',
+      rating: 4.8,
+      color: 'text-success',
+      badge: t('home.courses.new'),
+      imagePrompt: 'laboratory, scientific equipment, molecules, chemistry, physics experiments',
+      fallbackCategory: 'science' as const,
+    },
+    { 
+      title: t('courseData.programming.title'), 
+      icon: TrendingUp, 
+      description: t('courseData.programming.description'),
+      students: '3,156',
+      rating: 4.9,
+      color: 'text-warning',
+      badge: t('home.courses.trending'),
+      imagePrompt: 'programming code, computer screen, coding symbols, software development',
+      fallbackCategory: 'programming' as const,
+    },
+  ];
+
+  const progressData = [
+    { name: 'Maths', progress: 85, fill: 'hsl(var(--primary))' },
+    { name: 'Sciences', progress: 72, fill: 'hsl(var(--success))' },
+    { name: 'Histoire', progress: 91, fill: 'hsl(var(--warning))' },
+    { name: 'Français', progress: 78, fill: 'hsl(var(--accent))' },
+  ];
+
+  const stats = [
+    { icon: Users, label: t('home.stats.activeStudents'), value: '12,000+' },
+    { icon: Book, label: t('home.stats.availableCourses'), value: '150+' },
+    { icon: Award, label: t('home.stats.certificatesIssued'), value: '5,000+' },
+    { icon: Star, label: t('home.stats.averageRating'), value: '4.9/5' },
+  ];
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -62,6 +125,26 @@ const HomePage = () => {
     hidden: { y: 20, opacity: 0 },
     visible: { y: 0, opacity: 1, transition: { duration: 0.5 } },
   };
+
+  // Génère les images au chargement du composant
+  useEffect(() => {
+    preloadFallbackImages();
+    
+    // Génère une image pour chaque cours avec un délai pour éviter la surcharge
+    featuredCourses.forEach((course, index) => {
+      setTimeout(() => {
+        generateImage(
+          `course-${index}`,
+          {
+            prompt: course.imagePrompt,
+            width: 400,
+            height: 240,
+          },
+          course.fallbackCategory
+        );
+      }, index * 1000); // Délai de 1 seconde entre chaque génération
+    });
+  }, [generateImage, preloadFallbackImages]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -77,17 +160,15 @@ const HomePage = () => {
             >
               <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6">
                 <Zap className="h-4 w-4" />
-                Nouvelle expérience d'apprentissage
+                {t('home.hero.badge')}
               </div>
               
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6">
-                L'éducation du{' '}
-                <span className="text-primary">futur</span>, aujourd'hui
+                {t('home.hero.title', { future: t('home.hero.future') })}
               </h1>
               
               <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto lg:mx-0 mb-8 leading-relaxed">
-                Transformez votre façon d'apprendre avec notre plateforme interactive. 
-                Des cours personnalisés, des outils d'IA avancés et une communauté engagée.
+                {t('home.hero.subtitle')}
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -97,7 +178,7 @@ const HomePage = () => {
                   iconPosition="right"
                   className="animate-scale-in"
                 >
-                  Commencer gratuitement
+                  {t('home.hero.startFree')}
                 </Button>
                 <Button 
                   variant="outline" 
@@ -105,7 +186,7 @@ const HomePage = () => {
                   icon={PlayCircle}
                   iconPosition="left"
                 >
-                  Voir la démo
+                  {t('home.hero.watchDemo')}
                 </Button>
               </div>
             </motion.div>
@@ -123,7 +204,7 @@ const HomePage = () => {
                   className="w-full h-auto max-w-lg mx-auto"
                 />
                 <div className="absolute -top-4 -right-4 bg-primary text-primary-foreground px-3 py-2 rounded-lg text-sm font-semibold shadow-large">
-                  🎯 100% Gratuit
+                  {t('home.hero.freeBadge')}
                 </div>
               </div>
             </motion.div>
@@ -173,56 +254,79 @@ const HomePage = () => {
           >
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-                Découvrez nos cours
+                {t('home.courses.title')}
               </h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Des expériences d'apprentissage conçues pour vous faire progresser, 
-                quel que soit votre niveau de départ.
+                {t('home.courses.subtitle')}
               </p>
             </div>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {featuredCourses.map((course, index) => (
-                <motion.div 
-                  key={index} 
-                  variants={itemVariants}
-                  whileHover={{ y: -8 }}
-                  transition={{ type: 'spring', stiffness: 300 }}
-                >
-                  <Card className="h-full flex flex-col bg-card border-0 shadow-soft hover:shadow-large transition-all duration-300 cursor-pointer group">
-                    <CardHeader className="pb-4">
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex items-center gap-3">
-                          <div className={`p-2 rounded-lg bg-opacity-10 ${course.color.replace('text-', 'bg-')}`}>
-                            <course.icon className={`w-6 h-6 ${course.color}`} />
+              {featuredCourses.map((course, index) => {
+                const imageResult = getImageResult(`course-${index}`);
+                
+                return (
+                  <motion.div 
+                    key={index} 
+                    variants={itemVariants}
+                    whileHover={{ y: -8 }}
+                    transition={{ type: 'spring', stiffness: 300 }}
+                  >
+                    <Card className="h-full flex flex-col bg-card border-0 shadow-soft hover:shadow-large transition-all duration-300 cursor-pointer group overflow-hidden">
+                      {/* Image générée ou fallback */}
+                      <div className="relative h-48 overflow-hidden">
+                        {imageResult.isLoading ? (
+                          <div className="w-full h-full bg-secondary/50 flex items-center justify-center">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                           </div>
-                          <span className="px-2 py-1 bg-primary/10 text-primary text-xs font-medium rounded-full">
+                        ) : (
+                          <img 
+                            src={imageResult.imageUrl || `/images/${course.fallbackCategory}-fallback.svg`}
+                            alt={course.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            onError={(e) => {
+                              // Fallback en cas d'erreur d'image
+                              e.currentTarget.src = `/images/${course.fallbackCategory}-fallback.svg`;
+                            }}
+                          />
+                        )}
+                        <div className="absolute top-4 right-4">
+                          <span className="px-3 py-1 bg-white/90 dark:bg-black/90 text-primary text-xs font-medium rounded-full backdrop-blur-sm">
                             {course.badge}
                           </span>
                         </div>
                       </div>
-                      <CardTitle className="text-xl group-hover:text-primary transition-colors">
-                        {course.title}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex-grow">
-                      <p className="text-muted-foreground mb-4 leading-relaxed">
-                        {course.description}
-                      </p>
-                      <div className="flex items-center justify-between text-sm">
-                        <div className="flex items-center gap-1 text-warning">
-                          <Star className="h-4 w-4 fill-current" />
-                          <span className="font-medium">{course.rating}</span>
+                      
+                      <CardHeader className="pb-4">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className={`p-2 rounded-lg bg-opacity-10 ${course.color.replace('text-', 'bg-')}`}>
+                            <course.icon className={`w-5 h-5 ${course.color}`} />
+                          </div>
                         </div>
-                        <div className="flex items-center gap-1 text-muted-foreground">
-                          <Users className="h-4 w-4" />
-                          <span>{course.students} étudiants</span>
+                        <CardTitle className="text-xl group-hover:text-primary transition-colors">
+                          {course.title}
+                        </CardTitle>
+                      </CardHeader>
+                      
+                      <CardContent className="flex-grow">
+                        <p className="text-muted-foreground mb-4 leading-relaxed">
+                          {course.description}
+                        </p>
+                        <div className="flex items-center justify-between text-sm">
+                          <div className="flex items-center gap-1 text-warning">
+                            <Star className="h-4 w-4 fill-current" />
+                            <span className="font-medium">{course.rating}</span>
+                          </div>
+                          <div className="flex items-center gap-1 text-muted-foreground">
+                            <Users className="h-4 w-4" />
+                            <span>{course.students} {t('home.courses.students')}</span>
+                          </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                );
+              })}
             </div>
           </motion.div>
         </div>
@@ -239,10 +343,10 @@ const HomePage = () => {
           >
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Suivez vos progrès
+                {t('home.progress.title')}
               </h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Visualisez vos performances et célébrez vos réussites avec notre tableau de bord interactif.
+                {t('home.progress.subtitle')}
               </p>
             </div>
             

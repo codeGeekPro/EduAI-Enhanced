@@ -1,0 +1,44 @@
+/* Styles de base pour ProgressPage */
+
+.subject-progress-bar {
+  transition: width 0.5s ease-in-out;
+}
+
+.bg-card {
+  background-color: var(--card);
+}
+
+.text-primary {
+  color: var(--primary);
+}
+
+.text-success {
+  color: var(--success);
+}
+
+.text-warning {
+  color: var(--warning);
+}
+
+.text-accent {
+  color: var(--accent);
+}
+
+.bg-success\/10 {
+  background-color: var(--success);
+  opacity: 0.1;
+}
+
+.bg-primary\/10 {
+  background-color: var(--primary);
+  opacity: 0.1;
+}
+
+.bg-warning\/10 {
+  background-color: var(--warning);
+  opacity: 0.1;
+}
+
+.bg-muted {
+  background-color: var(--muted);
+}
