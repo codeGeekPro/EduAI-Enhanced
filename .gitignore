@@ -63,6 +63,49 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# 🔒 Fichiers sensibles et de développement personnel
+# Sensitive files and personal development files
+
+# Scripts de test et utilitaires développeur
+*.bat
+fix-*.sh
+fix-*.py
+test_*.py
+validate_*.py
+demo_*.py
+*_lite.py
+main_lite.py
+
+# Dossiers de développement personnel
+personnel/
+temp/
+uploads/
+logs/
+security-reports/
+.pytest_cache/
+node_modules/
+
+# Documentation de développement
+*_GUIDE.md
+*_COMPLETE.md
+DEPENDENCY_*.md
+CI_CD_*.md
+DEMO_*.md
+
+# Fichiers de configuration sensibles
+.env
+.env.*
+!.env.example
+constraints.txt
+requirements-minimal.txt
+
+# Scripts et outils de déploiement
+scripts/fix_*.py
+scripts/codacy-*.bat
+scripts/codacy-*.ps1
+scripts/fix_*.bat
+scripts/install_*.py
+
 # Système d'exploitation
 .DS_Store?
 ._*
@@ -177,7 +220,3 @@ Complete Roadmap.txt
 ANALYSIS_REPORT.md
 Alternatives_API.md
 template_utile.txt
-
-# Dossier personnel (non versionné)
-personnel/
-kalvi-master/

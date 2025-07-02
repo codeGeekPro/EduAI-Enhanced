@@ -408,11 +408,10 @@ const HomePage = () => {
             className="text-center"
           >
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
-              Prêt à transformer votre avenir ?
+              {t('home.cta.title')}
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed">
-              Rejoignez plus de 12,000 apprenants qui font confiance à EduAI pour développer leurs compétences. 
-              Commencez votre parcours d'apprentissage dès aujourd'hui.
+              {t('home.cta.subtitle')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
@@ -420,13 +419,13 @@ const HomePage = () => {
                 icon={ArrowRight}
                 iconPosition="right"
               >
-                Commencer maintenant
+                {t('home.cta.startToday')}
               </Button>
               <Button 
                 variant="outline" 
                 size="xl"
               >
-                Découvrir les prix
+                {t('home.cta.learnMore')}
               </Button>
             </div>
           </motion.div>

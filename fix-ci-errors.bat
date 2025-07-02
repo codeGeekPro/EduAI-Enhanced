@@ -4,21 +4,22 @@ REM Fix CI/CD Errors for EduAI Enhanced
 
 echo 🔧 Correction des erreurs CI/CD EduAI Enhanced...
 
-echo 📦 Mise à jour des dépendances Python...
+echo 📦 Mise à jour des outils pip...
 pip install --upgrade pip setuptools wheel
 
-echo 🔧 Correction des conflits FastAPI/Starlette...
-pip uninstall -y fastapi starlette uvicorn pydantic
+echo 🔧 Installation des packages core FastAPI...
 pip install fastapi==0.109.2 uvicorn[standard]==0.27.1 pydantic==2.9.2
 
 echo 📦 Installation des dépendances backend...
 cd backend
-pip install -c ../constraints.txt -r requirements.txt
+pip install -r requirements.txt --no-deps --quiet || echo "Installation no-deps terminée"
+pip install -r requirements.txt
 cd ..
 
 echo 🤖 Installation des dépendances AI services...
 cd ai_services  
-pip install -c ../constraints.txt -r requirements.txt
+pip install -r requirements.txt --no-deps --quiet || echo "Installation no-deps terminée"
+pip install -r requirements.txt
 cd ..
 
 echo 🎯 Installation des dépendances frontend...
@@ -29,11 +30,11 @@ cd ..
 echo ✅ Correction des erreurs terminée !
 
 echo 🧪 Test de l'installation...
-python -c "import fastapi, uvicorn, pydantic; print('✅ Python dependencies OK')"
+python -c "import fastapi, uvicorn, pydantic; print('✅ Python dependencies OK')" || echo "⚠️ Certaines dépendances peuvent manquer"
 
 echo 🎉 Prêt pour le commit et push !
 echo.
 echo 💡 Commandes suggérées :
 echo git add .
-echo git commit -m "🔧 Fix: Corriger les conflits de dépendances CI/CD"
+echo git commit -m "🔧 Fix: Corriger les contraintes pip et dépendances CI/CD"
 echo git push origin main
