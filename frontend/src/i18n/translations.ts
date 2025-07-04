@@ -70,47 +70,63 @@ export const translations = {
     progress: {
       title: 'Your Progress',
       subtitle: 'Track your achievements and discover your personalized learning statistics.',
-      overallProgress: 'Overall Average',
+      overallProgress: 'Overall Progress',
       completedCourses: 'Completed Courses',
       totalHours: 'Study Hours',
       certificates: 'Badges Earned',
       monthlyProgress: 'Monthly Progress',
       weeklyActivity: 'Weekly Activity',
       subjectProgress: 'Progress by Subject',
-      achievements: {
-        title: 'Achievements & Badges',
-        earnedOn: 'Earned on {date}',
-        notEarned: 'Not earned',
-        firstCourse: {
-          title: 'First Course Completed',
-          description: 'You have completed your first course!'
-        },
-        diligentStudent: {
-          title: 'Diligent Student',
-          description: '7 consecutive days of learning'
-        },
-        mathematician: {
-          title: 'Mathematician',
-          description: '85% mastery of mathematics'
-        },
-        perfectionist: {
-          title: 'Perfectionist',
-          description: 'Perfect score on 5 exercises'
-        },
-        champion: {
-          title: 'Champion',
-          description: 'Top 10% of students'
-        }
-      },
-      months: {
-        jan: 'Jan', feb: 'Feb', mar: 'Mar', apr: 'Apr', may: 'May', jun: 'Jun'
-      },
+      achievements: 'Achievements & Badges',
+      hours: 'hours',
+      courses: 'courses',
+      completedLesson: 'Completed lesson',
+      startedCourse: 'Started course',
+      earnedCertificate: 'Earned certificate',
+      courseProgress: 'Course Progress',
+      viewCertificate: 'View Certificate',
+      continueLearning: 'Continue Learning',
+      earnedOn: 'Earned on',
+      notEarned: 'Not earned',
+      minutes: 'Minutes',
+      completedCourses: 'Completed Courses',
+      // Days of the week
       days: {
-        mon: 'Mon', tue: 'Tue', wed: 'Wed', thu: 'Thu', fri: 'Fri', sat: 'Sat', sun: 'Sun'
+        mon: 'Mon',
+        tue: 'Tue',
+        wed: 'Wed',
+        thu: 'Thu',
+        fri: 'Fri',
+        sat: 'Sat',
+        sun: 'Sun'
       },
-      hours: 'Hours',
-      courses: 'Completed Courses',
-      minutes: 'Minutes'
+      // Months
+      months: {
+        jan: 'Jan',
+        feb: 'Feb',
+        mar: 'Mar',
+        apr: 'Apr',
+        may: 'May',
+        jun: 'Jun'
+      },
+      // Achievement titles
+      achievementTitles: {
+        firstCourse: 'First Course Completed',
+        studious: 'Studious Student',
+        mathematician: 'Mathematician',
+        perfectionist: 'Perfectionist',
+        champion: 'Champion',
+        advancedLearner: 'Advanced Learner'
+      },
+      // Achievement descriptions
+      achievementDescriptions: {
+        firstCourse: 'You completed your first course!',
+        studious: '7 consecutive days of learning',
+        mathematician: '85% mastery in mathematics',
+        perfectionist: 'Perfect score on 5 exercises',
+        champion: 'Top 10% of students',
+        advancedLearner: 'Complete 5 courses with 90%+ score'
+      }
     },
     // Course Data
     courseData: {
@@ -159,110 +175,57 @@ export const translations = {
     },
     // Footer
     footer: {
-      tagline: 'The education of the future, today.',
-      rights: 'All rights reserved.',
-      product: {
-        title: 'Product',
-        courses: 'Courses',
-        progress: 'Progress',
-        features: 'Features',
-        pricing: 'Pricing',
-      },
       company: {
-        title: 'Company',
-        about: 'About Us',
-        careers: 'Careers',
-        press: 'Press',
-        blog: 'Blog',
+        title: 'EduAI',
+        description: 'Transforming education through artificial intelligence and innovative learning experiences.',
+        copyright: '© 2025 EduAI. All rights reserved.'
       },
-      resources: {
-        title: 'Resources',
-        help: 'Help Center',
-        faq: 'FAQ',
-        contact: 'Contact Us',
-        community: 'Community',
+      links: {
+        product: {
+          title: 'Product',
+          courses: 'Courses',
+          features: 'Features',
+          pricing: 'Pricing',
+          demo: 'Demo'
+        },
+        company: {
+          title: 'Company',
+          about: 'About Us',
+          careers: 'Careers',
+          contact: 'Contact',
+          blog: 'Blog'
+        },
+        support: {
+          title: 'Support',
+          help: 'Help Center',
+          documentation: 'Documentation',
+          community: 'Community',
+          status: 'Status'
+        },
+        legal: {
+          title: 'Legal',
+          privacy: 'Privacy Policy',
+          terms: 'Terms of Service',
+          cookies: 'Cookie Policy'
+        }
       },
-      legal: {
-        title: 'Legal',
-        privacy: 'Privacy Policy',
-        terms: 'Terms of Service',
-        cookies: 'Cookie Policy',
+      social: {
+        followUs: 'Follow us'
       }
     },
-    // Settings Page
-    settings: {
-      title: 'Settings',
-      subtitle: 'Manage your account, preferences, and privacy settings.',
-      saveButton: 'Save Settings',
-      dataExportButton: 'Export My Data',
-      accountDeleteButton: 'Delete My Account',
-      notifications: {
-        title: 'Notifications',
-        description: 'Choose how you want to be notified.',
-        courses: 'New courses and updates',
-        achievements: 'Achievements and badges unlocked',
-        reminders: 'Study reminders',
-        marketing: 'Promotions and news'
-      },
-      theme: {
-        title: 'Appearance',
-        description: 'Customize the look and feel of the interface.',
-        light: 'Light',
-        dark: 'Dark'
-      },
-      language: {
-        title: 'Language',
-        description: 'Select your preferred language.',
-        english: 'English',
-        french: 'French'
-      },
-      sound: {
-        title: 'Audio',
-        description: 'Manage sound settings.',
-        enabled: 'Sound effects enabled'
-      },
-      privacy: {
-        title: 'Privacy',
-        description: 'Control your data and visibility.',
-        profilePublic: 'Public profile',
-        progressVisible: 'Show my progress to others',
-        analyticsEnabled: 'Allow collection of anonymous usage data'
-      },
-      account: {
-        title: 'Account',
-        description: 'Manage your account information.',
-        exportData: 'Export your personal data',
-        deleteAccount: 'Permanently delete your account',
-        deleteConfirmation: 'Are you sure you want to delete your account? This action is irreversible.',
-        deleteWarning: 'All your data (courses, progress, settings) will be permanently lost.'
-      },
-      messages: {
-        saveSuccess: 'Settings saved successfully!',
-        saveError: 'Error saving settings.',
-        exportFilename: 'eduai-settings'
-      }
-    },
-    // Analytics Page
-    analytics: {
-      title: 'Analytics',
-      loading: 'Loading analytics...',
-      noData: 'No data available',
-      noDataSubtitle: 'Start using the platform to see your analytics',
-      selectPeriod: 'Select period',
-      thisWeek: 'This week',
-      thisMonth: 'This month',
-      thisYear: 'This year',
-      export: 'Export',
-      totalTime: 'Total time',
-      activeCourses: 'Active courses',
-      achievements: 'Achievements',
-      avgProgress: 'Avg. progress',
-      dailyLearningTime: 'Daily learning time',
-      courseProgress: 'Course progress',
-      strengths: 'Strengths',
-      currentGoals: 'Current goals',
-      recentAchievements: 'Recent achievements',
-      reportFilename: 'analytics-report'
+    // Common
+    common: {
+      loading: 'Loading...',
+      error: 'An error occurred',
+      retry: 'Retry',
+      cancel: 'Cancel',
+      save: 'Save',
+      delete: 'Delete',
+      edit: 'Edit',
+      close: 'Close',
+      next: 'Next',
+      previous: 'Previous',
+      finish: 'Finish'
     }
   },
   fr: {
@@ -336,47 +299,63 @@ export const translations = {
     progress: {
       title: 'Votre Progression',
       subtitle: 'Suivez vos accomplissements et découvrez vos statistiques d\'apprentissage personnalisées.',
-      overallProgress: 'Moyenne générale',
-      completedCourses: 'Cours terminés',
+      overallProgress: 'Progression Globale',
+      completedCourses: 'Cours Terminés',
       totalHours: 'Heures d\'étude',
       certificates: 'Badges obtenus',
       monthlyProgress: 'Progression Mensuelle',
       weeklyActivity: 'Activité de la Semaine',
       subjectProgress: 'Progression par Matière',
-      achievements: {
-        title: 'Réussites & Badges',
-        earnedOn: 'Obtenu le {date}',
-        notEarned: 'Non obtenu',
-        firstCourse: {
-          title: 'Premier Cours Terminé',
-          description: 'Vous avez complété votre premier cours !'
-        },
-        diligentStudent: {
-          title: 'Étudiant Assidu',
-          description: '7 jours consécutifs d\'apprentissage'
-        },
-        mathematician: {
-          title: 'Mathématicien',
-          description: 'Maîtrise des mathématiques à 85%'
-        },
-        perfectionist: {
-          title: 'Perfectionniste',
-          description: 'Score parfait sur 5 exercices'
-        },
-        champion: {
-          title: 'Champion',
-          description: 'Top 10% des étudiants'
-        }
-      },
-      months: {
-        jan: 'Jan', feb: 'Fév', mar: 'Mar', apr: 'Avr', may: 'Mai', jun: 'Juin'
-      },
+      achievements: 'Réussites & Badges',
+      hours: 'heures',
+      courses: 'cours',
+      completedLesson: 'Leçon terminée',
+      startedCourse: 'Cours commencé',
+      earnedCertificate: 'Certificat obtenu',
+      courseProgress: 'Progression des Cours',
+      viewCertificate: 'Voir le Certificat',
+      continueLearning: 'Continuer l\'Apprentissage',
+      earnedOn: 'Obtenu le',
+      notEarned: 'Non obtenu',
+      minutes: 'Minutes',
+      completedCourses: 'Cours terminés',
+      // Days of the week
       days: {
-        mon: 'Lun', tue: 'Mar', wed: 'Mer', thu: 'Jeu', fri: 'Ven', sat: 'Sam', sun: 'Dim'
+        mon: 'Lun',
+        tue: 'Mar',
+        wed: 'Mer',
+        thu: 'Jeu',
+        fri: 'Ven',
+        sat: 'Sam',
+        sun: 'Dim'
       },
-      hours: 'Heures',
-      courses: 'Cours terminés',
-      minutes: 'Minutes'
+      // Months
+      months: {
+        jan: 'Jan',
+        feb: 'Fév',
+        mar: 'Mar',
+        apr: 'Avr',
+        may: 'Mai',
+        jun: 'Juin'
+      },
+      // Achievement titles
+      achievementTitles: {
+        firstCourse: 'Premier Cours Terminé',
+        studious: 'Étudiant Assidu',
+        mathematician: 'Mathématicien',
+        perfectionist: 'Perfectionniste',
+        champion: 'Champion',
+        advancedLearner: 'Apprenant Avancé'
+      },
+      // Achievement descriptions
+      achievementDescriptions: {
+        firstCourse: 'Vous avez complété votre premier cours !',
+        studious: '7 jours consécutifs d\'apprentissage',
+        mathematician: 'Maîtrise des mathématiques à 85%',
+        perfectionist: 'Score parfait sur 5 exercices',
+        champion: 'Top 10% des étudiants',
+        advancedLearner: 'Terminer 5 cours avec un score de 90%+'
+      }
     },
     // Course Data
     courseData: {
@@ -425,110 +404,57 @@ export const translations = {
     },
     // Footer
     footer: {
-      tagline: "L'éducation du futur, aujourd'hui.",
-      rights: 'Tous droits réservés.',
-      product: {
-        title: 'Produit',
-        courses: 'Cours',
-        progress: 'Progrès',
-        features: 'Fonctionnalités',
-        pricing: 'Tarifs',
-      },
       company: {
-        title: 'Entreprise',
-        about: 'À propos',
-        careers: 'Carrières',
-        press: 'Presse',
-        blog: 'Blog',
+        title: 'EduAI',
+        description: 'Transformer l\'éducation grâce à l\'intelligence artificielle et des expériences d\'apprentissage innovantes.',
+        copyright: '© 2025 EduAI. Tous droits réservés.'
       },
-      resources: {
-        title: 'Ressources',
-        help: 'Centre d\'aide',
-        faq: 'FAQ',
-        contact: 'Nous contacter',
-        community: 'Communauté',
+      links: {
+        product: {
+          title: 'Produit',
+          courses: 'Cours',
+          features: 'Fonctionnalités',
+          pricing: 'Tarifs',
+          demo: 'Démo'
+        },
+        company: {
+          title: 'Entreprise',
+          about: 'À propos',
+          careers: 'Carrières',
+          contact: 'Contact',
+          blog: 'Blog'
+        },
+        support: {
+          title: 'Support',
+          help: 'Centre d\'aide',
+          documentation: 'Documentation',
+          community: 'Communauté',
+          status: 'Statut'
+        },
+        legal: {
+          title: 'Légal',
+          privacy: 'Politique de confidentialité',
+          terms: 'Conditions d\'utilisation',
+          cookies: 'Politique des cookies'
+        }
       },
-      legal: {
-        title: 'Légal',
-        privacy: 'Politique de confidentialité',
-        terms: "Conditions d'utilisation",
-        cookies: 'Politique sur les cookies',
+      social: {
+        followUs: 'Suivez-nous'
       }
     },
-    // Settings Page
-    settings: {
-      title: 'Paramètres',
-      subtitle: 'Gérez votre compte, vos préférences et vos paramètres de confidentialité.',
-      saveButton: 'Sauvegarder les paramètres',
-      dataExportButton: 'Exporter mes données',
-      accountDeleteButton: 'Supprimer mon compte',
-      notifications: {
-        title: 'Notifications',
-        description: 'Choisissez comment vous souhaitez être notifié.',
-        courses: 'Nouveaux cours et mises à jour',
-        achievements: 'Succès et badges débloqués',
-        reminders: 'Rappels d\'étude',
-        marketing: 'Promotions et actualités'
-      },
-      theme: {
-        title: 'Apparence',
-        description: 'Personnalisez l\'apparence de l\'interface.',
-        light: 'Clair',
-        dark: 'Sombre'
-      },
-      language: {
-        title: 'Langue',
-        description: 'Sélectionnez votre langue préférée.',
-        english: 'Anglais',
-        french: 'Français'
-      },
-      sound: {
-        title: 'Audio',
-        description: 'Gérez les paramètres sonores.',
-        enabled: 'Effets sonores activés'
-      },
-      privacy: {
-        title: 'Confidentialité',
-        description: 'Contrôlez vos données et votre visibilité.',
-        profilePublic: 'Profil public',
-        progressVisible: 'Montrer ma progression aux autres',
-        analyticsEnabled: 'Autoriser la collecte de données d\'utilisation anonymes'
-      },
-      account: {
-        title: 'Compte',
-        description: 'Gérez les informations de votre compte.',
-        exportData: 'Exporter vos données personnelles',
-        deleteAccount: 'Supprimer définitivement votre compte',
-        deleteConfirmation: 'Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.',
-        deleteWarning: 'Toutes vos données (cours, progrès, paramètres) seront définitivement perdues.'
-      },
-      messages: {
-        saveSuccess: 'Paramètres sauvegardés avec succès !',
-        saveError: 'Erreur lors de la sauvegarde des paramètres.',
-        exportFilename: 'parametres-eduai'
-      }
-    },
-    // Analytics Page
-    analytics: {
-      title: 'Analytics',
-      loading: 'Chargement des analytics...',
-      noData: 'Aucune donnée disponible',
-      noDataSubtitle: 'Commencez à utiliser la plateforme pour voir vos analytics',
-      selectPeriod: 'Sélectionner la période',
-      thisWeek: 'Cette semaine',
-      thisMonth: 'Ce mois',
-      thisYear: 'Cette année',
-      export: 'Exporter',
-      totalTime: 'Temps total',
-      activeCourses: 'Cours actifs',
-      achievements: 'Réussites',
-      avgProgress: 'Progression moy.',
-      dailyLearningTime: 'Temps d\'apprentissage quotidien',
-      courseProgress: 'Progression par cours',
-      strengths: 'Points forts',
-      currentGoals: 'Objectifs en cours',
-      recentAchievements: 'Réussites récentes',
-      reportFilename: 'rapport-analytics'
+    // Common
+    common: {
+      loading: 'Chargement...',
+      error: 'Une erreur s\'est produite',
+      retry: 'Réessayer',
+      cancel: 'Annuler',
+      save: 'Enregistrer',
+      delete: 'Supprimer',
+      edit: 'Modifier',
+      close: 'Fermer',
+      next: 'Suivant',
+      previous: 'Précédent',
+      finish: 'Terminer'
     }
   }
 };

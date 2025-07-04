@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 
 const CoursesPage = () => {
-  const { t, language } = useI18nStore();
+  const { t } = useI18nStore();
   
   const courses = [
     {
@@ -33,7 +33,7 @@ const CoursesPage = () => {
       lessons: 48,
       category: 'Sciences',
       price: t('courses.free'),
-      tags: language === 'en' ? ['Algebra', 'Geometry', 'Statistics'] : ['Algèbre', 'Géométrie', 'Statistiques'],
+      tags: t('courseData.mathematics.tags'),
       nextLesson: t('courseData.mathematics.nextLesson'),
     },
     {
@@ -50,7 +50,7 @@ const CoursesPage = () => {
       lessons: 35,
       category: 'Sciences',
       price: t('courses.free'),
-      tags: language === 'en' ? ['Chemistry', 'Physics', 'Experiments'] : ['Chimie', 'Physique', 'Expériences'],
+      tags: t('courseData.science.tags'),
       nextLesson: t('courseData.science.nextLesson'),
     },
     {
@@ -67,7 +67,7 @@ const CoursesPage = () => {
       lessons: 52,
       category: 'Computer Science',
       price: t('courses.free'),
-      tags: language === 'en' ? ['JavaScript', 'Python', 'Projects'] : ['JavaScript', 'Python', 'Projets'],
+      tags: t('courseData.programming.tags'),
       nextLesson: t('courseData.programming.nextLesson'),
     },
     {
@@ -84,7 +84,7 @@ const CoursesPage = () => {
       lessons: 42,
       category: 'Humanities',
       price: t('courses.free'),
-      tags: language === 'en' ? ['Antiquity', 'Middle Ages', 'Modern Era'] : ['Antiquité', 'Moyen Âge', 'Époque moderne'],
+      tags: t('courseData.history.tags'),
       nextLesson: t('courseData.history.nextLesson'),
     },
     {
@@ -101,7 +101,7 @@ const CoursesPage = () => {
       lessons: 28,
       category: 'Arts',
       price: t('courses.free'),
-      tags: language === 'en' ? ['Drawing', 'Color', 'Composition'] : ['Dessin', 'Couleur', 'Composition'],
+      tags: t('courseData.art.tags'),
       nextLesson: t('courseData.art.nextLesson'),
     },
     {
@@ -118,7 +118,7 @@ const CoursesPage = () => {
       lessons: 36,
       category: 'Humanities',
       price: t('courses.free'),
-      tags: language === 'en' ? ['Ethics', 'Metaphysics', 'Logic'] : ['Éthique', 'Métaphysique', 'Logique'],
+      tags: t('courseData.philosophy.tags'),
       nextLesson: t('courseData.philosophy.nextLesson'),
     },
   ];
@@ -153,10 +153,11 @@ const CoursesPage = () => {
           className="text-center mb-12"
         >
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            {t('courses.title')}
+            Nos Cours
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            {t('courses.subtitle')}
+            Découvrez une large sélection de cours conçus pour vous accompagner 
+            dans votre parcours d'apprentissage, quel que soit votre niveau.
           </p>
         </motion.div>
 
@@ -171,25 +172,25 @@ const CoursesPage = () => {
             <div className="text-2xl font-bold text-primary mb-1">
               {courses.length}
             </div>
-            <div className="text-sm text-muted-foreground">{t('courses.availableCourses')}</div>
+            <div className="text-sm text-muted-foreground">Cours disponibles</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-success mb-1">
               {courses.reduce((sum, course) => sum + course.students, 0).toLocaleString()}
             </div>
-            <div className="text-sm text-muted-foreground">{t('courses.enrolledStudents')}</div>
+            <div className="text-sm text-muted-foreground">Étudiants inscrits</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-warning mb-1">
               {courses.reduce((sum, course) => sum + course.lessons, 0)}
             </div>
-            <div className="text-sm text-muted-foreground">{t('courses.totalLessons')}</div>
+            <div className="text-sm text-muted-foreground">Leçons totales</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-accent mb-1">
               4.8
             </div>
-            <div className="text-sm text-muted-foreground">{t('courses.averageRating')}</div>
+            <div className="text-sm text-muted-foreground">Note moyenne</div>
           </div>
         </motion.div>
 
@@ -236,7 +237,7 @@ const CoursesPage = () => {
                     {course.title}
                   </CardTitle>
                   <p className="text-sm text-muted-foreground">
-                    {t('courses.by')} {course.instructor}
+                    Par {course.instructor}
                   </p>
                 </CardHeader>
 
@@ -249,7 +250,7 @@ const CoursesPage = () => {
                   {course.progress > 0 && (
                     <div className="mb-4">
                       <div className="flex justify-between text-sm mb-1">
-                        <span className="text-muted-foreground">{t('courses.progress')}</span>
+                        <span className="text-muted-foreground">Progression</span>
                         <span className="font-medium">{course.progress}%</span>
                       </div>
                       <div className="w-full bg-secondary rounded-full h-2">
@@ -281,7 +282,7 @@ const CoursesPage = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <BookOpen className="h-4 w-4" />
-                      <span>{course.lessons} {t('courses.lessons')}</span>
+                      <span>{course.lessons} leçons</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Users className="h-4 w-4" />
@@ -289,7 +290,7 @@ const CoursesPage = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <Award className="h-4 w-4" />
-                      <span>{t('courses.certificate')}</span>
+                      <span>Certificat</span>
                     </div>
                   </div>
 
@@ -297,20 +298,20 @@ const CoursesPage = () => {
                   <div className="mt-auto">
                     {course.progress > 0 ? (
                       <Button 
-                        className="w-full"
-                        onClick={() => alert('Continue course: ' + course.title)}
+                        className="w-full" 
+                        icon={PlayCircle}
+                        iconPosition="left"
                       >
-                        <PlayCircle className="mr-2 h-4 w-4" />
-                        {t('courses.continue')}
+                        Continuer • {course.nextLesson}
                       </Button>
                     ) : (
                       <Button 
-                        variant="secondary"
-                        className="w-full"
-                        onClick={() => alert('Start course: ' + course.title)}
+                        className="w-full" 
+                        variant="outline"
+                        icon={BookOpen}
+                        iconPosition="left"
                       >
-                        <CheckCircle className="mr-2 h-4 w-4" />
-                        {t('courses.startCourse')}
+                        Commencer le cours
                       </Button>
                     )}
                   </div>

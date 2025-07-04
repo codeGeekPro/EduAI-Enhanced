@@ -35,6 +35,7 @@ import {
 const ProgressPage = () => {
   const { t } = useI18nStore();
 
+  // Données de simulation pour les progrès (traduites dynamiquement)
   const monthlyProgress = [
     { name: t('progress.months.jan'), heures: 12, cours: 2 },
     { name: t('progress.months.feb'), heures: 19, cours: 3 },
@@ -44,14 +45,7 @@ const ProgressPage = () => {
     { name: t('progress.months.jun'), heures: 35, cours: 6 },
   ];
 
-  const subjectProgressData = [
-    { name: t('courseData.mathematics.title'), progress: 85, color: 'hsl(var(--primary))' },
-    { name: t('courseData.science.title'), progress: 72, color: 'hsl(var(--success))' },
-    { name: t('courseData.programming.title'), progress: 91, color: 'hsl(var(--warning))' },
-    { name: t('courseData.history.title'), progress: 68, color: 'hsl(var(--accent))' },
-  ];
-
-  const weeklyActivityData = [
+  const weeklyActivity = [
     { day: t('progress.days.mon'), minutes: 45 },
     { day: t('progress.days.tue'), minutes: 30 },
     { day: t('progress.days.wed'), minutes: 60 },
@@ -61,38 +55,38 @@ const ProgressPage = () => {
     { day: t('progress.days.sun'), minutes: 20 },
   ];
 
-  const achievementsData = [
+  const achievements = [
     {
       id: 1,
-      title: t('progress.achievements.firstCourse.title'),
-      description: t('progress.achievements.firstCourse.description'),
+      title: t('progress.achievementTitles.firstCourse'),
+      description: t('progress.achievementDescriptions.firstCourse'),
       icon: BookOpen,
       earned: true,
-      date: '15 Mai 2025',
+      date: '15 May 2025',
       color: 'text-success bg-success/10',
     },
     {
       id: 2,
-      title: t('progress.achievements.diligentStudent.title'),
-      description: t('progress.achievements.diligentStudent.description'),
+      title: t('progress.achievementTitles.studious'),
+      description: t('progress.achievementDescriptions.studious'),
       icon: Calendar,
       earned: true,
-      date: '22 Mai 2025',
+      date: '22 May 2025',
       color: 'text-primary bg-primary/10',
     },
     {
       id: 3,
-      title: t('progress.achievements.mathematician.title'),
-      description: t('progress.achievements.mathematician.description'),
+      title: t('progress.achievementTitles.mathematician'),
+      description: t('progress.achievementDescriptions.mathematician'),
       icon: Target,
       earned: true,
-      date: '1 Juin 2025',
+      date: '1 June 2025',
       color: 'text-warning bg-warning/10',
     },
     {
       id: 4,
-      title: t('progress.achievements.perfectionist.title'),
-      description: t('progress.achievements.perfectionist.description'),
+      title: t('progress.achievementTitles.perfectionist'),
+      description: t('progress.achievementDescriptions.perfectionist'),
       icon: Star,
       earned: false,
       date: null,
@@ -100,20 +94,27 @@ const ProgressPage = () => {
     },
     {
       id: 5,
-      title: t('progress.achievements.champion.title'),
-      description: t('progress.achievements.champion.description'),
+      title: t('progress.achievementTitles.champion'),
+      description: t('progress.achievementDescriptions.champion'),
       icon: Trophy,
       earned: false,
       date: null,
       color: 'text-muted-foreground bg-muted',
     },
   ];
-  
+
   const stats = [
     { label: t('progress.totalHours'), value: '127h', icon: Clock, color: 'text-primary' },
     { label: t('progress.completedCourses'), value: '8', icon: BookOpen, color: 'text-success' },
     { label: t('progress.overallProgress'), value: '87%', icon: TrendingUp, color: 'text-warning' },
     { label: t('progress.certificates'), value: '3', icon: Trophy, color: 'text-accent' },
+  ];
+
+  const subjectProgress = [
+    { name: t('courseData.mathematics.title'), progress: 85, color: 'hsl(var(--primary))' },
+    { name: t('courseData.science.title'), progress: 72, color: 'hsl(var(--success))' },
+    { name: t('courseData.programming.title'), progress: 91, color: 'hsl(var(--warning))' },
+    { name: t('courseData.history.title'), progress: 68, color: 'hsl(var(--accent))' },
   ];
 
   const containerVariants = {
@@ -237,7 +238,7 @@ const ProgressPage = () => {
               <CardContent>
                 <div className="h-80">
                   <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={weeklyActivityData}>
+                    <AreaChart data={weeklyActivity}>
                       <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
                       <XAxis dataKey="day" />
                       <YAxis />
@@ -280,7 +281,7 @@ const ProgressPage = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {subjectProgressData.map((subject, index) => (
+                {subjectProgress.map((subject, index) => (
                   <div key={index}>
                     <div className="flex justify-between items-center">
                       <span className="font-medium">{subject.name}</span>
@@ -311,12 +312,12 @@ const ProgressPage = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Trophy className="h-5 w-5 text-accent" />
-                {t('progress.achievements.title')}
+                {t('progress.achievements')}
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {achievementsData.map((achievement) => (
+                {achievements.map((achievement) => (
                   <div
                     key={achievement.id}
                     className={`p-4 rounded-lg border-2 transition-all duration-300 ${
@@ -336,12 +337,12 @@ const ProgressPage = () => {
                         </p>
                         {achievement.earned && achievement.date && (
                           <p className="text-xs text-success font-medium">
-                            {t('progress.achievements.earnedOn', { date: achievement.date })}
+                            {t('progress.earnedOn')} {achievement.date}
                           </p>
                         )}
                         {!achievement.earned && (
                           <p className="text-xs text-muted-foreground">
-                            {t('progress.achievements.notEarned')}
+                            {t('progress.notEarned')}
                           </p>
                         )}
                       </div>

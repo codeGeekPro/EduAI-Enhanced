@@ -425,7 +425,7 @@ const HomePage = () => {
                 variant="outline" 
                 size="xl"
               >
-                {t('home.cta.learnMore')}
+                Découvrir les prix
               </Button>
             </div>
           </motion.div>
