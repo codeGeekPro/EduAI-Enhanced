@@ -1,434 +1,404 @@
-import { motion } from 'framer-motion';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { 
+  BookOpen, 
+  Users, 
+  Award, 
+  TrendingUp, 
+  Play, 
+  ArrowRight, 
+  Star, 
+  Brain,
+  Zap,
+  Target,
+  Clock,
+  CheckCircle
+} from 'lucide-react';
 import { Button } from '../components/ui/Button';
-import { ArrowRight, Book, Target, TrendingUp, PlayCircle, Star, Users, Award, Zap } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { useImageGeneration } from '../hooks/useImageGeneration';
 import { useI18nStore } from '../stores/i18nStore';
-import { useEffect } from 'react';
+import { useAuthStore } from '../stores/authStore';
 
-// Données de simulation améliorées inspirées de Kalvi
-const featuredCourses = [
-  { 
-    title: 'Mathématiques Interactives', 
-    icon: Book, 
-    description: 'Maîtrisez les concepts mathématiques grâce à des exercices interactifs et des visualisations dynamiques.',
-    students: '2,847',
-    rating: 4.9,
-    color: 'text-primary',
-    badge: 'Populaire',
-    imagePrompt: 'mathematics equations, geometric shapes, numbers, educational style',
-    fallbackCategory: 'mathematics' as const,
-  },
-  { 
-    title: 'Laboratoire de Sciences', 
-    icon: Target, 
-    description: 'Explorez la physique et la chimie avec des expériences virtuelles immersives.',
-    students: '1,923',
-    rating: 4.8,
-    color: 'text-success',
-    badge: 'Nouveau',
-    imagePrompt: 'laboratory, scientific equipment, molecules, chemistry, physics experiments',
-    fallbackCategory: 'science' as const,
-  },
-  { 
-    title: 'Programmation Créative', 
-    icon: TrendingUp, 
-    description: 'Apprenez à coder de manière ludique avec des projets créatifs et interactifs.',
-    students: '3,156',
-    rating: 4.9,
-    color: 'text-warning',
-    badge: 'Tendance',
-    imagePrompt: 'programming code, computer screen, coding symbols, software development',
-    fallbackCategory: 'programming' as const,
-  },
-];
+interface StatItem {
+  label: string;
+  value: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+}
 
-const progressData = [
-  { name: 'Maths', progress: 85, fill: 'hsl(var(--primary))' },
-  { name: 'Sciences', progress: 72, fill: 'hsl(var(--success))' },
-  { name: 'Histoire', progress: 91, fill: 'hsl(var(--warning))' },
-  { name: 'Français', progress: 78, fill: 'hsl(var(--accent))' },
-];
+interface Course {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  duration: string;
+  rating: number;
+  students: number;
+  instructor: string;
+  category: string;
+  isPopular?: boolean;
+}
 
-const stats = [
-  { icon: Users, label: 'Étudiants actifs', value: '12,000+' },
-  { icon: Book, label: 'Cours disponibles', value: '150+' },
-  { icon: Award, label: 'Certificats délivrés', value: '5,000+' },
-  { icon: Star, label: 'Note moyenne', value: '4.9/5' },
-];
+interface Feature {
+  title: string;
+  description: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  color: string;
+}
 
-const HomePage = () => {
-  const { generateImage, getImageResult, preloadFallbackImages } = useImageGeneration();
+const HomePage: React.FC = () => {
   const { t } = useI18nStore();
-  
-  // Données de simulation améliorées inspirées de Kalvi
-  const featuredCourses = [
-    { 
-      title: t('courseData.mathematics.title'), 
-      icon: Book, 
-      description: t('courseData.mathematics.description'),
-      students: '2,847',
-      rating: 4.9,
-      color: 'text-primary',
-      badge: t('home.courses.popular'),
-      imagePrompt: 'mathematics equations, geometric shapes, numbers, educational style',
-      fallbackCategory: 'mathematics' as const,
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuthStore();
+
+  const stats: StatItem[] = [
+    { label: t('home.stats.availableCourses'), value: '500+', icon: BookOpen },
+    { label: t('home.stats.activeStudents'), value: '10k+', icon: Users },
+    { label: t('home.stats.certificatesIssued'), value: '2.5k+', icon: Award },
+    { label: t('home.stats.averageRating'), value: '94%', icon: TrendingUp },
+  ];
+
+  const features: Feature[] = [
+    {
+      title: t('home.features.ai.title'),
+      description: t('home.features.ai.description'),
+      icon: Brain,
+      color: 'from-purple-500 to-blue-500'
     },
-    { 
-      title: t('courseData.science.title'), 
-      icon: Target, 
-      description: t('courseData.science.description'),
-      students: '1,923',
-      rating: 4.8,
-      color: 'text-success',
-      badge: t('home.courses.new'),
-      imagePrompt: 'laboratory, scientific equipment, molecules, chemistry, physics experiments',
-      fallbackCategory: 'science' as const,
+    {
+      title: t('home.features.microlearning.title'),
+      description: t('home.features.microlearning.description'),
+      icon: Target,
+      color: 'from-green-500 to-teal-500'
     },
-    { 
-      title: t('courseData.programming.title'), 
-      icon: TrendingUp, 
+    {
+      title: t('home.features.progress.title'),
+      description: t('home.features.progress.description'),
+      icon: TrendingUp,
+      color: 'from-orange-500 to-red-500'
+    },
+    {
+      title: t('home.features.community.title'),
+      description: t('home.features.community.description'),
+      icon: Users,
+      color: 'from-blue-500 to-purple-500'
+    }
+  ];
+
+  const featuredCourses: Course[] = [
+    {
+      id: '1',
+      title: t('courseData.programming.title'),
       description: t('courseData.programming.description'),
-      students: '3,156',
+      image: '/api/placeholder/400/250',
+      duration: '8h',
       rating: 4.9,
-      color: 'text-warning',
-      badge: t('home.courses.trending'),
-      imagePrompt: 'programming code, computer screen, coding symbols, software development',
-      fallbackCategory: 'programming' as const,
+      students: 1200,
+      instructor: t('courseData.programming.instructor'),
+      category: 'Informatique',
+      isPopular: true
     },
-  ];
-
-  const progressData = [
-    { name: 'Maths', progress: 85, fill: 'hsl(var(--primary))' },
-    { name: 'Sciences', progress: 72, fill: 'hsl(var(--success))' },
-    { name: 'Histoire', progress: 91, fill: 'hsl(var(--warning))' },
-    { name: 'Français', progress: 78, fill: 'hsl(var(--accent))' },
-  ];
-
-  const stats = [
-    { icon: Users, label: t('home.stats.activeStudents'), value: '12,000+' },
-    { icon: Book, label: t('home.stats.availableCourses'), value: '150+' },
-    { icon: Award, label: t('home.stats.certificatesIssued'), value: '5,000+' },
-    { icon: Star, label: t('home.stats.averageRating'), value: '4.9/5' },
-  ];
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1, delayChildren: 0.2 },
+    {
+      id: '2',
+      title: t('courseData.mathematics.title'),
+      description: t('courseData.mathematics.description'),
+      image: '/api/placeholder/400/250',
+      duration: '12h',
+      rating: 4.8,
+      students: 850,
+      instructor: t('courseData.mathematics.instructor'),
+      category: 'Mathématiques',
+      isPopular: true
     },
+    {
+      id: '3',
+      title: t('courseData.science.title'),
+      description: t('courseData.science.description'),
+      image: '/api/placeholder/400/250',
+      duration: '10h',
+      rating: 4.7,
+      students: 950,
+      instructor: t('courseData.science.instructor'),
+      category: 'Data Science'
+    }
+  ];
+
+  const handleGetStarted = () => {
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    } else {
+      navigate('/register');
+    }
   };
 
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.5 } },
+  const handleExploreCourses = () => {
+    navigate('/courses');
   };
-
-  // Génère les images au chargement du composant
-  useEffect(() => {
-    preloadFallbackImages();
-    
-    // Génère une image pour chaque cours avec un délai pour éviter la surcharge
-    featuredCourses.forEach((course, index) => {
-      setTimeout(() => {
-        generateImage(
-          `course-${index}`,
-          {
-            prompt: course.imagePrompt,
-            width: 400,
-            height: 240,
-          },
-          course.fallbackCategory
-        );
-      }, index * 1000); // Délai de 1 seconde entre chaque génération
-    });
-  }, [generateImage, preloadFallbackImages]);
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Section Héros avec arrière-plan grille */}
-      <section className="relative overflow-hidden grid-background">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
-          <div className="grid lg:grid-cols-2 gap-12 items-center relative z-10">
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, ease: 'easeOut' }}
-              className="text-center lg:text-left"
-            >
-              <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6">
-                <Zap className="h-4 w-4" />
-                {t('home.hero.badge')}
-              </div>
-              
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6">
-                {t('home.hero.title', { future: t('home.hero.future') })}
-              </h1>
-              
-              <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto lg:mx-0 mb-8 leading-relaxed">
-                {t('home.hero.subtitle')}
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Button 
-                  size="xl" 
-                  icon={ArrowRight}
-                  iconPosition="right"
-                  className="animate-scale-in"
-                >
-                  {t('home.hero.startFree')}
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="xl"
-                  icon={PlayCircle}
-                  iconPosition="left"
-                >
-                  {t('home.hero.watchDemo')}
-                </Button>
-              </div>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, ease: 'easeOut' }}
-              className="relative"
-            >
-              <div className="relative">
-                <img 
-                  src="/images/education_illustration.svg" 
-                  alt="Apprentissage interactif" 
-                  className="w-full h-auto max-w-lg mx-auto"
-                />
-                <div className="absolute -top-4 -right-4 bg-primary text-primary-foreground px-3 py-2 rounded-lg text-sm font-semibold shadow-large">
-                  {t('home.hero.freeBadge')}
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-teal-500 text-white overflow-hidden">
+        <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight">
+              {t('home.hero.title')}
+            </h1>
+            <p className="text-xl md:text-2xl text-blue-100 mb-8 max-w-4xl mx-auto leading-relaxed">
+              {t('home.hero.subtitle')}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Button 
+                size="lg" 
+                onClick={handleGetStarted}
+                className="bg-white text-blue-600 hover:bg-gray-100 shadow-lg transform hover:scale-105 transition-all duration-200"
+              >
+                <Play className="h-5 w-5 mr-2" />
+                {isAuthenticated ? t('home.hero.accessDashboard') : t('home.hero.getStarted')}
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline" 
+                onClick={handleExploreCourses}
+                className="border-white text-white hover:bg-white hover:text-blue-600 shadow-lg transition-all duration-200"
+              >
+                {t('home.hero.discoverCourses')}
+                <ArrowRight className="h-5 w-5 ml-2" />
+              </Button>
+            </div>
+          </div>
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-gray-50 to-transparent"></div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-16 -mt-10 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {stats.map((stat, index) => (
+              <div key={index} className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow text-center">
+                <div className="flex justify-center mb-4">
+                  <div className="p-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full">
+                    <stat.icon className="h-6 w-6 text-white" />
+                  </div>
                 </div>
+                <div className="text-2xl font-bold text-gray-900 mb-1">{stat.value}</div>
+                <div className="text-gray-600 text-sm">{stat.label}</div>
               </div>
-            </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Section Statistiques */}
-      <section className="py-16 bg-secondary/30">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            className="grid grid-cols-2 lg:grid-cols-4 gap-8"
-          >
-            {stats.map((stat, index) => (
-              <motion.div
-                key={index}
-                variants={itemVariants}
-                className="text-center"
-              >
-                <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 text-primary rounded-xl mb-4">
-                  <stat.icon className="h-6 w-6" />
+      {/* Features Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              {t('home.features.title')}
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              {t('home.features.subtitle')}
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {features.map((feature, index) => (
+              <div key={index} className="text-center group hover:transform hover:scale-105 transition-all duration-300">
+                <div className="flex justify-center mb-6">
+                  <div className={`p-4 bg-gradient-to-r ${feature.color} rounded-2xl shadow-lg group-hover:shadow-xl transition-shadow`}>
+                    <feature.icon className="h-8 w-8 text-white" />
+                  </div>
                 </div>
-                <div className="text-2xl lg:text-3xl font-bold text-foreground mb-1">
-                  {stat.value}
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  {stat.label}
-                </div>
-              </motion.div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                  {feature.title}
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  {feature.description}
+                </p>
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* Section des Cours */}
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
-          >
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+      {/* Featured Courses */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center mb-12">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
                 {t('home.courses.title')}
               </h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-gray-600 text-lg">
                 {t('home.courses.subtitle')}
               </p>
             </div>
-            
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {featuredCourses.map((course, index) => {
-                const imageResult = getImageResult(`course-${index}`);
-                
-                return (
-                  <motion.div 
-                    key={index} 
-                    variants={itemVariants}
-                    whileHover={{ y: -8 }}
-                    transition={{ type: 'spring', stiffness: 300 }}
-                  >
-                    <Card className="h-full flex flex-col bg-card border-0 shadow-soft hover:shadow-large transition-all duration-300 cursor-pointer group overflow-hidden">
-                      {/* Image générée ou fallback */}
-                      <div className="relative h-48 overflow-hidden">
-                        {imageResult.isLoading ? (
-                          <div className="w-full h-full bg-secondary/50 flex items-center justify-center">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                          </div>
-                        ) : (
-                          <img 
-                            src={imageResult.imageUrl || `/images/${course.fallbackCategory}-fallback.svg`}
-                            alt={course.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                            onError={(e) => {
-                              // Fallback en cas d'erreur d'image
-                              e.currentTarget.src = `/images/${course.fallbackCategory}-fallback.svg`;
-                            }}
-                          />
-                        )}
-                        <div className="absolute top-4 right-4">
-                          <span className="px-3 py-1 bg-white/90 dark:bg-black/90 text-primary text-xs font-medium rounded-full backdrop-blur-sm">
-                            {course.badge}
-                          </span>
-                        </div>
-                      </div>
-                      
-                      <CardHeader className="pb-4">
-                        <div className="flex items-center gap-3 mb-2">
-                          <div className={`p-2 rounded-lg bg-opacity-10 ${course.color.replace('text-', 'bg-')}`}>
-                            <course.icon className={`w-5 h-5 ${course.color}`} />
-                          </div>
-                        </div>
-                        <CardTitle className="text-xl group-hover:text-primary transition-colors">
-                          {course.title}
-                        </CardTitle>
-                      </CardHeader>
-                      
-                      <CardContent className="flex-grow">
-                        <p className="text-muted-foreground mb-4 leading-relaxed">
-                          {course.description}
-                        </p>
-                        <div className="flex items-center justify-between text-sm">
-                          <div className="flex items-center gap-1 text-warning">
-                            <Star className="h-4 w-4 fill-current" />
-                            <span className="font-medium">{course.rating}</span>
-                          </div>
-                          <div className="flex items-center gap-1 text-muted-foreground">
-                            <Users className="h-4 w-4" />
-                            <span>{course.students} {t('home.courses.students')}</span>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </motion.div>
+            <Link to="/courses">
+              <Button variant="outline" className="hidden md:flex">
+                {t('common.viewAllCourses')}
+                <ArrowRight className="h-4 w-4 ml-2" />
+              </Button>
+            </Link>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {featuredCourses.map((course) => (
+              <div key={course.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                <div className="relative">
+                  <img
+                    src={course.image}
+                    alt={course.title}
+                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  {course.isPopular && (
+                    <div className="absolute top-4 left-4">
+                      <span className="px-3 py-1 bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-medium rounded-full">
+                        🔥 {t('home.courses.popular')}
+                      </span>
+                    </div>
+                  )}
+                  <div className="absolute top-4 right-4">
+                    <span className="px-2 py-1 bg-blue-600 text-white text-xs font-medium rounded-full">
+                      {course.category}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                    {course.title}
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                    {course.description}
+                  </p>
+
+                  <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                    <div className="flex items-center">
+                      <Clock className="h-4 w-4 mr-1" />
+                      {course.duration}
+                    </div>
+                    <div className="flex items-center">
+                      <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
+                      {course.rating}
+                    </div>
+                    <div className="flex items-center">
+                      <Users className="h-4 w-4 mr-1" />
+                      {course.students}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-600">
+                      {t('courses.by')} {course.instructor}
+                    </span>
+                    <Button size="sm" className="group-hover:bg-blue-700 transition-colors">
+                      {t('courses.startCourse')}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center mt-8 md:hidden">
+            <Link to="/courses">
+              <Button variant="outline">
+                {t('common.viewAllCourses')}
+                <ArrowRight className="h-4 w-4 ml-2" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* Section des Progrès */}
-      <section className="py-20 bg-secondary/30">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
-          >
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                {t('home.progress.title')}
-              </h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                {t('home.progress.subtitle')}
-              </p>
-            </div>
-            
-            <motion.div variants={itemVariants} className="max-w-4xl mx-auto">
-              <Card className="bg-card border-0 shadow-soft">
-                <CardHeader>
-                  <CardTitle className="text-xl">Progression par matière</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={350}>
-                    <BarChart data={progressData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                      <XAxis 
-                        dataKey="name" 
-                        stroke="hsl(var(--muted-foreground))" 
-                        fontSize={14} 
-                        tickLine={false} 
-                        axisLine={false}
-                      />
-                      <YAxis 
-                        stroke="hsl(var(--muted-foreground))" 
-                        fontSize={14} 
-                        tickLine={false} 
-                        axisLine={false} 
-                        tickFormatter={(value) => `${value}%`}
-                      />
-                      <Tooltip 
-                        cursor={{ fill: 'hsl(var(--muted) / 0.5)' }} 
-                        contentStyle={{ 
-                          backgroundColor: 'hsl(var(--card))', 
-                          borderRadius: '0.75rem', 
-                          border: '1px solid hsl(var(--border))',
-                          boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
-                          color: 'hsl(var(--card-foreground))'
-                        }} 
-                      />
-                      <Bar dataKey="progress" radius={[6, 6, 0, 0]}>
-                        {progressData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.fill} />
-                        ))}
-                      </Bar>
-                    </BarChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Section CTA Final */}
-      <section className="py-20 bg-background relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-success/5"></div>
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.7 }}
-            className="text-center"
-          >
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
-              {t('home.cta.title')}
+      {/* Testimonials Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              {t('home.testimonials.title')}
             </h2>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed">
-              {t('home.cta.subtitle')}
+            <p className="text-xl text-gray-600">
+              {t('home.testimonials.subtitle')}
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="xl"
-                icon={ArrowRight}
-                iconPosition="right"
-              >
-                {t('home.cta.startToday')}
-              </Button>
-              <Button 
-                variant="outline" 
-                size="xl"
-              >
-                Découvrir les prix
-              </Button>
-            </div>
-          </motion.div>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                name: "Marie Leroux",
+                role: "Développeuse Web",
+                content: "EduAI Enhanced a transformé ma façon d'apprendre. L'IA s'adapte parfaitement à mon rythme et me propose toujours le bon contenu au bon moment.",
+                avatar: "/api/placeholder/60/60"
+              },
+              {
+                name: "Thomas Dubois",
+                role: "Data Scientist",
+                content: "Les cours sont exceptionnels et la progression adaptative est remarquable. J'ai pu acquérir de nouvelles compétences en un temps record.",
+                avatar: "/api/placeholder/60/60"
+              },
+              {
+                name: "Sarah Martin",
+                role: "Chef de Projet",
+                content: "La qualité pédagogique est au rendez-vous. L'interface est intuitive et les certificats sont reconnus dans mon secteur.",
+                avatar: "/api/placeholder/60/60"
+              }
+            ].map((testimonial, index) => (
+              <div key={index} className="bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-shadow">
+                <div className="flex items-center mb-4">
+                  <img
+                    src={testimonial.avatar}
+                    alt={testimonial.name}
+                    className="w-12 h-12 rounded-full mr-4"
+                  />
+                  <div>
+                    <h4 className="font-semibold text-gray-900">{testimonial.name}</h4>
+                    <p className="text-gray-600 text-sm">{testimonial.role}</p>
+                  </div>
+                </div>
+                <p className="text-gray-700 italic">"{testimonial.content}"</p>
+                <div className="flex text-yellow-400 mt-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 fill-current" />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-purple-600 to-blue-600 text-white">
+        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Prêt à transformer votre apprentissage ?
+          </h2>
+          <p className="text-xl text-purple-100 mb-8 max-w-2xl mx-auto">
+            Rejoignez des milliers d'apprenants qui développent déjà leurs compétences 
+            avec notre IA révolutionnaire. Commencez votre parcours dès aujourd'hui.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button 
+              size="lg" 
+              onClick={handleGetStarted}
+              className="bg-white text-purple-600 hover:bg-gray-100 shadow-lg transform hover:scale-105 transition-all duration-200"
+            >
+              <Zap className="h-5 w-5 mr-2" />
+              Commencer maintenant
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              onClick={handleExploreCourses}
+              className="border-white text-white hover:bg-white hover:text-purple-600 shadow-lg transition-all duration-200"
+            >
+              Explorer les cours
+            </Button>
+          </div>
+          <p className="text-purple-200 text-sm mt-6">
+            ✨ Inscription gratuite • 🎯 Contenu personnalisé • 🏆 Certificats reconnus
+          </p>
         </div>
       </section>
     </div>

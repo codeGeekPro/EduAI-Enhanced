@@ -13,12 +13,15 @@ export const translations = {
     home: {
       hero: {
         badge: 'New Learning Experience',
-        title: 'The education of the {future}, today',
+        title: 'Learn with Artificial Intelligence',
+        subtitle: 'EduAI Enhanced revolutionizes learning with adaptive AI that adjusts to your pace, style and goals for a personalized educational experience.',
         future: 'future',
-        subtitle: 'Transform your way of learning with our interactive platform. Personalized courses, advanced AI tools and an engaged community.',
         startFree: 'Start for free',
         watchDemo: 'Watch demo',
-        freeBadge: '🎯 100% Free'
+        freeBadge: '🎯 100% Free',
+        getStarted: 'Get Started',
+        accessDashboard: 'Access Dashboard',
+        discoverCourses: 'Discover courses'
       },
       stats: {
         activeStudents: 'Active students',
@@ -43,6 +46,30 @@ export const translations = {
         subtitle: 'Join thousands of students who have already chosen EduAI to reach their goals.',
         startToday: 'Start today',
         learnMore: 'Learn more'
+      },
+      features: {
+        title: 'Why choose EduAI Enhanced?',
+        subtitle: 'Our platform combines advanced artificial intelligence with the best pedagogical practices to create a revolutionary learning experience.',
+        ai: {
+          title: 'Adaptive Artificial Intelligence',
+          description: 'Our AI analyzes your learning style and adapts content in real-time to maximize your understanding.'
+        },
+        microlearning: {
+          title: 'Micro-Targeted Learning',
+          description: 'Short and efficient modules designed to fit your busy schedule.'
+        },
+        progress: {
+          title: 'Advanced Progress Tracking',
+          description: 'Visualize your performance with detailed analytics and personalized recommendations.'
+        },
+        community: {
+          title: 'Collaborative Community',
+          description: 'Connect with experts and other learners in a stimulating environment.'
+        }
+      },
+      testimonials: {
+        title: 'What our learners say',
+        subtitle: 'Testimonials from our learning community'
       }
     },
     // Courses Page
@@ -89,7 +116,7 @@ export const translations = {
       earnedOn: 'Earned on',
       notEarned: 'Not earned',
       minutes: 'Minutes',
-      completedCourses: 'Completed Courses',
+      //completedCourses: 'Completed Courses',
       // Days of the week
       days: {
         mon: 'Mon',
@@ -130,48 +157,21 @@ export const translations = {
     },
     // Course Data
     courseData: {
+      programming: {
+        title: 'Introduction to Artificial Intelligence',
+        description: 'Discover the basics of AI with practical examples and concrete projects.',
+        instructor: 'Dr. Marie Dubois'
+      },
       mathematics: {
-        title: 'Interactive Mathematics',
-        description: 'Master mathematical concepts through interactive exercises and dynamic visualizations.',
-        instructor: 'Dr. Marie Dubois',
-        tags: ['Algebra', 'Geometry', 'Statistics'],
-        nextLesson: 'Polynomial functions'
+        title: 'Advanced Mathematics for AI',
+        description: 'Master the essential mathematical concepts to understand artificial intelligence.',
+        instructor: 'Prof. Jean Martin'
       },
       science: {
-        title: 'Science Laboratory',
-        description: 'Explore physics and chemistry with immersive virtual experiments.',
-        instructor: 'Prof. Jean Martin',
-        tags: ['Chemistry', 'Physics', 'Experiments'],
-        nextLesson: 'Chemical reactions'
+        title: 'Practical Data Science',
+        description: 'Learn to analyze and visualize data with modern tools.',
+        instructor: 'Dr. Sophie Laurent'
       },
-      programming: {
-        title: 'Creative Programming',
-        description: 'Learn to code in a fun way with creative and interactive projects.',
-        instructor: 'Alex Thompson',
-        tags: ['JavaScript', 'Python', 'Projects'],
-        nextLesson: 'Variables and functions'
-      },
-      history: {
-        title: 'World History',
-        description: 'Discover the civilizations and events that shaped our world.',
-        instructor: 'Dr. Sophie Legrand',
-        tags: ['Antiquity', 'Middle Ages', 'Modern Era'],
-        nextLesson: 'The great discoveries'
-      },
-      art: {
-        title: 'Art and Design',
-        description: 'Develop your creativity with modern artistic techniques.',
-        instructor: 'Marina Rossi',
-        tags: ['Drawing', 'Color', 'Composition'],
-        nextLesson: 'Drawing basics'
-      },
-      philosophy: {
-        title: 'Modern Philosophy',
-        description: 'Explore the great questions of existence and knowledge.',
-        instructor: 'Prof. Pierre Moreau',
-        tags: ['Ethics', 'Metaphysics', 'Logic'],
-        nextLesson: 'Introduction to philosophy'
-      }
     },
     // Footer
     footer: {
@@ -225,7 +225,76 @@ export const translations = {
       close: 'Close',
       next: 'Next',
       previous: 'Previous',
-      finish: 'Finish'
+      finish: 'Finish',
+      viewAllCourses: 'View all courses'
+    },
+    // Profile Page
+    profile: {
+      title: 'My Profile',
+      backToDashboard: 'Back to dashboard',
+      userDescription: 'Passionate Learner',
+      tabs: {
+        profile: 'Profile',
+        activity: 'Activity',
+        badges: 'Badges',
+        preferences: 'Preferences',
+        notifications: 'Notifications',
+        security: 'Security'
+      },
+      stats: {
+        completedCourses: 'Completed courses',
+        successRate: 'Success rate',
+        studyTime: 'Study time',
+        badgesEarned: 'Badges earned'
+      },
+      personalInfo: {
+        title: 'Personal Information',
+        firstName: 'First Name',
+        lastName: 'Last Name',
+        email: 'Email',
+        phone: 'Phone',
+        birthdate: 'Date of birth',
+        saveChanges: 'Save changes'
+      },
+      activity: {
+        title: 'Recent Activity',
+        completed: 'Completed',
+        badgeEarned: 'Badge earned',
+        quizPassed: 'Quiz passed'
+      },
+      badges: {
+        title: 'Badges and Rewards',
+        earnedOn: 'Earned on'
+      },
+      preferences: {
+        title: 'Preferences',
+        language: 'Language',
+        timezone: 'Timezone',
+        theme: 'Theme',
+        light: 'Light',
+        dark: 'Dark',
+        auto: 'Auto'
+      },
+      notifications: {
+        title: 'Notifications',
+        courseNotifications: 'Course notifications',
+        courseNotificationsDesc: 'Receive notifications for new courses',
+        studyReminders: 'Study reminders',
+        studyRemindersDesc: 'Daily reminders to continue your courses',
+        emailNotifications: 'Email notifications',
+        emailNotificationsDesc: 'Receive updates by email'
+      },
+      security: {
+        title: 'Security',
+        changePassword: 'Change password',
+        currentPassword: 'Current password',
+        newPassword: 'New password',
+        confirmPassword: 'Confirm new password',
+        updatePassword: 'Update password',
+        twoFactor: 'Two-factor authentication',
+        twoFactorDesc: 'Add an extra layer of security to your account',
+        enable2FA: 'Enable 2FA'
+      }
     }
   },
   fr: {
@@ -242,12 +311,15 @@ export const translations = {
     home: {
       hero: {
         badge: 'Nouvelle expérience d\'apprentissage',
-        title: 'L\'éducation du {future}, aujourd\'hui',
+        title: 'Apprenez avec l\'Intelligence Artificielle',
+        subtitle: 'EduAI Enhanced révolutionne l\'apprentissage avec une IA adaptive qui s\'ajuste à votre rythme, style et objectifs pour une expérience éducative sur mesure.',
         future: 'futur',
-        subtitle: 'Transformez votre façon d\'apprendre avec notre plateforme interactive. Des cours personnalisés, des outils d\'IA avancés et une communauté engagée.',
         startFree: 'Commencer gratuitement',
         watchDemo: 'Voir la démo',
-        freeBadge: '🎯 100% Gratuit'
+        freeBadge: '🎯 100% Gratuit',
+        getStarted: 'Commencer gratuitement',
+        accessDashboard: 'Accéder au tableau de bord',
+        discoverCourses: 'Découvrir les cours'
       },
       stats: {
         activeStudents: 'Étudiants actifs',
@@ -272,6 +344,30 @@ export const translations = {
         subtitle: 'Rejoignez des milliers d\'étudiants qui ont déjà choisi EduAI pour atteindre leurs objectifs.',
         startToday: 'Commencer aujourd\'hui',
         learnMore: 'En savoir plus'
+      },
+      features: {
+        title: 'Pourquoi choisir EduAI Enhanced ?',
+        subtitle: 'Notre plateforme combine l\'intelligence artificielle avancée avec les meilleures pratiques pédagogiques pour créer une expérience d\'apprentissage révolutionnaire.',
+        ai: {
+          title: 'Intelligence Artificielle Adaptive',
+          description: 'Notre IA analyse votre style d\'apprentissage et adapte le contenu en temps réel pour maximiser votre compréhension.'
+        },
+        microlearning: {
+          title: 'Apprentissage Micro-Ciblé',
+          description: 'Des modules courts et efficaces conçus pour s\'adapter à votre emploi du temps chargé.'
+        },
+        progress: {
+          title: 'Suivi de Progression Avancé',
+          description: 'Visualisez votre progression avec des analyses détaillées et des recommandations personnalisées.'
+        },
+        community: {
+          title: 'Communauté Collaborative',
+          description: 'Échangez avec des experts et d\'autres apprenants dans un environnement stimulant.'
+        }
+      },
+      testimonials: {
+        title: 'Ce que disent nos apprenants',
+        subtitle: 'Témoignages de notre communauté d\'apprenants'
       }
     },
     // Courses Page
@@ -318,7 +414,7 @@ export const translations = {
       earnedOn: 'Obtenu le',
       notEarned: 'Non obtenu',
       minutes: 'Minutes',
-      completedCourses: 'Cours terminés',
+      //completedCourses: 'Cours terminés',
       // Days of the week
       days: {
         mon: 'Lun',
@@ -359,26 +455,20 @@ export const translations = {
     },
     // Course Data
     courseData: {
+      programming: {
+        title: 'Introduction à l\'Intelligence Artificielle',
+        description: 'Découvrez les bases de l\'IA avec des exemples pratiques et des projets concrets.',
+        instructor: 'Dr. Marie Dubois'
+      },
       mathematics: {
-        title: 'Mathématiques Interactives',
-        description: 'Maîtrisez les concepts mathématiques grâce à des exercices interactifs et des visualisations dynamiques.',
-        instructor: 'Dr. Marie Dubois',
-        tags: ['Algèbre', 'Géométrie', 'Statistiques'],
-        nextLesson: 'Fonctions polynomiales'
+        title: 'Mathématiques Avancées pour l\'IA',
+        description: 'Maîtrisez les concepts mathématiques essentiels pour comprendre l\'intelligence artificielle.',
+        instructor: 'Prof. Jean Martin'
       },
       science: {
-        title: 'Laboratoire de Sciences',
-        description: 'Explorez la physique et la chimie avec des expériences virtuelles immersives.',
-        instructor: 'Prof. Jean Martin',
-        tags: ['Chimie', 'Physique', 'Expériences'],
-        nextLesson: 'Réactions chimiques'
-      },
-      programming: {
-        title: 'Programmation Créative',
-        description: 'Apprenez à coder de manière ludique avec des projets créatifs et interactifs.',
-        instructor: 'Alex Thompson',
-        tags: ['JavaScript', 'Python', 'Projets'],
-        nextLesson: 'Variables et fonctions'
+        title: 'Sciences des Données Pratiques',
+        description: 'Apprenez à analyser et visualiser des données avec des outils modernes.',
+        instructor: 'Dr. Sophie Laurent'
       },
       history: {
         title: 'Histoire Mondiale',
@@ -454,7 +544,76 @@ export const translations = {
       close: 'Fermer',
       next: 'Suivant',
       previous: 'Précédent',
-      finish: 'Terminer'
+      finish: 'Terminer',
+      viewAllCourses: 'Voir tous les cours'
+    },
+    // Profile Page
+    profile: {
+      title: 'Mon Profil',
+      backToDashboard: 'Retour au tableau de bord',
+      userDescription: 'Apprenante passionnée',
+      tabs: {
+        profile: 'Profil',
+        activity: 'Activité',
+        badges: 'Badges',
+        preferences: 'Préférences',
+        notifications: 'Notifications',
+        security: 'Sécurité'
+      },
+      stats: {
+        completedCourses: 'Cours terminés',
+        successRate: 'Taux de réussite',
+        studyTime: 'Temps d\'étude',
+        badgesEarned: 'Badges obtenus'
+      },
+      personalInfo: {
+        title: 'Informations personnelles',
+        firstName: 'Prénom',
+        lastName: 'Nom',
+        email: 'Email',
+        phone: 'Téléphone',
+        birthdate: 'Date de naissance',
+        saveChanges: 'Sauvegarder les modifications'
+      },
+      activity: {
+        title: 'Activité récente',
+        completed: 'Terminé',
+        badgeEarned: 'Badge obtenu',
+        quizPassed: 'Quiz réussi'
+      },
+      badges: {
+        title: 'Badges et récompenses',
+        earnedOn: 'Obtenu le'
+      },
+      preferences: {
+        title: 'Préférences',
+        language: 'Langue',
+        timezone: 'Fuseau horaire',
+        theme: 'Thème',
+        light: 'Clair',
+        dark: 'Sombre',
+        auto: 'Automatique'
+      },
+      notifications: {
+        title: 'Notifications',
+        courseNotifications: 'Notifications de cours',
+        courseNotificationsDesc: 'Recevoir des notifications pour les nouveaux cours',
+        studyReminders: 'Rappels d\'étude',
+        studyRemindersDesc: 'Rappels quotidiens pour continuer vos cours',
+        emailNotifications: 'Notifications par email',
+        emailNotificationsDesc: 'Recevoir des mises à jour par email'
+      },
+      security: {
+        title: 'Sécurité',
+        changePassword: 'Changer le mot de passe',
+        currentPassword: 'Mot de passe actuel',
+        newPassword: 'Nouveau mot de passe',
+        confirmPassword: 'Confirmer le nouveau mot de passe',
+        updatePassword: 'Mettre à jour le mot de passe',
+        twoFactor: 'Authentification à deux facteurs',
+        twoFactorDesc: 'Ajoutez une couche de sécurité supplémentaire à votre compte',
+        enable2FA: 'Activer 2FA'
+      }
     }
   }
 };

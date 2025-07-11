@@ -115,11 +115,11 @@ const Header = () => {
               })}
               <div className="pt-4 border-t border-border">
                 <Button fullWidth className="mb-2">
-                  Connexion
+                  {t('nav.login')}
                 </Button>
                 <Button variant="outline" fullWidth>
                   <User className="h-4 w-4 mr-2" />
-                  Profil
+                  {t('nav.profile')}
                 </Button>
               </div>
             </nav>

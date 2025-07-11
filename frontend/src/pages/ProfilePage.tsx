@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   ArrowLeft, 
@@ -9,35 +9,41 @@ import {
   Calendar,
   Award,
   BookOpen,
-  Clock,
   Target,
+  Settings,
   Bell,
   Shield,
-  Palette,
-  Globe
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
+import { useI18nStore } from '../stores/i18nStore';
+
+type TabType = 'profile' | 'activity' | 'badges' | 'preferences' | 'notifications' | 'security';
 
 const ProfilePage: React.FC = () => {
-  const [activeTab, setActiveTab] = React.useState('profile');
+  const [activeTab, setActiveTab] = useState<TabType>('profile');
+  const [showPassword, setShowPassword] = useState(false);
+  const { t } = useI18nStore();
 
-  const userStats = {
-    coursesCompleted: 12,
-    hoursLearned: 48,
-    streakDays: 15,
-    badges: 8
-  };
+  const tabs = [
+    { id: 'profile' as const, label: t('profile.tabs.profile'), icon: User },
+    { id: 'activity' as const, label: t('profile.tabs.activity'), icon: BookOpen },
+    { id: 'badges' as const, label: t('profile.tabs.badges'), icon: Award },
+    { id: 'preferences' as const, label: t('profile.tabs.preferences'), icon: Settings },
+    { id: 'notifications' as const, label: t('profile.tabs.notifications'), icon: Bell },
+    { id: 'security' as const, label: t('profile.tabs.security'), icon: Shield }
+  ];
 
   const recentActivity = [
-    { type: 'course', title: 'Communication Efficace', action: 'Cours terminé', date: '2025-06-28' },
-    { type: 'badge', title: 'Expert en IA', action: 'Badge obtenu', date: '2025-06-27' },
-    { type: 'quiz', title: 'Quiz Leadership', action: 'Score: 95%', date: '2025-06-26' },
-    { type: 'course', title: 'Analyse de Données', action: 'Chapitre 3 terminé', date: '2025-06-25' }
+    { type: 'course', title: `${t('profile.activity.completed')}: ${t('courseData.mathematics.title')}`, date: '2025-07-10', time: '14:30' },
+    { type: 'badge', title: `${t('profile.activity.badgeEarned')}: Expert Python`, date: '2025-07-09', time: '16:45' },
+    { type: 'quiz', title: `${t('profile.activity.quizPassed')}: Bases de ML`, date: '2025-07-08', time: '10:15' }
   ];
 
   const badges = [
-    { name: 'Premier Cours', icon: '🎓', date: '2025-05-15' },
-    { name: 'Série de 5 jours', icon: '🔥', date: '2025-06-10' },
+    { name: t('profile.badges.firstCourse'), icon: '🎯', date: '2025-06-01' },
+    { name: t('progress.achievementTitles.studious'), icon: '🔥', date: '2025-06-10' },
     { name: 'Expert en IA', icon: '🤖', date: '2025-06-27' },
     { name: 'Communication Pro', icon: '💬', date: '2025-06-28' }
   ];
@@ -49,32 +55,27 @@ const ProfilePage: React.FC = () => {
         <div className="mb-8">
           <Link to="/dashboard" className="inline-flex items-center text-blue-600 hover:text-blue-500 mb-4">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Retour au tableau de bord
+            {t('profile.backToDashboard')}
           </Link>
-          <h1 className="text-4xl font-bold text-gray-900">Mon Profil</h1>
+          <h1 className="text-4xl font-bold text-gray-900">{t('profile.title')}</h1>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Sidebar */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-sm p-6">
+              {/* Profile Photo */}
               <div className="text-center mb-6">
-                <div className="w-24 h-24 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <User className="h-12 w-12 text-white" />
+                <div className="w-24 h-24 bg-blue-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+                  <User className="h-12 w-12 text-blue-600" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900">Jean Dupont</h3>
-                <p className="text-gray-600">jean.dupont@entreprise.com</p>
+                <h2 className="text-xl font-semibold text-gray-900">Marie Dubois</h2>
+                <p className="text-gray-600">{t('profile.userDescription')}</p>
               </div>
 
+              {/* Navigation */}
               <nav className="space-y-2">
-                {[
-                  { id: 'profile', label: 'Informations personnelles', icon: User },
-                  { id: 'activity', label: 'Activité récente', icon: Clock },
-                  { id: 'badges', label: 'Badges et récompenses', icon: Award },
-                  { id: 'preferences', label: 'Préférences', icon: Palette },
-                  { id: 'notifications', label: 'Notifications', icon: Bell },
-                  { id: 'security', label: 'Sécurité', icon: Shield }
-                ].map((item) => (
+                {tabs.map((item) => (
                   <button
                     key={item.id}
                     onClick={() => setActiveTab(item.id)}
@@ -98,114 +99,84 @@ const ProfilePage: React.FC = () => {
               <div className="space-y-6">
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                  <div className="bg-white p-6 rounded-lg shadow-sm">
-                    <div className="flex items-center">
-                      <BookOpen className="h-8 w-8 text-green-600 mr-3" />
-                      <div>
-                        <div className="text-2xl font-bold text-gray-900">{userStats.coursesCompleted}</div>
-                        <div className="text-sm text-gray-600">Cours terminés</div>
-                      </div>
-                    </div>
+                  <div className="bg-white rounded-lg shadow-sm p-6 text-center">
+                    <div className="text-2xl font-bold text-blue-600 mb-1">12</div>
+                    <div className="text-sm text-gray-600">{t('profile.stats.completedCourses')}</div>
                   </div>
-                  <div className="bg-white p-6 rounded-lg shadow-sm">
-                    <div className="flex items-center">
-                      <Clock className="h-8 w-8 text-blue-600 mr-3" />
-                      <div>
-                        <div className="text-2xl font-bold text-gray-900">{userStats.hoursLearned}h</div>
-                        <div className="text-sm text-gray-600">Heures d'apprentissage</div>
-                      </div>
-                    </div>
+                  <div className="bg-white rounded-lg shadow-sm p-6 text-center">
+                    <div className="text-2xl font-bold text-green-600 mb-1">87%</div>
+                    <div className="text-sm text-gray-600">{t('profile.stats.successRate')}</div>
                   </div>
-                  <div className="bg-white p-6 rounded-lg shadow-sm">
-                    <div className="flex items-center">
-                      <Target className="h-8 w-8 text-purple-600 mr-3" />
-                      <div>
-                        <div className="text-2xl font-bold text-gray-900">{userStats.streakDays}</div>
-                        <div className="text-sm text-gray-600">Jours consécutifs</div>
-                      </div>
-                    </div>
+                  <div className="bg-white rounded-lg shadow-sm p-6 text-center">
+                    <div className="text-2xl font-bold text-purple-600 mb-1">156h</div>
+                    <div className="text-sm text-gray-600">{t('profile.stats.studyTime')}</div>
                   </div>
-                  <div className="bg-white p-6 rounded-lg shadow-sm">
-                    <div className="flex items-center">
-                      <Award className="h-8 w-8 text-yellow-600 mr-3" />
-                      <div>
-                        <div className="text-2xl font-bold text-gray-900">{userStats.badges}</div>
-                        <div className="text-sm text-gray-600">Badges obtenus</div>
-                      </div>
-                    </div>
+                  <div className="bg-white rounded-lg shadow-sm p-6 text-center">
+                    <div className="text-2xl font-bold text-orange-600 mb-1">8</div>
+                    <div className="text-sm text-gray-600">{t('profile.stats.badgesEarned')}</div>
                   </div>
                 </div>
 
-                {/* Personal Information */}
+                {/* Profile Information */}
                 <div className="bg-white rounded-lg shadow-sm p-6">
-                  <h2 className="text-xl font-semibold text-gray-900 mb-6">Informations personnelles</h2>
+                  <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('profile.personalInfo.title')}</h2>
                   <div className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Prénom</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="firstName">{t('profile.personalInfo.firstName')}</label>
                         <input
+                          id="firstName"
                           type="text"
-                          value="Jean"
-                          placeholder="Prénom"
+                          value="Marie"
+                          placeholder={t('profile.personalInfo.firstName')}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
                       </div>
                       <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="lastName">{t('profile.personalInfo.lastName')}</label>
                         <input
+                          id="lastName"
                           type="text"
-                          value="Dupont"
-                          placeholder="Nom"
+                          value="Dubois"
+                          placeholder={t('profile.personalInfo.lastName')}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
                       </div>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        <Mail className="inline h-4 w-4 mr-1" />
-                        Email
-                      </label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="email">{t('profile.personalInfo.email')}</label>
                       <input
+                        id="email"
                         type="email"
-                        value="jean.dupont@entreprise.com"
-                        placeholder="Email"
+                        value="marie.dubois@email.com"
+                        placeholder={t('profile.personalInfo.email')}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Téléphone
-                        </label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="phone">{t('profile.personalInfo.phone')}</label>
                         <input
+                          id="phone"
                           type="tel"
                           value="+33 1 23 45 67 89"
-                          placeholder="Téléphone"
+                          placeholder={t('profile.personalInfo.phone')}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Date de naissance
-                        </label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="birthdate">{t('profile.personalInfo.birthdate')}</label>
                         <input
+                          id="birthdate"
                           type="date"
                           value="1985-03-15"
-                          title="Date de naissance"
+                          title={t('profile.personalInfo.birthdate')}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
                       </div>
                     </div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Adresse
-                    </label>
-                    <input
-                      type="text"
-                      value="123 Rue de la Paix, 75001 Paris, France"
-                      placeholder="Adresse"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
                     <div className="pt-4">
-                      <Button>Sauvegarder les modifications</Button>
+                      <Button>{t('profile.personalInfo.saveChanges')}</Button>
                     </div>
                   </div>
                 </div>
@@ -214,7 +185,7 @@ const ProfilePage: React.FC = () => {
 
             {activeTab === 'activity' && (
               <div className="bg-white rounded-lg shadow-sm p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">Activité récente</h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('profile.activity.title')}</h2>
                 <div className="space-y-4">
                   {recentActivity.map((activity, index) => (
                     <div key={index} className="flex items-center p-4 border border-gray-200 rounded-lg">
@@ -225,9 +196,8 @@ const ProfilePage: React.FC = () => {
                       </div>
                       <div className="flex-1">
                         <h3 className="font-medium text-gray-900">{activity.title}</h3>
-                        <p className="text-sm text-gray-600">{activity.action}</p>
+                        <p className="text-sm text-gray-500">{activity.date} à {activity.time}</p>
                       </div>
-                      <div className="text-sm text-gray-500">{activity.date}</div>
                     </div>
                   ))}
                 </div>
@@ -236,13 +206,13 @@ const ProfilePage: React.FC = () => {
 
             {activeTab === 'badges' && (
               <div className="bg-white rounded-lg shadow-sm p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">Badges et récompenses</h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('profile.badges.title')}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {badges.map((badge, index) => (
                     <div key={index} className="border border-gray-200 rounded-lg p-4 text-center">
                       <div className="text-4xl mb-2">{badge.icon}</div>
                       <h3 className="font-medium text-gray-900">{badge.name}</h3>
-                      <p className="text-sm text-gray-500">Obtenu le {badge.date}</p>
+                      <p className="text-sm text-gray-500">{t('profile.badges.earnedOn')} {badge.date}</p>
                     </div>
                   ))}
                 </div>
@@ -251,50 +221,44 @@ const ProfilePage: React.FC = () => {
 
             {activeTab === 'preferences' && (
               <div className="bg-white rounded-lg shadow-sm p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">Préférences</h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('profile.preferences.title')}</h2>
                 <div className="space-y-6">
                   <div>
-                    <label htmlFor="language-select" className="font-medium text-gray-900 mb-3 block">Langue</label>
-                    <select
-                      id="language-select"
-                      className="w-full md:w-auto px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    <h3 className="font-medium text-gray-900 mb-3">{t('profile.preferences.language')}</h3>
+                    <select 
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                      aria-label={t('profile.preferences.language')}
                     >
-                      <option value="fr">Français</option>
-                      <option value="en">English</option>
-                      <option value="es">Español</option>
+                      <option>Français</option>
+                      <option>English</option>
+                      <option>Español</option>
                     </select>
                   </div>
                   <div>
-                    <h3 className="font-medium text-gray-900 mb-3">Thème</h3>
+                    <h3 className="font-medium text-gray-900 mb-3">{t('profile.preferences.timezone')}</h3>
+                    <select 
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                      aria-label={t('profile.preferences.timezone')}
+                    >
+                      <option>Europe/Paris</option>
+                      <option>America/New_York</option>
+                      <option>Asia/Tokyo</option>
+                    </select>
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-900 mb-3">{t('profile.preferences.theme')}</h3>
                     <div className="flex space-x-4">
                       <label className="flex items-center">
                         <input type="radio" name="theme" value="light" className="mr-2" defaultChecked />
-                        Clair
+                        {t('profile.preferences.light')}
                       </label>
                       <label className="flex items-center">
                         <input type="radio" name="theme" value="dark" className="mr-2" />
-                        Sombre
+                        {t('profile.preferences.dark')}
                       </label>
                       <label className="flex items-center">
                         <input type="radio" name="theme" value="auto" className="mr-2" />
-                        Automatique
-                      </label>
-                    </div>
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-gray-900 mb-3">Apprentissage</h3>
-                    <div className="space-y-2">
-                      <label className="flex items-center">
-                        <input type="checkbox" className="mr-2" defaultChecked />
-                        Activer les rappels quotidiens
-                      </label>
-                      <label className="flex items-center">
-                        <input type="checkbox" className="mr-2" defaultChecked />
-                        Sons et vibrations
-                      </label>
-                      <label className="flex items-center">
-                        <input type="checkbox" className="mr-2" />
-                        Mode hors ligne automatique
+                        {t('profile.preferences.auto')}
                       </label>
                     </div>
                   </div>
@@ -304,28 +268,28 @@ const ProfilePage: React.FC = () => {
 
             {activeTab === 'notifications' && (
               <div className="bg-white rounded-lg shadow-sm p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">Préférences de notification</h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('profile.notifications.title')}</h2>
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between py-3 border-b border-gray-200">
+                  <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-medium text-gray-900">Nouveaux cours</h3>
-                      <p className="text-sm text-gray-600">Recevoir des notifications pour les nouveaux cours</p>
+                      <h3 className="font-medium text-gray-900">{t('profile.notifications.courseNotifications')}</h3>
+                      <p className="text-sm text-gray-600">{t('profile.notifications.courseNotificationsDesc')}</p>
                     </div>
-                    <input type="checkbox" className="toggle" defaultChecked />
+                    <input type="checkbox" className="toggle" defaultChecked aria-label={t('profile.notifications.courseNotifications')} />
                   </div>
-                  <div className="flex items-center justify-between py-3 border-b border-gray-200">
+                  <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-medium text-gray-900">Rappels d'apprentissage</h3>
-                      <p className="text-sm text-gray-600">Rappels quotidiens pour maintenir votre série</p>
+                      <h3 className="font-medium text-gray-900">{t('profile.notifications.studyReminders')}</h3>
+                      <p className="text-sm text-gray-600">{t('profile.notifications.studyRemindersDesc')}</p>
                     </div>
-                    <input type="checkbox" className="toggle" defaultChecked />
+                    <input type="checkbox" className="toggle" defaultChecked aria-label={t('profile.notifications.studyReminders')} />
                   </div>
-                  <div className="flex items-center justify-between py-3 border-b border-gray-200">
+                  <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-medium text-gray-900">Récompenses et badges</h3>
-                      <p className="text-sm text-gray-600">Notifications pour les nouveaux badges obtenus</p>
+                      <h3 className="font-medium text-gray-900">{t('profile.notifications.emailNotifications')}</h3>
+                      <p className="text-sm text-gray-600">{t('profile.notifications.emailNotificationsDesc')}</p>
                     </div>
-                    <input type="checkbox" className="toggle" defaultChecked />
+                    <input type="checkbox" className="toggle" aria-label={t('profile.notifications.emailNotifications')} />
                   </div>
                 </div>
               </div>
@@ -333,35 +297,48 @@ const ProfilePage: React.FC = () => {
 
             {activeTab === 'security' && (
               <div className="bg-white rounded-lg shadow-sm p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">Sécurité</h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('profile.security.title')}</h2>
                 <div className="space-y-6">
                   <div>
-                    <h3 className="font-medium text-gray-900 mb-3">Changer le mot de passe</h3>
+                    <h3 className="font-medium text-gray-900 mb-3">{t('profile.security.changePassword')}</h3>
                     <div className="space-y-3">
+                      <div className="relative">
+                        <input
+                          type={showPassword ? "text" : "password"}
+                          placeholder={t('profile.security.currentPassword')}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-10"
+                          aria-label={t('profile.security.currentPassword')}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                          aria-label="Toggle password visibility"
+                        >
+                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </button>
+                      </div>
                       <input
                         type="password"
-                        placeholder="Mot de passe actuel"
+                        placeholder={t('profile.security.newPassword')}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        aria-label={t('profile.security.newPassword')}
                       />
                       <input
                         type="password"
-                        placeholder="Nouveau mot de passe"
+                        placeholder={t('profile.security.confirmPassword')}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        aria-label={t('profile.security.confirmPassword')}
                       />
-                      <input
-                        type="password"
-                        placeholder="Confirmer le nouveau mot de passe"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      />
-                      <Button>Mettre à jour le mot de passe</Button>
+                      <Button>{t('profile.security.updatePassword')}</Button>
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-medium text-gray-900 mb-3">Authentification à deux facteurs</h3>
+                    <h3 className="font-medium text-gray-900 mb-3">{t('profile.security.twoFactor')}</h3>
                     <p className="text-sm text-gray-600 mb-3">
-                      Ajoutez une couche de sécurité supplémentaire à votre compte
+                      {t('profile.security.twoFactorDesc')}
                     </p>
-                    <Button variant="outline">Activer 2FA</Button>
+                    <Button variant="outline">{t('profile.security.enable2FA')}</Button>
                   </div>
                 </div>
               </div>

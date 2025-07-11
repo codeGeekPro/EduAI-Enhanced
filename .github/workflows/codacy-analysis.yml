@@ -10,7 +10,6 @@ jobs:
   codacy-analysis-cli:
     name: Codacy Analysis CLI
     runs-on: ubuntu-latest
-    if: false  # Temporarily disabled until authentication is configured
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

@@ -153,11 +153,10 @@ const CoursesPage = () => {
           className="text-center mb-12"
         >
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Nos Cours
+            {t('courses.title')}
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Découvrez une large sélection de cours conçus pour vous accompagner 
-            dans votre parcours d'apprentissage, quel que soit votre niveau.
+            {t('courses.subtitle')}
           </p>
         </motion.div>
 
@@ -172,25 +171,25 @@ const CoursesPage = () => {
             <div className="text-2xl font-bold text-primary mb-1">
               {courses.length}
             </div>
-            <div className="text-sm text-muted-foreground">Cours disponibles</div>
+            <div className="text-sm text-muted-foreground">{t('courses.availableCourses')}</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-success mb-1">
               {courses.reduce((sum, course) => sum + course.students, 0).toLocaleString()}
             </div>
-            <div className="text-sm text-muted-foreground">Étudiants inscrits</div>
+            <div className="text-sm text-muted-foreground">{t('courses.enrolledStudents')}</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-warning mb-1">
               {courses.reduce((sum, course) => sum + course.lessons, 0)}
             </div>
-            <div className="text-sm text-muted-foreground">Leçons totales</div>
+            <div className="text-sm text-muted-foreground">{t('courses.totalLessons')}</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-accent mb-1">
               4.8
             </div>
-            <div className="text-sm text-muted-foreground">Note moyenne</div>
+            <div className="text-sm text-muted-foreground">{t('courses.averageRating')}</div>
           </div>
         </motion.div>
 
@@ -264,14 +263,24 @@ const CoursesPage = () => {
 
                   {/* Course Tags */}
                   <div className="flex flex-wrap gap-2 mb-4">
-                    {course.tags.map((tag, tagIndex) => (
-                      <span 
-                        key={tagIndex}
-                        className="px-2 py-1 bg-secondary text-secondary-foreground text-xs rounded-md"
-                      >
-                        {tag}
-                      </span>
-                    ))}
+                    {Array.isArray(course.tags)
+                      ? course.tags.map((tag, tagIndex) => (
+                          <span 
+                            key={tagIndex}
+                            className="px-2 py-1 bg-secondary text-secondary-foreground text-xs rounded-md"
+                          >
+                            {tag}
+                          </span>
+                        ))
+                      : typeof course.tags === 'string' && course.tags.split(',').map((tag, tagIndex) => (
+                          <span 
+                            key={tagIndex}
+                            className="px-2 py-1 bg-secondary text-secondary-foreground text-xs rounded-md"
+                          >
+                            {tag.trim()}
+                          </span>
+                        ))
+                    }
                   </div>
 
                   {/* Course Info */}

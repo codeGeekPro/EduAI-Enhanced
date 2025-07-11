@@ -30,6 +30,8 @@ export const useI18nStore = create<I18nState>()(
       language: 'en', // Default to English for the jury
       setLanguage: (language: Language) => {
         set({ language });
+        // Force re-render by triggering a state change
+        console.log('Language changed to:', language);
       },
       t: (key: string, params?: Record<string, string>) => {
         const { language } = get();
@@ -39,6 +41,9 @@ export const useI18nStore = create<I18nState>()(
     }),
     {
       name: 'i18n-storage',
+      onRehydrateStorage: () => (state) => {
+        console.log('i18n store rehydrated:', state);
+      },
     }
   )
 );

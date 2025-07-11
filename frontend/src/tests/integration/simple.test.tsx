@@ -45,7 +45,7 @@ vi.mock('../../hooks/useAPI', () => ({
 }));
 
 // Import des composants après les mocks
-import LandingPage from '../../pages/LandingPage';
+import HomePage from '../../pages/HomePage';
 import LoginPage from '../../pages/LoginPage';
 
 const createWrapper = () => {
@@ -66,8 +66,8 @@ const createWrapper = () => {
 };
 
 describe('Frontend Integration Tests', () => {
-  test('LandingPage should render without crashing', () => {
-    render(<LandingPage />, { wrapper: createWrapper() });
+  test('HomePage should render without crashing', () => {
+    render(<HomePage />, { wrapper: createWrapper() });
     
     // Vérifier qu'au moins un élément est présent
     expect(document.body).toBeTruthy();
