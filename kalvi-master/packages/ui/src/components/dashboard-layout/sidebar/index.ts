@@ -1,6 +1,0 @@
-export * from './body'
-export * from './content'
-export * from './item'
-export * from './logo'
-export * from './footer'
-export * from './state'
