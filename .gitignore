@@ -1,3 +1,21 @@
+# Secrets et variables d’environnement
+.env
+.env.*
+# Dossiers à ignorer
+kalvi-master/
+__pycache__/
+node_modules/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+*.db
+*.log
+*.bak
+*.tmp
+# Autres fichiers temporaires
+.DS_Store
+Thumbs.db
 # Frontend PWA (React + TypeScript)
 frontend/node_modules/
 frontend/dist/
@@ -84,6 +102,7 @@ logs/
 security-reports/
 .pytest_cache/
 node_modules/
+kalvi-master/
 
 # Documentation de développement
 *_GUIDE.md

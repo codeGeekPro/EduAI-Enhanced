@@ -21,6 +21,7 @@ from app.core.config import get_settings
 from app.core.database import init_database
 from app.core.logging import setup_logging
 from app.core.i18n import init_i18n
+from app.core.adaptive_services import lifespan_adaptive_services
 from app.middleware.security import SecurityMiddleware
 from app.middleware.rate_limiting import RateLimitMiddleware
 
@@ -36,6 +37,7 @@ from app.api.routes import (
     analytics,
     offline
 )
+from app.api.adaptive_learning import router as adaptive_router
 
 # Charger les variables d'environnement
 load_dotenv()
@@ -48,36 +50,20 @@ async def lifespan(app: FastAPI):
     """Gestionnaire du cycle de vie de l'application"""
     
     # 🚀 STARTUP
-    print("🎓 Démarrage d'EduAI Enhanced...")
-    print("🌍 PWA IA Éducative Multilingue & Adaptive")
+    logger.info("🚀 Démarrage d'EduAI Enhanced Backend...")
     
-    # Configuration du logging
-    setup_logging()
-    
-    # Initialisation de la base de données
+    # Initialiser les services de base
     await init_database()
+    setup_logging()
+    init_i18n()
     
-    # Initialisation de l'internationalisation (50+ langues)
-    await init_i18n()
+    # Démarrer les services adaptatifs
+    async with lifespan_adaptive_services(app):
+        logger.info("✅ Services adaptatifs démarrés")
+        yield
     
-    # Initialisation des services IA
-    print("🤖 Initialisation des services IA...")
-    print("   ├── OpenAI GPT-4 & Whisper")
-    print("   ├── Hugging Face Transformers")
-    print("   ├── ElevenLabs TTS")
-    print("   ├── Emotion Recognition")
-    print("   └── Vector Database (Pinecone)")
-    
-    print("✅ EduAI Enhanced démarré avec succès!")
-    print(f"🌐 API disponible sur: {settings.api_host}:{settings.api_port}")
-    print(f"📚 Documentation: {settings.api_host}:{settings.api_port}/docs")
-    
-    yield
-    
-    # 🛑 SHUTDOWN
-    print("⏹️ Arrêt d'EduAI Enhanced...")
-    print("💾 Sauvegarde des données d'apprentissage...")
-    print("🔒 Fermeture des connexions...")
+    # 🛑 SHUTDOWN  
+    logger.info("👋 Arrêt d'EduAI Enhanced Backend...")
 
 # Créer l'application FastAPI
 app = FastAPI(
@@ -166,6 +152,7 @@ app.include_router(speech.router, prefix="/api/speech", tags=["🎤 Reconnaissan
 app.include_router(emotion.router, prefix="/api/emotion", tags=["🎭 Reconnaissance Émotionnelle"])
 app.include_router(analytics.router, prefix="/api/analytics", tags=["📊 Analytics"])
 app.include_router(offline.router, prefix="/api/offline", tags=["📱 Mode Offline"])
+app.include_router(adaptive_router, tags=["🎯 Apprentissage Adaptatif"])
 
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)
 async def root():

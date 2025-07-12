@@ -32,7 +32,6 @@ librosa==0.10.1
 soundfile==0.12.1
 
 # Phonetics and Speech Analysis
-phoneme==0.1.2
 scipy>=1.10.0
 
 # Text-to-Speech
