@@ -1,0 +1,469 @@
+/**
+ * 🎨 Styles pour les Améliorations Avancées
+ * Animations et styles pour WebSocket, Visualisations 3D, et Interface
+ */
+
+/* WebSocket Status Indicators */
+.websocket-status {
+  @apply flex items-center space-x-2 text-sm;
+}
+
+.websocket-status.connected {
+  @apply text-green-600;
+}
+
+.websocket-status.connecting {
+  @apply text-yellow-600;
+}
+
+.websocket-status.disconnected {
+  @apply text-red-600;
+}
+
+.websocket-status.error {
+  @apply text-red-700;
+}
+
+/* Loading Animations */
+.loading-spinner {
+  @apply inline-block animate-spin rounded-full border-4 border-solid border-current border-r-transparent;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.loading-overlay {
+  @apply absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center z-10;
+  backdrop-filter: blur(2px);
+}
+
+.loading-text {
+  @apply text-white font-medium text-lg flex items-center space-x-3;
+}
+
+/* Enhanced Dashboard Styles */
+.enhanced-dashboard {
+  @apply min-h-screen bg-gray-50;
+}
+
+.dashboard-header {
+  @apply sticky top-0 z-20 bg-white shadow-sm border-b;
+}
+
+.dashboard-content {
+  @apply container mx-auto max-w-7xl;
+}
+
+/* Tab Navigation */
+.nav-tab {
+  @apply px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200;
+}
+
+.nav-tab.active {
+  @apply bg-blue-100 text-blue-700 border border-blue-200 shadow-sm;
+}
+
+.nav-tab:not(.active) {
+  @apply text-gray-500 hover:text-gray-700 hover:bg-gray-100 border border-transparent;
+}
+
+/* Visualization Containers */
+.learning-visualizations {
+  @apply w-full space-y-4;
+}
+
+.visualization-controls {
+  @apply flex flex-wrap gap-2 mb-4;
+}
+
+.visualization-container {
+  @apply relative bg-white rounded-lg border shadow-sm overflow-hidden;
+}
+
+.network-view,
+.progress-view,
+.skills-view {
+  @apply p-4;
+}
+
+.network-view h3,
+.progress-view h3,
+.skills-view h3 {
+  @apply text-lg font-semibold text-gray-900 mb-4;
+}
+
+/* D3.js Tooltip Styles */
+.tooltip {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.4;
+  pointer-events: none;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  max-width: 200px;
+}
+
+.tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.9) transparent transparent transparent;
+}
+
+/* Node Styles */
+.node {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.node:hover {
+  transform: scale(1.1);
+  filter: brightness(1.2);
+}
+
+.node circle {
+  transition: all 0.3s ease;
+}
+
+.node:hover circle {
+  stroke-width: 3px;
+  filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.5));
+}
+
+/* Links between nodes */
+.links line {
+  transition: all 0.3s ease;
+}
+
+.links line:hover {
+  stroke-width: 3px;
+  stroke-opacity: 1;
+}
+
+/* 3D World Styles */
+.learning-world-3d {
+  @apply space-y-4;
+}
+
+.world-controls {
+  @apply bg-white rounded-lg border p-4 space-y-4;
+}
+
+.world-controls h3 {
+  @apply text-lg font-semibold text-gray-900;
+}
+
+.environment-selector {
+  @apply flex flex-wrap items-center gap-2;
+}
+
+.environment-selector label {
+  @apply text-sm font-medium text-gray-700;
+}
+
+.env-btn {
+  @apply px-3 py-2 text-sm font-medium rounded-lg border transition-all duration-200;
+}
+
+.env-btn.active {
+  @apply bg-blue-100 text-blue-700 border-blue-200;
+}
+
+.env-btn:not(.active) {
+  @apply text-gray-600 border-gray-200 hover:bg-gray-50 hover:text-gray-900;
+}
+
+.world-stats {
+  @apply flex flex-wrap gap-4;
+}
+
+.world-stats .stat {
+  @apply bg-gray-50 px-3 py-2 rounded-lg text-sm;
+}
+
+.world-container {
+  @apply relative overflow-hidden rounded-lg border;
+  min-height: 600px;
+}
+
+.world-instructions {
+  @apply bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800;
+}
+
+/* Offline Manager Styles */
+.offline-status {
+  @apply flex items-center space-x-2 text-sm;
+}
+
+.offline-status.online {
+  @apply text-green-600;
+}
+
+.offline-status.offline {
+  @apply text-red-600;
+}
+
+.sync-pending {
+  @apply bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded-full;
+}
+
+/* Progress Indicators */
+.progress-bar {
+  @apply w-full bg-gray-200 rounded-full h-2;
+}
+
+.progress-fill {
+  @apply h-2 rounded-full transition-all duration-300 ease-out;
+}
+
+.progress-fill.high {
+  @apply bg-green-500;
+}
+
+.progress-fill.medium {
+  @apply bg-yellow-500;
+}
+
+.progress-fill.low {
+  @apply bg-red-500;
+}
+
+/* Mastery Indicators */
+.mastery-indicator {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+.mastery-indicator.beginner {
+  @apply bg-red-100 text-red-800;
+}
+
+.mastery-indicator.intermediate {
+  @apply bg-yellow-100 text-yellow-800;
+}
+
+.mastery-indicator.advanced {
+  @apply bg-green-100 text-green-800;
+}
+
+.mastery-indicator.expert {
+  @apply bg-blue-100 text-blue-800;
+}
+
+/* Connection Quality Indicators */
+.connection-quality {
+  @apply inline-flex items-center space-x-1;
+}
+
+.quality-dot {
+  @apply w-2 h-2 rounded-full;
+}
+
+.quality-dot.excellent {
+  @apply bg-green-500;
+}
+
+.quality-dot.good {
+  @apply bg-yellow-500;
+}
+
+.quality-dot.poor {
+  @apply bg-red-500;
+}
+
+/* Animation Classes */
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+.slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+.pulse-glow {
+  animation: pulseGlow 2s infinite;
+}
+
+.float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Interactive Elements */
+.interactive-node {
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.interactive-node:hover {
+  transform: scale(1.1);
+  filter: brightness(1.2) drop-shadow(0 0 10px rgba(59, 130, 246, 0.4));
+}
+
+.interactive-node:active {
+  transform: scale(0.95);
+}
+
+/* Skill Radar Chart Enhancements */
+.skill-radar {
+  @apply relative;
+}
+
+.skill-point {
+  transition: all 0.3s ease;
+}
+
+.skill-point:hover {
+  transform: scale(1.5);
+  filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.6));
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dashboard-header {
+    @apply px-4;
+  }
+  
+  .dashboard-content {
+    @apply px-4;
+  }
+  
+  .visualization-controls {
+    @apply flex-col;
+  }
+  
+  .world-controls {
+    @apply space-y-3;
+  }
+  
+  .environment-selector {
+    @apply flex-col items-start;
+  }
+  
+  .nav-tab {
+    @apply px-3 py-1.5 text-xs;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .enhanced-dashboard {
+    @apply bg-gray-900;
+  }
+  
+  .dashboard-header {
+    @apply bg-gray-800 border-gray-700;
+  }
+  
+  .nav-tab.active {
+    @apply bg-blue-900 text-blue-300 border-blue-700;
+  }
+  
+  .nav-tab:not(.active) {
+    @apply text-gray-400 hover:text-gray-200 hover:bg-gray-700;
+  }
+  
+  .world-controls,
+  .visualization-container {
+    @apply bg-gray-800 border-gray-700;
+  }
+  
+  .tooltip {
+    background: rgba(255, 255, 255, 0.95);
+    color: #1f2937;
+  }
+}
+
+/* High DPI / Retina Display Optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .loading-spinner {
+    border-width: 2px;
+  }
+  
+  .quality-dot {
+    @apply w-1.5 h-1.5;
+  }
+}
+
+/* Accessibility Enhancements */
+@media (prefers-reduced-motion: reduce) {
+  .fade-in,
+  .slide-up,
+  .pulse-glow,
+  .float,
+  .interactive-node,
+  .skill-point,
+  .node {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* Focus Styles for Keyboard Navigation */
+.nav-tab:focus,
+.env-btn:focus,
+.interactive-node:focus {
+  @apply outline-none ring-2 ring-blue-500 ring-offset-2;
+}
+
+/* Print Styles */
+@media print {
+  .dashboard-header,
+  .world-controls,
+  .visualization-controls {
+    @apply hidden;
+  }
+  
+  .enhanced-dashboard {
+    @apply bg-white;
+  }
+  
+  .visualization-container {
+    @apply border border-gray-300;
+  }
+}
