@@ -311,15 +311,18 @@ def main() -> None:
         console.print("[bold red]Error: Required modules not installed.[/bold red]")
         console.print("Install dependencies with: [green]pip install deep-translator rich[/green]")
         return
-    
+
     console.print("[bold blue]===== EduAI Language Migration Tool =====[/bold blue]")
-    
+
     # Check that directories exist
     if not os.path.isdir(args.input):
-        console.print(f"[bold red]Error: Source directory '{args.input}' does not exist.[/bold red]")
+        console.print(
+            f"[bold red]Error: Source directory '{args.input}' does not exist.[/bold red]"
+        )
         return
-    
+
     process_project(args)
+
 
 if __name__ == "__main__":
     main()

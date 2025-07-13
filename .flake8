@@ -1,0 +1,18 @@
+[flake8]
+max-line-length = 100
+exclude = 
+    .git,
+    __pycache__,
+    .venv,
+    venv,
+    .env
+ignore = 
+    # Allow longer lines for specific cases
+    E501,
+    # Allow unused imports in some cases
+    F401,
+    # Allow specific whitespace issues in legacy files
+    W293,
+    W291
+per-file-ignores =
+    scripts/translate_project.py:E501,F401,W293,W291,E302,E226
