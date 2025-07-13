@@ -8,6 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Install PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - name: Audit Node.js
         run: |
           pnpm install
