@@ -7,8 +7,13 @@ import React, { useState, useEffect } from 'react';
 import { useAdvancedWebSocket } from '../services/WebSocketManager';
 import { useAPIQuery, useAPIMutation, usePersistedState } from '../hooks/useRobustAPI';
 import { useOfflineManager } from '../services/OfflineManager';
+import { aiMetrics } from '../services/AIMonitoring';
+import { aiCache } from '../services/AICache';
+import { embeddingsStore, ragService } from '../services/VectorizationService';
 import { InteractiveLearningViz } from './visualizations/LearningVisualizationsD3';
 import { LearningWorld3D } from './visualizations/LearningWorld3D';
+import AIMonitoringDashboard from './AIMonitoringDashboard';
+import SecurityDashboard from './SecurityDashboard';
 
 // Types pour les données
 interface EnhancedLearningData {
@@ -300,6 +305,8 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ userId, className
               { id: 'overview', label: '📊 Vue d\'ensemble', icon: '📊' },
               { id: 'network', label: '🕸️ Réseau de connaissances', icon: '🕸️' },
               { id: 'world3d', label: '🌍 Monde 3D', icon: '🌍' },
+              { id: 'monitoring', label: '🤖 Monitoring IA', icon: '🤖' },
+              { id: 'security', label: '🛡️ Sécurité', icon: '🛡️' },
               { id: 'analytics', label: '📈 Analytics', icon: '📈' },
               { id: 'settings', label: '⚙️ Paramètres', icon: '⚙️' }
             ].map(tab => (
@@ -516,6 +523,148 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ userId, className
                 </div>
               </div>
             </div>
+          </div>
+        )}
+
+        {activeTab === 'monitoring' && (
+          <div className="monitoring-tab space-y-6">
+            <AIMonitoringDashboard className="w-full" />
+            
+            {/* Intégration avec les services IA */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Recherche vectorielle */}
+              <div className="bg-white rounded-lg shadow-sm border p-6">
+                <h3 className="text-lg font-semibold mb-4 flex items-center">
+                  🔍 Recherche Vectorielle
+                </h3>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between text-sm">
+                    <span>Documents indexés:</span>
+                    <span className="font-medium">{embeddingsStore.getStats?.()?.totalDocuments || 0}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span>Taille de l'index:</span>
+                    <span className="font-medium">{embeddingsStore.getStats?.()?.storageSize || 0} KB</span>
+                  </div>
+                  <button 
+                    onClick={async () => {
+                      try {
+                        await embeddingsStore.addDocument({
+                          content: 'Contenu de démonstration pour le test de vectorisation',
+                          metadata: { 
+                            type: 'lesson' as const,
+                            subject: 'mathematics',
+                            difficulty: 'beginner' as const,
+                            tags: ['demo'],
+                            createdAt: new Date(),
+                            updatedAt: new Date()
+                          }
+                        });
+                        console.log('✅ Document de démo ajouté');
+                      } catch (error) {
+                        console.error('❌ Erreur ajout document:', error);
+                      }
+                    }}
+                    className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
+                  >
+                    🧪 Test Vectorisation
+                  </button>
+                </div>
+              </div>
+
+              {/* Cache IA */}
+              <div className="bg-white rounded-lg shadow-sm border p-6">
+                <h3 className="text-lg font-semibold mb-4 flex items-center">
+                  💾 Cache IA
+                </h3>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between text-sm">
+                    <span>Entrées en cache:</span>
+                    <span className="font-medium">{aiCache.getStats().totalEntries}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span>Taux de réussite:</span>
+                    <span className="font-medium text-green-600">
+                      {(aiCache.getStats().hitRate * 100).toFixed(1)}%
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span>Économies:</span>
+                    <span className="font-medium text-green-600">
+                      ${aiCache.getStats().costSaved.toFixed(2)}
+                    </span>
+                  </div>
+                  <button 
+                    onClick={async () => {
+                      try {
+                        const testResult = await aiCache.cacheAIResponse(
+                          `test-${Date.now()}`,
+                          async () => {
+                            // Simulation d'une réponse IA
+                            await new Promise(resolve => setTimeout(resolve, 100));
+                            return { 
+                              result: 'Réponse de test cachée',
+                              cost: 0.001,
+                              tokens: 50
+                            };
+                          },
+                          { service: 'test', operation: 'demo' }
+                        );
+                        console.log('✅ Test cache IA:', testResult);
+                      } catch (error) {
+                        console.error('❌ Erreur test cache:', error);
+                      }
+                    }}
+                    className="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-sm"
+                  >
+                    🧪 Test Cache
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Actions de maintenance */}
+            <div className="bg-gray-50 rounded-lg p-6">
+              <h3 className="text-lg font-semibold mb-4">🛠️ Actions de Maintenance</h3>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <button 
+                  onClick={() => aiMetrics.clearMetrics()}
+                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm"
+                >
+                  🗑️ Vider Métriques
+                </button>
+                <button 
+                  onClick={() => aiCache.clear()}
+                  className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 text-sm"
+                >
+                  🗑️ Vider Cache
+                </button>
+                <button 
+                  onClick={() => {
+                    console.log('🗑️ Simulation suppression documents');
+                    // Note: méthode de suppression non disponible dans l'interface actuelle
+                  }}
+                  className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 text-sm"
+                >
+                  🗑️ Vider Index
+                </button>
+                <button 
+                  onClick={() => {
+                    aiMetrics.setCollecting(false);
+                    setTimeout(() => aiMetrics.setCollecting(true), 1000);
+                  }}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
+                >
+                  🔄 Redémarrer
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'security' && (
+          <div className="security-tab space-y-6">
+            <SecurityDashboard className="w-full" />
           </div>
         )}
       </div>
