@@ -7,7 +7,7 @@
 export interface AIMetric {
   id: string;
   timestamp: Date;
-  service: 'openai' | 'anthropic' | 'local' | 'embeddings' | 'rag' | 'auth' | 'rate_limit' | 'validation' | 'encryption';
+  service: 'openai' | 'anthropic' | 'local' | 'embeddings' | 'rag' | 'auth' | 'rate_limit' | 'validation' | 'encryption' | 'load_balancer' | 'queue' | 'database' | 'cdn';
   operation: string;
   model?: string;
   duration: number; // en millisecondes
@@ -46,6 +46,8 @@ export interface AIMetric {
     // Champs pour le chiffrement
     classification?: string;
     keyId?: string;
+    // Champs pour l'infrastructure
+    [key: string]: any;
   };
 }
 

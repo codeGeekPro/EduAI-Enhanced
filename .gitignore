@@ -106,6 +106,7 @@ kalvi-master/
 
 # Documentation de développement
 *_GUIDE.md
+!INFRASTRUCTURE_*_GUIDE.md
 *_COMPLETE.md
 DEPENDENCY_*.md
 CI_CD_*.md

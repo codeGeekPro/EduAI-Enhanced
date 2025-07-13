@@ -24,11 +24,20 @@ Frontend React 18 + TypeScript avancé pour la plateforme d'apprentissage EduAI 
 - **Upload de Fichiers**: Glisser-déposer avec prévisualisation
 - **Chat Temps Réel**: WebSocket pour communication instantanée
 
+### 🏗️ Infrastructure d'Entreprise
+- **Load Balancing**: 6 algorithmes intelligents pour distribution IA
+- **Queue System**: Traitement asynchrone des tâches lourdes avec priorités
+- **Database Pooling**: Optimisation connexions multi-DB avec cache
+- **CDN Global**: Distribution assets avec optimisation automatique
+- **Security Suite**: Authentification, validation et audit complets
+- **Infrastructure Dashboard**: Monitoring temps réel unifié
+
 ### 📊 Analytics & Monitoring
 - Tableaux de bord avec graphiques interactifs (Recharts)
 - Métriques de performance (Core Web Vitals)
 - Suivi de la progression d'apprentissage
 - Rapports d'activité exportables
+- **Monitoring Infrastructure**: Métriques temps réel tous services
 
 ### ⚡ Performance & PWA
 - Service Worker avancé pour le cache et la synchronisation
@@ -83,12 +92,20 @@ frontend/
 │   ├── components/        # Composants réutilisables
 │   │   ├── ai/           # Composants IA
 │   │   ├── chat/         # Composants de chat
+│   │   ├── infrastructure/ # Dashboard infrastructure
 │   │   ├── layout/       # Composants de mise en page
 │   │   ├── monitoring/   # Composants de monitoring
 │   │   ├── ui/           # Composants UI de base
 │   │   └── upload/       # Composants d'upload
 │   ├── hooks/            # Hooks personnalisés
 │   ├── pages/            # Pages de l'application
+│   ├── services/         # Services TypeScript
+│   │   ├── AIQueueService.ts          # Queue system intelligent
+│   │   ├── CDNService.ts              # Distribution globale assets
+│   │   ├── DatabasePoolingService.ts  # Optimisation connexions DB
+│   │   ├── LoadBalancingService.ts    # Répartition charge IA
+│   │   ├── SecurityIntegrationService.ts # Suite sécurité
+│   │   └── AIMonitoring.ts           # Monitoring unifié
 │   ├── services/         # Services API et utilitaires
 │   ├── stores/           # Stores Zustand
 │   ├── tests/            # Tests unitaires et d'intégration

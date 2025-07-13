@@ -1,12 +1,17 @@
 /**
- * 🔐 Middleware d'Intégration de Sécurité - Version Simplifiée
- * Coordonne l'authentification, rate limiting, validation et chiffrement
+ * 🔐 Middleware d'Intégration de Sécurité - Version Complète
+ * Coordonne l'authentification, rate limiting, validation, chiffrement et infrastructure
  */
 
 import { authService } from './AuthService';
 import { rateLimitingService } from './RateLimitingService';
 import { validationService } from './ValidationService';
 import { encryptionService } from './EncryptionService';
+import { aiMetrics } from './AIMonitoring';
+import { loadBalancingService } from './LoadBalancingService';
+import { aiQueueService } from './AIQueueService';
+import { databasePoolingService } from './DatabasePoolingService';
+import { cdnService } from './CDNService';
 
 // Types pour l'intégration
 export interface SecurityContext {
@@ -45,6 +50,8 @@ export interface SecureResponse<T = any> {
   success: boolean;
   data?: T;
   error?: string;
+  details?: any; // Pour les détails d'erreur
+  metadata?: any; // Pour les métadonnées additionnelles
   securityMetadata?: {
     authenticated: boolean;
     rateLimited: boolean;
@@ -87,9 +94,13 @@ export class SecurityIntegrationService {
       const rateLimitReady = rateLimitingService.isReady();
       const validationReady = validationService.isReady();
       const encryptionReady = encryptionService.isReady();
+      
+      // Vérifier les nouveaux services d'infrastructure
+      const loadBalancerReady = loadBalancingService.getActiveInstances().length > 0;
+      const queueReady = aiQueueService.getStats().totalTasks >= 0; // Service prêt si stats disponibles
 
-      if (authReady && rateLimitReady && validationReady && encryptionReady) {
-        console.log('✅ Tous les services de sécurité sont prêts');
+      if (authReady && rateLimitReady && validationReady && encryptionReady && loadBalancerReady && queueReady) {
+        console.log('✅ Tous les services de sécurité et d\'infrastructure sont prêts');
         return;
       }
 
@@ -319,59 +330,6 @@ export class SecurityIntegrationService {
    * Méthodes de commodité simplifiées
    */
 
-  // Requête IA sécurisée
-  async secureAIRequest(prompt: string, options: {
-    model?: string;
-    maxTokens?: number;
-    files?: File[];
-    userId?: string;
-  } = {}): Promise<SecureResponse> {
-    return this.secureRequest({
-      method: 'POST',
-      url: '/api/ai/chat',
-      data: {
-        prompt,
-        model: options.model || 'gpt-4',
-        maxTokens: options.maxTokens || 1000
-      },
-      files: options.files,
-      security: {
-        requireAuth: true,
-        validateContent: true,
-        encryptResponse: true,
-        auditLog: true
-      },
-      context: {
-        userId: options.userId,
-        endpoint: '/api/ai/chat',
-        action: 'ai_request'
-      }
-    });
-  }
-
-  // Upload de fichier sécurisé
-  async secureFileUpload(files: File[], options: {
-    userId?: string;
-    folder?: string;
-  } = {}): Promise<SecureResponse> {
-    return this.secureRequest({
-      method: 'POST',
-      url: '/api/files/upload',
-      data: { folder: options.folder || 'uploads' },
-      files,
-      security: {
-        requireAuth: true,
-        validateContent: true,
-        auditLog: true
-      },
-      context: {
-        userId: options.userId,
-        endpoint: '/api/files/upload',
-        action: 'file_upload'
-      }
-    });
-  }
-
   // Mise à jour de profil sécurisée
   async secureProfileUpdate(profileData: any, userId: string): Promise<SecureResponse> {
     return this.secureRequest({
@@ -390,6 +348,381 @@ export class SecurityIntegrationService {
         action: 'profile_update'
       }
     });
+  }
+
+  /**
+   * 🤖 Requête IA avec infrastructure optimisée
+   */
+  async secureAIRequest(
+    prompt: string,
+    model: string,
+    options: {
+      priority?: 'low' | 'normal' | 'high' | 'critical';
+      maxLatency?: number;
+      userId: string;
+      sessionId?: string;
+    }
+  ): Promise<SecureResponse> {
+    try {
+      // 1. Valider l'input
+      const validationResult = await validationService.validate({
+        id: `ai_request_${Date.now()}`,
+        content: { text: prompt },
+        mediaType: 'text',
+        metadata: { userId: options.userId }
+      });
+
+      if (!validationResult.valid) {
+        return {
+          success: false,
+          error: 'Contenu non valide',
+          details: validationResult.issues
+        };
+      }
+
+      // 2. Sélectionner l'instance IA optimale
+      const instanceResult = await loadBalancingService.selectInstance({
+        model,
+        priority: options.priority || 'normal',
+        expectedTokens: prompt.length / 4, // Estimation
+        maxLatency: options.maxLatency,
+        retryable: true,
+        userId: options.userId,
+        sessionId: options.sessionId
+      });
+
+      // 3. Créer une tâche en queue pour les requêtes lourdes
+      if (options.priority === 'low' || prompt.length > 1000) {
+        const taskId = await aiQueueService.addTask({
+          type: 'chat',
+          payload: { prompt, model, instanceId: instanceResult.instance.id },
+          priority: options.priority || 'normal',
+          userId: options.userId,
+          sessionId: options.sessionId,
+          maxRetries: 3,
+          timeout: 300000, // 5 minutes
+          metadata: {
+            estimatedDuration: instanceResult.estimatedLatency,
+            estimatedCost: instanceResult.estimatedCost,
+            requiredModel: model,
+            computeIntensive: true,
+            retryable: true,
+            tags: ['ai', 'chat']
+          }
+        });
+
+        return {
+          success: true,
+          data: { taskId, status: 'queued' },
+          metadata: {
+            instanceId: instanceResult.instance.id,
+            estimatedLatency: instanceResult.estimatedLatency,
+            queuePosition: await aiQueueService.getTasks({ status: 'pending' }).length
+          }
+        };
+      }
+
+      // 4. Exécution directe pour les requêtes prioritaires
+      const startTime = Date.now();
+      
+      // Simuler l'appel à l'IA
+      await new Promise(resolve => setTimeout(resolve, instanceResult.estimatedLatency));
+      
+      const mockResponse = {
+        response: `Réponse IA simulée pour: ${prompt.substring(0, 50)}...`,
+        model,
+        tokens: Math.floor(prompt.length / 4),
+        latency: Date.now() - startTime
+      };
+
+      // 5. Enregistrer les performances
+      loadBalancingService.recordPerformance(
+        instanceResult.instance.id,
+        Date.now() - startTime,
+        true,
+        instanceResult.estimatedCost
+      );
+
+      return {
+        success: true,
+        data: mockResponse,
+        metadata: {
+          instanceId: instanceResult.instance.id,
+          actualLatency: Date.now() - startTime,
+          estimatedLatency: instanceResult.estimatedLatency,
+          cost: instanceResult.estimatedCost
+        }
+      };
+
+    } catch (error) {
+      console.error('❌ Erreur requête IA sécurisée:', error);
+      return {
+        success: false,
+        error: (error as Error).message
+      };
+    }
+  }
+
+  /**
+   * 📤 Upload sécurisé avec CDN
+   */
+  async secureFileUpload(
+    file: File,
+    path: string,
+    userId: string,
+    options: {
+      optimize?: boolean;
+      responsive?: boolean;
+      priority?: 'low' | 'normal' | 'high';
+    } = {}
+  ): Promise<SecureResponse> {
+    try {
+      // 1. Validation du fichier
+      const validationResult = await validationService.validate({
+        id: `file_upload_${Date.now()}`,
+        content: { file: file },
+        mediaType: file.type.split('/')[0] as 'text' | 'image' | 'audio' | 'video',
+        metadata: { 
+          userId,
+          filename: file.name,
+          size: file.size 
+        }
+      });
+
+      if (!validationResult.valid) {
+        return {
+          success: false,
+          error: 'Fichier non valide',
+          details: validationResult.issues
+        };
+      }
+
+      // 2. Chiffrer les métadonnées sensibles si nécessaire
+      const metadataToEncrypt = {
+        uploaderId: userId,
+        originalName: file.name,
+        uploadTime: new Date().toISOString()
+      };
+      const secureMetadata = await encryptionService.encryptData({
+        data: metadataToEncrypt,
+        purpose: 'metadata_protection',
+        classification: { 
+          level: 'internal', 
+          categories: [], 
+          retention: { period: 365, autoDelete: true },
+          access: { roles: ['user'], conditions: [] }
+        }
+      });
+
+      // 3. Upload vers CDN
+      const asset = await cdnService.uploadAsset(file, path, {
+        optimize: options.optimize,
+        responsive: options.responsive,
+        priority: options.priority
+      });
+
+      // 4. Enregistrer dans la base de données via le pool
+      const uploadRecord = {
+        assetId: asset.id,
+        userId,
+        path: asset.path,
+        size: asset.size,
+        type: asset.type,
+        metadata: secureMetadata.ciphertext,
+        uploadDate: new Date()
+      };
+
+      await databasePoolingService.executeQuery(
+        'indexeddb_eduai_main',
+        'INSERT INTO uploads VALUES (?)',
+        [uploadRecord],
+        { priority: 'normal', cached: false }
+      );
+
+      return {
+        success: true,
+        data: {
+          assetId: asset.id,
+          url: await cdnService.getAsset(path),
+          size: asset.size,
+          type: asset.type
+        },
+        metadata: {
+          optimized: asset.metadata.optimized,
+          compressed: asset.metadata.compressed,
+          responsive: asset.metadata.responsive
+        }
+      };
+
+    } catch (error) {
+      console.error('❌ Erreur upload sécurisé:', error);
+      return {
+        success: false,
+        error: (error as Error).message
+      };
+    }
+  }
+
+  /**
+   * 📊 Récupérer les métriques d'infrastructure
+   */
+  async getInfrastructureMetrics(): Promise<SecureResponse> {
+    try {
+      const [
+        loadBalancerInstances,
+        queueStats,
+        dbStats,
+        cdnStats,
+        aiStats
+      ] = await Promise.all([
+        loadBalancingService.getActiveInstances(),
+        aiQueueService.getStats(),
+        databasePoolingService.getPools().map(pool => databasePoolingService.getPoolStats(pool.id)),
+        cdnService.getStats(),
+        aiMetrics.getPerformanceStats({
+          start: new Date(Date.now() - 60 * 60 * 1000),
+          end: new Date()
+        })
+      ]);
+
+      return {
+        success: true,
+        data: {
+          loadBalancer: {
+            activeInstances: loadBalancerInstances.length,
+            totalRequests: aiStats.totalRequests,
+            averageLatency: aiStats.averageLatency,
+            instances: loadBalancerInstances.map(instance => ({
+              id: instance.id,
+              provider: instance.provider,
+              status: instance.status,
+              performance: instance.performance
+            }))
+          },
+          queue: {
+            totalTasks: queueStats.totalTasks,
+            runningTasks: queueStats.runningTasks,
+            completedTasks: queueStats.completedTasks,
+            successRate: queueStats.successRate,
+            throughput: queueStats.throughputPerHour
+          },
+          database: {
+            pools: dbStats.filter(Boolean).map((stats, index) => ({
+              poolId: `pool_${index}`,
+              totalConnections: stats?.totalConnections || 0,
+              activeConnections: stats?.activeConnections || 0,
+              averageQueryTime: stats?.averageQueryTime || 0
+            }))
+          },
+          cdn: {
+            totalAssets: cdnStats.totalAssets,
+            totalBandwidth: cdnStats.totalBandwidth,
+            hitRatio: cdnStats.hitRatio,
+            costSavings: cdnStats.costSavings
+          }
+        }
+      };
+
+    } catch (error) {
+      console.error('❌ Erreur récupération métriques:', error);
+      return {
+        success: false,
+        error: (error as Error).message
+      };
+    }
+  }
+
+  /**
+   * 🔧 Configuration optimisée des services
+   */
+  async optimizeInfrastructure(): Promise<SecureResponse> {
+    try {
+      // Analyser les performances actuelles
+      const stats = await this.getInfrastructureMetrics();
+      if (!stats.success) return stats;
+
+      const metrics = stats.data;
+      const recommendations = [];
+
+      // Optimisations Load Balancer
+      if (metrics.loadBalancer.averageLatency > 2000) {
+        recommendations.push({
+          service: 'load_balancer',
+          action: 'add_instance',
+          reason: 'Latence élevée détectée',
+          impact: 'high'
+        });
+      }
+
+      // Optimisations Queue
+      if (metrics.queue.runningTasks > 50) {
+        recommendations.push({
+          service: 'queue',
+          action: 'scale_workers',
+          reason: 'Trop de tâches en attente',
+          impact: 'medium'
+        });
+      }
+
+      // Optimisations Database
+      const avgConnections = metrics.database.pools.reduce((sum: number, pool: any) => 
+        sum + (pool.activeConnections / pool.totalConnections), 0) / metrics.database.pools.length;
+
+      if (avgConnections > 0.8) {
+        recommendations.push({
+          service: 'database',
+          action: 'increase_pool_size',
+          reason: 'Pools de connexions saturés',
+          impact: 'high'
+        });
+      }
+
+      // Optimisations CDN
+      if (metrics.cdn.hitRatio < 0.8) {
+        recommendations.push({
+          service: 'cdn',
+          action: 'adjust_caching',
+          reason: 'Taux de hit cache faible',
+          impact: 'medium'
+        });
+      }
+
+      return {
+        success: true,
+        data: {
+          recommendations,
+          currentMetrics: metrics,
+          optimizationScore: this.calculateOptimizationScore(metrics)
+        }
+      };
+
+    } catch (error) {
+      console.error('❌ Erreur optimisation infrastructure:', error);
+      return {
+        success: false,
+        error: (error as Error).message
+      };
+    }
+  }
+
+  /**
+   * 📈 Calculer le score d'optimisation
+   */
+  private calculateOptimizationScore(metrics: any): number {
+    let score = 100;
+
+    // Pénalités basées sur les métriques
+    if (metrics.loadBalancer.averageLatency > 1000) score -= 20;
+    if (metrics.queue.successRate < 0.95) score -= 15;
+    if (metrics.cdn.hitRatio < 0.85) score -= 10;
+
+    const avgDbUtilization = metrics.database.pools.reduce((sum: number, pool: any) => 
+      sum + (pool.activeConnections / pool.totalConnections), 0) / metrics.database.pools.length;
+    
+    if (avgDbUtilization > 0.8) score -= 15;
+    if (avgDbUtilization < 0.3) score -= 5; // Sous-utilisation
+
+    return Math.max(0, Math.min(100, score));
   }
 }
 

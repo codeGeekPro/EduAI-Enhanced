@@ -16,6 +16,16 @@
 
 ## 🛠 Stack Technique
 
+### Architecture d'Infrastructure Avancée ⚡
+```
+┌─ Load Balancing ──── Distribution intelligente (6 algorithmes)
+├─ Queue System ────── Tâches IA lourdes avec priorités (Celery)
+├─ Database Pooling ── Optimisation connexions multi-DB
+├─ CDN Service ─────── Distribution globale des assets
+├─ Security Suite ──── Authentification, validation, monitoring
+└─ Real-time Dashboard ─ Monitoring infrastructure unifié
+```
+
 ### Backend Architecture
 ```
 ┌─ FastAPI (Python) ─ REST API
@@ -26,7 +36,9 @@
 ├─ Hugging Face ─── Models personnalisés
 ├─ Pinecone ─────── Vector database
 ├─ MongoDB ──────── Data persistence
-└─ Redis ────────── Cache & sessions
+├─ Redis ────────── Cache & sessions
+├─ Event Sourcing ── Traçage complet des interactions
+└─ Message Broker ── Orchestration asynchrone
 ```
 
 ### Frontend PWA Architecture
@@ -40,7 +52,9 @@
 ├─ IndexedDB ────── Stockage local pour mode offline
 ├─ D3.js ────────── Visualisations interactives
 ├─ Three.js ─────── Éléments 3D & gamification
-└─ Push API ─────── Notifications d'apprentissage
+├─ Push API ─────── Notifications d'apprentissage
+├─ Infrastructure Services ─ Services avancés intégrés
+└─ Real-time Monitoring ─── Dashboard performance live
 ```
 
 ### AI/ML Pipeline
@@ -49,7 +63,9 @@
 ├─ Emotion Detection ── Analyse sentiment vocal
 ├─ Learning Analytics ── ML pour adaptation
 ├─ Content Generation ── IA créative pour exercices
-└─ Multi-language ──── 50+ langues supportées
+├─ Multi-language ──── 50+ langues supportées
+├─ Adaptive Loading ── Load balancing IA intelligent
+└─ Background Processing ─ Queue system pour tâches lourdes
 ```
 
 ## 🚀 Installation et Configuration
@@ -115,8 +131,15 @@ eduai/
 ├── frontend/              # PWA React + TypeScript
 │   ├── src/
 │   │   ├── components/    # Composants réutilisables
+│   │   │   └── infrastructure/ # Dashboard infrastructure
 │   │   ├── pages/        # Pages de l'application
 │   │   ├── services/     # Services API et IA
+│   │   │   ├── LoadBalancingService.ts    # Répartition de charge IA
+│   │   │   ├── AIQueueService.ts          # Queue système intelligent
+│   │   │   ├── DatabasePoolingService.ts  # Optimisation DB
+│   │   │   ├── CDNService.ts              # Distribution globale
+│   │   │   ├── SecurityIntegrationService.ts # Suite sécurité
+│   │   │   └── AIMonitoring.ts           # Monitoring unifié
 │   │   ├── hooks/        # Hooks React personnalisés
 │   │   ├── utils/        # Utilitaires
 │   │   └── workers/      # Service Workers PWA
@@ -125,7 +148,10 @@ eduai/
 ├── backend/              # API FastAPI + Python
 │   ├── app/
 │   │   ├── api/          # Routes API
+│   │   │   └── adaptive_learning.py # API apprentissage adaptatif
 │   │   ├── core/         # Configuration et utilitaires
+│   │   │   ├── event_sourcing.py    # Traçage événements
+│   │   │   └── orchestration.py     # Message broker
 │   │   ├── models/       # Modèles de données
 │   │   ├── services/     # Services métier
 │   │   └── ai/           # Services IA
@@ -135,9 +161,13 @@ eduai/
 │   ├── nlp/             # Traitement du langage naturel
 │   ├── emotion/         # Reconnaissance émotionnelle
 │   ├── speech/          # Speech-to-Text / Text-to-Speech
-│   └── vision/          # Vision par ordinateur
+│   ├── vision/          # Vision par ordinateur
+│   ├── metacognition/   # Moteur métacognitif révolutionnaire
+│   └── collaboration/   # Moteur collaboratif
 ├── docs/                # Documentation
+│   └── ARCHITECTURE_IMPROVEMENTS.md # Améliorations architecture
 ├── scripts/             # Scripts de déploiement
+├── security-reports/    # Rapports sécurité automatisés
 └── deployment/          # Configuration Docker & Cloud
 ```
 
@@ -145,17 +175,70 @@ eduai/
 
 ```bash
 # Installation des dépendances
-npm run setup
+pnpm install
+
+# Configuration environnement Python
+conda create -n eduai-backend python=3.11
+conda activate eduai-backend
+pip install -r ai_services/requirements.txt
+pip install -r backend/requirements.txt
 
 # Lancement en développement
-npm run dev
+pnpm dev        # Frontend avec infrastructure dashboard (port 3000)
+uvicorn main:app --reload  # Backend API (port 8000)
+
+# Services IA spécialisés
+cd ai_services && python main.py  # Services IA (port 8001)
 
 # Build pour production
-npm run build
+pnpm build
+
+# Tests et validation
+pnpm test
+pnpm run type-check  # Vérification TypeScript
+python scripts/validate_project.py  # Validation complète
 
 # Déploiement
 npm run deploy
 ```
+
+## 🏗️ Services d'Infrastructure Avancés
+
+### 🔄 Load Balancing Service
+- **6 algorithmes intelligents** : Round Robin, Weighted, Least Connections, Least Response Time, Cost Optimized, Adaptive
+- **Multi-providers IA** : OpenAI, OpenRouter, Anthropic
+- **Failover automatique** avec scoring de performance
+- **Monitoring temps réel** des instances
+
+### 📋 AI Queue Service 
+- **Système de priorités** : Critical, High, Normal, Low
+- **Worker pools** avec gestion automatique
+- **Retry logic** exponentiel avec dead letter queue
+- **Support tâches lourdes** : génération d'images, transcription, analyse
+
+### 💾 Database Pooling Service
+- **Connection pooling** optimisé pour IndexedDB, PostgreSQL, MySQL, MongoDB, Redis
+- **Query caching** intelligent avec invalidation automatique
+- **Health monitoring** des connexions
+- **Load balancing** entre répliques
+
+### 🌐 CDN Service
+- **Multi-providers** : Cloudflare, AWS CloudFront, Cloudinary
+- **Optimisation automatique** : compression, formats modernes (WebP, AVIF)
+- **Images responsives** avec variants automatiques
+- **Suivi des coûts** et performance globale
+
+### 🛡️ Security Integration Service
+- **Authentification robuste** avec validation multi-niveaux
+- **Rate limiting** adaptatif par utilisateur
+- **File validation** avec scanning sécurité
+- **Audit logging** complet des actions
+
+### 📊 Infrastructure Dashboard
+- **Monitoring temps réel** de tous les services
+- **Métriques performance** : latence, throughput, erreurs
+- **Alertes intelligentes** avec notifications
+- **Visualisations interactives** D3.js
 
 ## 📈 Métriques de Succès
 
