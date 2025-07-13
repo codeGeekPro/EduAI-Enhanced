@@ -15,7 +15,7 @@ class PaginationParams(BaseModel):
     page: int = Field(1, ge=1, description="Numéro de page (commence à 1)")
     size: int = Field(20, ge=1, le=100, description="Nombre d'éléments par page")
     sort_by: Optional[str] = Field(None, description="Champ pour le tri")
-    sort_order: Optional[str] = Field("asc", regex="^(asc|desc)$", description="Ordre de tri")
+    sort_order: Optional[str] = Field("asc", pattern="^(asc|desc)$", description="Ordre de tri")
     search: Optional[str] = Field(None, description="Terme de recherche")
 
 class PaginationMeta(BaseModel):
@@ -44,7 +44,7 @@ def get_pagination_params(
     page: int = Query(1, ge=1, description="Numéro de page"),
     size: int = Query(20, ge=1, le=100, description="Taille de page"),
     sort_by: Optional[str] = Query(None, description="Champ de tri"),
-    sort_order: str = Query("asc", regex="^(asc|desc)$", description="Ordre de tri"),
+    sort_order: str = Query("asc", pattern="^(asc|desc)$", description="Ordre de tri"),
     search: Optional[str] = Query(None, description="Recherche")
 ) -> PaginationParams:
     """Dependency pour extraire les paramètres de pagination"""
@@ -183,7 +183,7 @@ def get_course_pagination_params(
     page: int = Query(1, ge=1),
     size: int = Query(20, ge=1, le=100),
     sort_by: Optional[str] = Query(None),
-    sort_order: str = Query("asc", regex="^(asc|desc)$"),
+    sort_order: str = Query("asc", pattern="^(asc|desc)$"),
     search: Optional[str] = Query(None),
     category: Optional[str] = Query(None),
     difficulty: Optional[str] = Query(None),
@@ -207,7 +207,7 @@ def get_user_pagination_params(
     page: int = Query(1, ge=1),
     size: int = Query(20, ge=1, le=100),
     sort_by: Optional[str] = Query(None),
-    sort_order: str = Query("asc", regex="^(asc|desc)$"),
+    sort_order: str = Query("asc", pattern="^(asc|desc)$"),
     search: Optional[str] = Query(None),
     role: Optional[str] = Query(None),
     is_active: Optional[bool] = Query(None),

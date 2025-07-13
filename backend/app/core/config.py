@@ -5,12 +5,20 @@ Configuration pour l'API FastAPI avec tous les services IA
 
 import os
 from typing import List, Optional
-from pydantic import BaseSettings, validator, Field
+from pydantic import validator, Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from functools import lru_cache
 
 
 class Settings(BaseSettings):
     """Configuration principale de l'application"""
+    
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=False,
+        extra="ignore"  # Ignore extra fields from .env
+    )
     
     # 🌐 Configuration de base
     app_name: str = "EduAI Enhanced"
@@ -29,19 +37,25 @@ class Settings(BaseSettings):
     refresh_token_expire_days: int = Field(default=7, env="REFRESH_TOKEN_EXPIRE_DAYS")
     
     # 🌐 CORS pour PWA - Configuré selon l'environnement
-    cors_origins: List[str] = Field(
-        default=[
-            "http://localhost:3000",
-            "http://localhost:3001", 
-            "http://127.0.0.1:3000"
-        ],
+    cors_origins_str: str = Field(
+        default="http://localhost:3000,http://localhost:3001,http://127.0.0.1:3000",
         env="CORS_ORIGINS"
     )
     
-    trusted_hosts: List[str] = Field(
-        default=["localhost", "127.0.0.1"],
+    trusted_hosts_str: str = Field(
+        default="localhost,127.0.0.1",
         env="TRUSTED_HOSTS"
     )
+    
+    @property
+    def cors_origins(self) -> List[str]:
+        """Parse CORS origins from comma-separated string"""
+        return [origin.strip() for origin in self.cors_origins_str.split(',') if origin.strip()]
+    
+    @property 
+    def trusted_hosts(self) -> List[str]:
+        """Parse trusted hosts from comma-separated string"""
+        return [host.strip() for host in self.trusted_hosts_str.split(',') if host.strip()]
     
     # 🗄️ Base de données - Sécurisé
     mongodb_url: str = Field(..., env="MONGODB_URL")
@@ -53,20 +67,6 @@ class Settings(BaseSettings):
     openai_model: str = Field(default="gpt-4", env="OPENAI_MODEL")
     anthropic_api_key: str = Field(..., env="ANTHROPIC_API_KEY")
     elevenlabs_api_key: str = Field(..., env="ELEVENLABS_API_KEY")
-    
-    @validator('cors_origins', pre=True)
-    def parse_cors_origins(cls, v):
-        """Parse CORS origins from string or list"""
-        if isinstance(v, str):
-            return [origin.strip() for origin in v.split(',')]
-        return v
-    
-    @validator('trusted_hosts', pre=True)
-    def parse_trusted_hosts(cls, v):
-        """Parse trusted hosts from string or list"""
-        if isinstance(v, str):
-            return [host.strip() for host in v.split(',')]
-        return v
     
     @validator('environment')
     def validate_environment(cls, v):
@@ -92,11 +92,6 @@ class Settings(BaseSettings):
             "retryWrites": True
         }
         return config
-    
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        case_sensitive = False
 
 
 class DevelopmentSettings(Settings):
@@ -197,5 +192,6 @@ print(f"🎓 Configuration EduAI Enhanced chargée:")
 print(f"   Environment: {settings.environment}")
 print(f"   Debug: {settings.debug}")
 print(f"   API: {settings.api_host}:{settings.api_port}")
-print(f"   Langues supportées: {len(settings.supported_languages)}")
-print(f"   PWA: {'✅ Activé' if settings.offline_support else '❌ Désactivé'}")
+print(f"   CORS Origins: {len(settings.cors_origins)} domaines")
+print(f"   MongoDB: {settings.mongodb_url}")
+print(f"   Redis: {settings.redis_url}")
