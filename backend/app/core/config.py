@@ -5,8 +5,7 @@ Configuration pour l'API FastAPI avec tous les services IA
 
 import os
 from typing import List, Optional
-from pydantic import validator
-from pydantic_settings import BaseSettings
+from pydantic import BaseSettings, validator, Field
 from functools import lru_cache
 
 
@@ -16,148 +15,88 @@ class Settings(BaseSettings):
     # 🌐 Configuration de base
     app_name: str = "EduAI Enhanced"
     app_version: str = "1.0.0"
-    environment: str = "development"
-    debug: bool = True
+    environment: str = Field(default="development", env="ENVIRONMENT")
+    debug: bool = Field(default=False, env="DEBUG")
     
     # 🌍 Configuration API
-    api_host: str = "127.0.0.1"  # Bind local par défaut pour la sécurité
-    api_port: int = 8000
+    api_host: str = Field(default="127.0.0.1", env="API_HOST")
+    api_port: int = Field(default=8000, env="API_PORT")
     api_prefix: str = "/api"
     
-    # 🔒 Sécurité
-    secret_key: str = "eduai-enhanced-super-secret-key-change-in-production"
-    access_token_expire_minutes: int = 30
-    refresh_token_expire_days: int = 7
+    # 🔒 Sécurité - OBLIGATOIRE via variables d'environnement
+    secret_key: str = Field(..., env="SECRET_KEY", min_length=32)
+    access_token_expire_minutes: int = Field(default=30, env="ACCESS_TOKEN_EXPIRE_MINUTES")
+    refresh_token_expire_days: int = Field(default=7, env="REFRESH_TOKEN_EXPIRE_DAYS")
     
-    # 🌐 CORS pour PWA
-    cors_origins: List[str] = [
-        "http://localhost:3000",
-        "http://localhost:3001", 
-        "http://127.0.0.1:3000",
-        "https://eduai-enhanced.com",
-        "https://app.eduai-enhanced.com"
-    ]
-    
-    trusted_hosts: List[str] = ["localhost", "127.0.0.1", "eduai-enhanced.com"]
-    
-    # 🗄️ Base de données
-    mongodb_url: str = "mongodb://localhost:27017"
-    mongodb_db_name: str = "eduai_enhanced"
-    redis_url: str = "redis://localhost:6379"
-    
-    # 🤖 Configuration OpenAI
-    openai_api_key: Optional[str] = None
-    openai_model: str = "gpt-4"
-    openai_whisper_model: str = "whisper-1"
-    openai_max_tokens: int = 2000
-    openai_temperature: float = 0.7
-    
-    # 🎭 Configuration Anthropic (Claude)
-    anthropic_api_key: Optional[str] = None
-    
-    # 🗣️ Configuration ElevenLabs (TTS)
-    elevenlabs_api_key: Optional[str] = None
-    elevenlabs_voice_id: str = "21m00Tcm4TlvDq8ikWAM"  # Rachel (anglais)
-    
-    # 🔍 Configuration Pinecone (Vector DB)
-    pinecone_api_key: Optional[str] = None
-    pinecone_environment: str = "us-west1-gcp"
-    pinecone_index_name: str = "eduai-enhanced"
-    
-    # 🤗 Configuration Hugging Face
-    hf_api_key: Optional[str] = None
-    hf_model_cache_dir: str = "./models/cache"
-    
-    # 🔀 Configuration OpenRouter
-    openrouter_api_key: Optional[str] = None
-    openrouter_base_url: str = "https://openrouter.ai/api/v1"
-    openrouter_model: str = "mistralai/mistral-7b-instruct:free"
-    
-    # 🌐 Configuration Google Cloud (Translation)
-    google_credentials_path: Optional[str] = None
-    google_project_id: Optional[str] = None
-    
-    # 📊 Configuration Analytics
-    enable_analytics: bool = True
-    analytics_db: str = "analytics"
-    
-    # 📱 Configuration PWA
-    pwa_cache_duration: int = 3600  # 1 heure
-    offline_support: bool = True
-    
-    # 🚀 Configuration Performance
-    max_request_size: int = 50 * 1024 * 1024  # 50MB
-    rate_limit_requests: int = 100
-    rate_limit_window: int = 60  # 60 secondes
-    
-    # 📁 Chemins
-    static_files_dir: str = "app/static"
-    upload_dir: str = "uploads"
-    temp_dir: str = "temp"
-    
-    # 🎵 Configuration Audio
-    max_audio_duration: int = 300  # 5 minutes max
-    supported_audio_formats: List[str] = ["wav", "mp3", "m4a", "ogg"]
-    
-    # 🖼️ Configuration Images
-    max_image_size: int = 10 * 1024 * 1024  # 10MB
-    supported_image_formats: List[str] = ["jpg", "jpeg", "png", "webp"]
-    
-    # 📚 Configuration éducative
-    supported_subjects: List[str] = [
-        "mathematics", "science", "history", "literature", 
-        "geography", "physics", "chemistry", "biology"
-    ]
-    
-    # 🌍 Configuration multilingue (50+ langues)
-    supported_languages: List[str] = [
-        # Langues principales
-        "en", "fr", "es", "pt", "de", "it", "ru", "zh", "ja", "ko",
-        # Langues africaines (priorité)
-        "wo", "sw", "ha", "yo", "ig", "zu", "xh", "af", "am", "tw",
-        # Langues des minorités
-        "nv", "chr", "lkt", "iu", "qu", "gn", "hy", "ka", "eu", "cy"
-    ]
-    
-    default_language: str = "fr"
-    
-    @validator("cors_origins", pre=True)
-    def assemble_cors_origins(cls, v) -> List[str]:
-        if v is None or v == "" or v == "[]":
-            # Valeur par défaut si vide
-            return [
-                "http://localhost:3000",
-                "http://localhost:3001", 
-                "http://127.0.0.1:3000"
-            ]
-        if isinstance(v, str) and not v.startswith("["):
-            # Format: "url1,url2,url3"
-            return [i.strip() for i in v.split(",") if i.strip()]
-        elif isinstance(v, list):
-            return v
-        elif isinstance(v, str) and v.startswith("[") and len(v.strip()) > 2:
-            # Essayer de parser le JSON seulement si ce n'est pas vide
-            try:
-                import json
-                return json.loads(v)
-            except json.JSONDecodeError:
-                # Si le parsing échoue, traiter comme une string simple
-                return [v]
-        return [str(v)] if v else [
+    # 🌐 CORS pour PWA - Configuré selon l'environnement
+    cors_origins: List[str] = Field(
+        default=[
             "http://localhost:3000",
             "http://localhost:3001", 
             "http://127.0.0.1:3000"
-        ]
+        ],
+        env="CORS_ORIGINS"
+    )
     
-    @validator("openai_api_key", "anthropic_api_key", "elevenlabs_api_key", "pinecone_api_key", "openrouter_api_key")
-    def validate_api_keys(cls, v):
-        if not v:
-            print(f"⚠️  Clé API manquante - certaines fonctionnalités seront limitées")
+    trusted_hosts: List[str] = Field(
+        default=["localhost", "127.0.0.1"],
+        env="TRUSTED_HOSTS"
+    )
+    
+    # 🗄️ Base de données - Sécurisé
+    mongodb_url: str = Field(..., env="MONGODB_URL")
+    mongodb_db_name: str = Field(default="eduai_enhanced", env="MONGODB_DB_NAME")
+    redis_url: str = Field(..., env="REDIS_URL")
+    
+    # 🤖 Configuration APIs - Toutes obligatoires
+    openai_api_key: str = Field(..., env="OPENAI_API_KEY")
+    openai_model: str = Field(default="gpt-4", env="OPENAI_MODEL")
+    anthropic_api_key: str = Field(..., env="ANTHROPIC_API_KEY")
+    elevenlabs_api_key: str = Field(..., env="ELEVENLABS_API_KEY")
+    
+    @validator('cors_origins', pre=True)
+    def parse_cors_origins(cls, v):
+        """Parse CORS origins from string or list"""
+        if isinstance(v, str):
+            return [origin.strip() for origin in v.split(',')]
         return v
+    
+    @validator('trusted_hosts', pre=True)
+    def parse_trusted_hosts(cls, v):
+        """Parse trusted hosts from string or list"""
+        if isinstance(v, str):
+            return [host.strip() for host in v.split(',')]
+        return v
+    
+    @validator('environment')
+    def validate_environment(cls, v):
+        """Validate environment value"""
+        allowed = ['development', 'staging', 'production']
+        if v not in allowed:
+            raise ValueError(f'Environment must be one of {allowed}')
+        return v
+    
+    @property
+    def is_production(self) -> bool:
+        """Check if running in production"""
+        return self.environment == "production"
+    
+    @property
+    def database_config(self) -> dict:
+        """Database configuration for production optimization"""
+        config = {
+            "maxPoolSize": 20 if self.is_production else 10,
+            "minPoolSize": 5 if self.is_production else 2,
+            "maxIdleTimeMS": 30000,
+            "serverSelectionTimeoutMS": 5000,
+            "retryWrites": True
+        }
+        return config
     
     class Config:
         env_file = ".env"
-        case_sensitive = True
+        env_file_encoding = "utf-8"
+        case_sensitive = False
 
 
 class DevelopmentSettings(Settings):

@@ -1,0 +1,330 @@
+"""
+🐳 Fichier Docker Compose optimisé pour la production
+Configuration sécurisée avec monitoring et observabilité
+"""
+
+version: '3.8'
+
+services:
+  # 🗄️ Base de données MongoDB avec réplication
+  mongodb:
+    image: mongo:7.0
+    container_name: eduai_mongodb_primary
+    restart: unless-stopped
+    ports:
+      - "${MONGODB_PORT:-27017}:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+      - ./scripts/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./config/mongodb.conf:/etc/mongod.conf:ro
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_ROOT_USER:-eduai}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_ROOT_PASSWORD:?MONGODB_ROOT_PASSWORD is required}
+      MONGO_INITDB_DATABASE: ${MONGODB_DATABASE:-eduai_enhanced}
+    command: ["mongod", "--config", "/etc/mongod.conf", "--replSet", "rs0"]
+    networks:
+      - eduai_network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # 📊 Cache Redis avec persistance
+  redis:
+    image: redis:7.2-alpine
+    container_name: eduai_redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+      - ./config/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    command: redis-server /usr/local/etc/redis/redis.conf
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?REDIS_PASSWORD is required}
+    networks:
+      - eduai_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # 🔧 API Backend (FastAPI) avec configuration sécurisée
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        ENVIRONMENT: ${ENVIRONMENT:-production}
+    container_name: eduai_backend
+    restart: unless-stopped
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    environment:
+      # Configuration obligatoire via variables d'environnement
+      ENVIRONMENT: ${ENVIRONMENT:-production}
+      SECRET_KEY: ${SECRET_KEY:?SECRET_KEY is required}
+      
+      # Base de données
+      MONGODB_URL: mongodb://${MONGODB_ROOT_USER:-eduai}:${MONGODB_ROOT_PASSWORD}@mongodb:27017/${MONGODB_DATABASE:-eduai_enhanced}?authSource=admin
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379
+      
+      # APIs externes
+      OPENAI_API_KEY: ${OPENAI_API_KEY:?OPENAI_API_KEY is required}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:?ANTHROPIC_API_KEY is required}
+      ELEVENLABS_API_KEY: ${ELEVENLABS_API_KEY:?ELEVENLABS_API_KEY is required}
+      
+      # Sécurité
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,https://eduai-enhanced.com}
+      TRUSTED_HOSTS: ${TRUSTED_HOSTS:-localhost,127.0.0.1,eduai-enhanced.com}
+      
+      # Monitoring
+      ENABLE_METRICS: "true"
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    volumes:
+      - ./uploads:/app/uploads:rw
+      - ./logs:/app/logs:rw
+      - /tmp:/tmp:rw
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - eduai_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+
+  # 🤖 Services IA avec optimisation GPU
+  ai_services:
+    build:
+      context: ./ai_services
+      dockerfile: Dockerfile
+      args:
+        ENVIRONMENT: ${ENVIRONMENT:-production}
+    container_name: eduai_ai_services
+    restart: unless-stopped
+    ports:
+      - "${AI_SERVICES_PORT:-8001}:8001"
+    environment:
+      ENVIRONMENT: ${ENVIRONMENT:-production}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      HF_API_KEY: ${HF_API_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    volumes:
+      - ai_models:/app/models:rw
+      - ai_cache:/app/cache:rw
+      - ./temp:/app/temp:rw
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - eduai_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: '2.0'
+        reservations:
+          memory: 1G
+          cpus: '1.0'
+
+  # 📱 Frontend PWA avec Nginx optimisé
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${FRONTEND_API_URL:-http://localhost:8000}
+        VITE_AI_SERVICES_URL: ${FRONTEND_AI_URL:-http://localhost:8001}
+        VITE_ENVIRONMENT: ${ENVIRONMENT:-production}
+    container_name: eduai_frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:-3000}:80"
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      backend:
+        condition: service_healthy
+      ai_services:
+        condition: service_healthy
+    networks:
+      - eduai_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+
+  # 📊 Monitoring - Prometheus
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: eduai_prometheus
+    restart: unless-stopped
+    ports:
+      - "${PROMETHEUS_PORT:-9090}:9090"
+    volumes:
+      - prometheus_data:/prometheus
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    networks:
+      - eduai_network
+    profiles:
+      - monitoring
+
+  # 📈 Visualisation - Grafana
+  grafana:
+    image: grafana/grafana:latest
+    container_name: eduai_grafana
+    restart: unless-stopped
+    ports:
+      - "${GRAFANA_PORT:-3001}:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./config/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./config/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin123}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_INSTALL_PLUGINS: grafana-piechart-panel
+    depends_on:
+      - prometheus
+    networks:
+      - eduai_network
+    profiles:
+      - monitoring
+
+  # 🔍 Logs centralisés - ELK Stack
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: eduai_elasticsearch
+    restart: unless-stopped
+    environment:
+      discovery.type: single-node
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+      xpack.security.enabled: "false"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    ports:
+      - "${ELASTICSEARCH_PORT:-9200}:9200"
+    networks:
+      - eduai_network
+    profiles:
+      - logging
+
+  # 📋 Collecteur de logs - Logstash
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.11.0
+    container_name: eduai_logstash
+    restart: unless-stopped
+    volumes:
+      - ./config/logstash/pipeline:/usr/share/logstash/pipeline:ro
+      - ./logs:/usr/share/logstash/logs:ro
+    depends_on:
+      - elasticsearch
+    networks:
+      - eduai_network
+    profiles:
+      - logging
+
+  # 🔎 Interface de logs - Kibana
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.11.0
+    container_name: eduai_kibana
+    restart: unless-stopped
+    ports:
+      - "${KIBANA_PORT:-5601}:5601"
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
+    depends_on:
+      - elasticsearch
+    networks:
+      - eduai_network
+    profiles:
+      - logging
+
+  # 🚦 Reverse Proxy - Traefik (pour la production)
+  traefik:
+    image: traefik:v3.0
+    container_name: eduai_traefik
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "${TRAEFIK_DASHBOARD_PORT:-8080}:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./config/traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./ssl:/ssl:ro
+      - traefik_data:/data
+    networks:
+      - eduai_network
+    profiles:
+      - production
+
+# 🗂️ Volumes persistants
+volumes:
+  mongodb_data:
+    driver: local
+  mongodb_config:
+    driver: local
+  redis_data:
+    driver: local
+  ai_models:
+    driver: local
+  ai_cache:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+  elasticsearch_data:
+    driver: local
+  traefik_data:
+    driver: local
+
+# 🌐 Réseau isolé
+networks:
+  eduai_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
