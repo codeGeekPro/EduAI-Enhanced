@@ -386,15 +386,15 @@ class SpeechProcessor:
                 self.tts_processor = None
                 self.tts_model = None
                 self.vocoder = None
-            
-            # Speech recognition with SpeechRecognition as fallback
+        
+        # Speech recognition with SpeechRecognition as fallback
+        try:
             self.sr_recognizer = sr.Recognizer()
             
             # Phonemes for pronunciation analysis
             self.phoneme_mapping = self._load_phoneme_mapping()
             
             print("✅ Speech processing models initialized successfully")
-            
         except Exception as e:
             print(f"⚠️ Error initializing speech models: {e}")
             # Initialiser les fallbacks
