@@ -87,6 +87,8 @@ def install_minimal_packages():
         except subprocess.CalledProcessError:
             print(f"❌ Erreur installation {package}")
 
+    
+
 def create_demo_config():
     """Créer le fichier .env pour la démo"""
     env_content = """# 🎯 Configuration EduAI Enhanced - Alternatives Gratuites Cloud
@@ -131,6 +133,8 @@ MOCK_RESPONSES=true
     
     print("✅ Fichier .env.demo créé!")
 
+    
+
 def setup_free_alternatives():
     """Configuration complète des alternatives gratuites cloud"""
     print("🎯 Configuration EduAI Enhanced - Alternatives Cloud Gratuites")
@@ -161,5 +165,7 @@ def setup_free_alternatives():
     print("\n💰 Coût total: 0€/mois (avec limitations gratuites)")
     print("💡 Parfait pour démos et tests!")
     
+    
+
 if __name__ == "__main__":
     setup_free_alternatives()

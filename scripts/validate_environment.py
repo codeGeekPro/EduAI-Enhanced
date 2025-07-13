@@ -4,8 +4,13 @@ Script de validation de l'environnement EduAI
 Vérifie que toutes les dépendances sont correctement installées
 """
 
+
 import sys
 import importlib
+import os
+
+# Ajout du dossier racine au PYTHONPATH pour les imports locaux
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 
 def check_package(package_name, import_name=None):

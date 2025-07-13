@@ -4,6 +4,11 @@ Script de test OpenRouter pour EduAI Enhanced
 Test rapide des fonctionnalités OpenRouter avec différents modèles gratuits
 """
 
+
+import logging
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
+
 import asyncio
 import os
 import sys
@@ -28,26 +33,26 @@ except ImportError:
     load_dotenv(env_path)
     print("✅ Fichier .env chargé avec succès")
 
+
 from ai_services.nlp.openrouter_client import OpenRouterClient
 
 
 async def test_openrouter_functionality():
     """Test complet des fonctionnalités OpenRouter"""
     
-    print("🔮 Test OpenRouter pour EduAI Enhanced")
-    print("=" * 50)
+    logger.info("🔮 Test OpenRouter pour EduAI Enhanced")
+    logger.info("=" * 50)
     
     # Vérification de la clé API
     api_key = os.getenv("OPENROUTER_API_KEY")
     if not api_key:
-        print("❌ OPENROUTER_API_KEY non trouvée dans l'environnement")
-        print("   1. Allez sur https://openrouter.ai/keys")
-        print("   2. Créez un compte gratuit")
-        print("   3. Générez une clé API")
-        print("   4. Ajoutez-la à votre .env: OPENROUTER_API_KEY=sk-or-v1-...")
+        logger.error("❌ OPENROUTER_API_KEY non trouvée dans l'environnement")
+        logger.error("   1. Allez sur https://openrouter.ai/keys")
+        logger.error("   2. Créez un compte gratuit")
+        logger.error("   3. Générez une clé API")
+        logger.error("   4. Ajoutez-la à votre .env: OPENROUTER_API_KEY=sk-or-v1-...")
         return False
-    
-    print(f"✅ Clé API trouvée: {api_key[:20]}...")
+    logger.info(f"✅ Clé API trouvée: {api_key[:20]}...")
     
     async with OpenRouterClient(api_key) as client:
         
@@ -126,31 +131,32 @@ async def test_openrouter_functionality():
             print(f"   ❌ Erreur: {e}")
         
         # Test 5: Test de différents modèles
-        print("\n🤖 Test 5: Comparaison de modèles...")
+        logger.info("\n🤖 Test 5: Comparaison de modèles...")
         test_prompt = "Qu'est-ce que la photosynthèse ?"
         models_to_test = [
             "mistralai/mistral-7b-instruct:free",
             "meta-llama/llama-3.1-8b-instruct:free",
             "microsoft/phi-3-mini-128k-instruct:free"
         ]
-        
         for model in models_to_test:
             try:
-                print(f"\n   🧪 Test avec {model}:")
-                response = await client.simple_completion(
-                    prompt=test_prompt,
-                    model=model,
-                    max_tokens=100,
-                    system_message="Tu es un assistant éducatif. Réponds de manière claire et concise."
-                )
-                
+                logger.info(f"\n   🧪 Test avec {model}:")
+                try:
+                    response = await client.simple_completion(
+                        prompt=test_prompt,
+                        model=model,
+                        max_tokens=100,
+                        system_message="Tu es un assistant éducatif. Réponds de manière claire et concise."
+                    )
+                except Exception as hf_error:
+                    logger.error(f"      ❌ Erreur HuggingFace lors du chargement du modèle {model}: {hf_error}")
+                    continue
                 if response:
-                    print(f"      ✅ Réponse: {response[:150]}...")
+                    logger.info(f"      ✅ Réponse: {response[:150]}...")
                 else:
-                    print("      ❌ Aucune réponse")
-                    
+                    logger.warning("      ❌ Aucune réponse")
             except Exception as e:
-                print(f"      ❌ Erreur avec {model}: {e}")
+                logger.error(f"      ❌ Erreur avec {model}: {e}")
         
         print("\n🎉 Tests terminés !")
         print("\n📋 Résumé:")
