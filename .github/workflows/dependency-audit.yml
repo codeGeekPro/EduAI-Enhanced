@@ -19,8 +19,12 @@ jobs:
       - name: Audit Python
         run: |
           pip install --upgrade pip
-          pip install -r ai_services/requirements.txt
-          pip install -r backend/requirements.txt
+          # Install faiss-cpu first with binary wheel to avoid compilation issues
+          pip install --only-binary=faiss-cpu faiss-cpu==1.11.0
+          # Install other dependencies, excluding faiss-cpu, preferring binary wheels
+          grep -v "faiss-cpu" ai_services/requirements.txt > temp_requirements.txt
+          pip install --prefer-binary -r temp_requirements.txt
+          pip install --prefer-binary -r backend/requirements.txt
           pip install bandit
           bandit -r ai_services
           bandit -r backend
