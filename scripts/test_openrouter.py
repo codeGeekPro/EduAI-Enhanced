@@ -81,7 +81,7 @@ async def test_openrouter_functionality():
             )
             
             if response:
-                print(f"   ✅ Réponse (premiers 200 caractères):")
+                print("   ✅ Réponse (premiers 200 caractères):")
                 print(f"      {response[:200]}...")
             else:
                 print("   ❌ Aucune réponse reçue")
@@ -147,7 +147,7 @@ async def test_openrouter_functionality():
                 if response:
                     print(f"      ✅ Réponse: {response[:150]}...")
                 else:
-                    print(f"      ❌ Aucune réponse")
+                    print("      ❌ Aucune réponse")
                     
             except Exception as e:
                 print(f"      ❌ Erreur avec {model}: {e}")
@@ -180,12 +180,12 @@ async def test_models_availability():
             all_models = await client.list_models()
             free_models = await client.get_free_models()
             
-            print(f"\n📊 Statistiques des modèles:")
+            print("\n📊 Statistiques des modèles:")
             print(f"   Total des modèles: {len(all_models)}")
             print(f"   Modèles gratuits: {len(free_models)}")
             print(f"   Pourcentage gratuit: {len(free_models)/len(all_models)*100:.1f}%")
             
-            print(f"\n🆓 Top 10 des modèles gratuits:")
+            print("\n🆓 Top 10 des modèles gratuits:")
             for i, model in enumerate(free_models[:10]):
                 name = model.get('id', 'N/A')
                 context = model.get('context_length', 'N/A')
