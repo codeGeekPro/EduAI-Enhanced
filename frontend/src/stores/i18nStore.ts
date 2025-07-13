@@ -43,6 +43,7 @@ export const useI18nStore = create<I18nState>()(
       name: 'i18n-storage',
       onRehydrateStorage: () => (state) => {
         console.log('i18n store rehydrated:', state);
+        console.log('Language after rehydration:', state?.language || 'undefined');
       },
     }
   )
